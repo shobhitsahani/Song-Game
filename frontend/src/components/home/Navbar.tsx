@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, Menu, X, User, Users } from 'lucide-react';
+import { Music, Menu, X, User, Users, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUser } from '@/providers/UserProvider';
 import { useNotificationStore } from '@/store/notifications';
@@ -27,7 +27,9 @@ export function Navbar() {
       useNotificationStore.getState().addNotification(notification);
     };
     socket.on('notification:new', handleNotification);
-    return () => socket.off('notification:new', handleNotification);
+    return () => {
+      socket.off('notification:new', handleNotification);
+    };
   }, [socket]);
 
   return (

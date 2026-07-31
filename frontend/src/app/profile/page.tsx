@@ -38,7 +38,7 @@ import { EmptyState } from '@/components/shared/empty-state';
 import { ErrorState } from '@/components/shared/error-state';
 import { GameModeBadge } from '@/components/shared/game-mode-badge';
 import type {
-  User, Achievement, MatchHistory, XPInfo,
+  User, Achievement, MatchHistory, XPInfo, GameMode,
   DeezerPlaylist, Friend, LeaderboardEntry,
 } from '@/types';
 
@@ -462,11 +462,11 @@ export default function ProfilePage() {
   };
 
   const levelInfo = user ? getLevelProgress(user.xp) : null;
-  const favouriteGenres = (user as any).favoriteGenres || ['CLASSIC', 'ARTIST', 'LYRICS', 'DECADE'];
+  const favouriteGenres: GameMode[] = (user as any)?.favoriteGenres || ['CLASSIC', 'ARTIST', 'LYRICS', 'DECADE'];
   const userBadges = [
-    ...(user.title ? [{ name: user.title, icon: '👑', tier: 'legendary' }] : []),
-    ...(user.border ? [{ name: `${user.border} border`, icon: '🖼️', tier: user.border }] : []),
-    { name: `Level ${user.level}`, icon: '⭐', tier: user.level >= 50 ? 'legendary' : user.level >= 25 ? 'epic' : user.level >= 10 ? 'rare' : 'common' },
+    ...(user?.title ? [{ name: user.title, icon: '👑', tier: 'legendary' }] : []),
+    ...(user?.border ? [{ name: `${user.border} border`, icon: '🖼️', tier: user.border }] : []),
+    { name: `Level ${user?.level ?? 0}`, icon: '⭐', tier: (user?.level ?? 0) >= 50 ? 'legendary' : (user?.level ?? 0) >= 25 ? 'epic' : (user?.level ?? 0) >= 10 ? 'rare' : 'common' },
   ];
   const filteredFriends = mockFriends.filter(f =>
     f.username.toLowerCase().includes(friendSearch.toLowerCase()),

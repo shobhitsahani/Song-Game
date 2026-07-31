@@ -1,20 +1,21 @@
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
 import type { StorybookConfig } from '@storybook/nextjs';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.@(ts|tsx)', '../src/**/*.mdx'],
-  addons: [
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-    '@storybook/addon-links',
-  ],
+  addons: [getAbsolutePath("@storybook/addon-links"), getAbsolutePath("@storybook/addon-docs")],
+
   framework: {
-    name: '@storybook/nextjs',
+    name: getAbsolutePath("@storybook/nextjs"),
     options: {},
   },
-  staticDirs: ['../public'],
-  docs: {
-    autodocs: true,
-  },
+
+  staticDirs: ['../public']
 };
 
 export default config;
+
+function getAbsolutePath(value: string): any {
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+}

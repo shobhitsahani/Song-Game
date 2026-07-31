@@ -51,7 +51,6 @@ const nextConfig: NextConfig = {
   compress: true,
   generateEtags: true,
   productionBrowserSourceMaps: false,
-  swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
   },

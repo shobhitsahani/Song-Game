@@ -1,15 +1,6 @@
 ﻿import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'swap',
-  preload: true,
-  fallback: ['system-ui', 'arial'],
-});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://songgame.app';
 
@@ -60,7 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#7c3aed" />
         <meta name="msapplication-TileColor" content="#0a0a1a" />
       </head>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <a href="#main-content" className="skip-link">Skip to content</a>
         <Providers>
           <div id="main-content">{children}</div>

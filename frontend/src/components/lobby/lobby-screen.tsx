@@ -60,7 +60,7 @@ function MusicNoteParticle({ index }: { index: number }) {
 
 export function LobbyScreen({
   room, players, settings, chatMessages, typingUsers, isHost, currentUserId,
-  showSettings, onToggleReady, onStartGame, onSendChat, onTyping, onUpdateSettings,
+  showSettings, onToggleReady, onStartGame, onSendChat, onTyping, onReaction, onUpdateSettings,
   onKickPlayer, onBanPlayer, onCopyInvite, onToggleSettings,
 }: LobbyScreenProps) {
   const [hoveredPlayer, setHoveredPlayer] = useState<string | null>(null);

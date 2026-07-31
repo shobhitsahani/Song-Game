@@ -1,16 +1,17 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import type { ReactElement } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X, Check, Trophy, UserPlus, Gamepad2, Zap, Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useNotificationStore } from '@/store/notifications';
-import { useAuthStore } from '@/providers/UserProvider';
+import { useUser } from '@/providers/UserProvider';
 import { useSocket } from '@/hooks/useSocket';
 import { cn } from '@/lib/utils';
 import type { Notification } from '@/types';
 
-const notificationIcons: Record<Notification['type'], JSX.Element> = {
+const notificationIcons: Record<Notification['type'], ReactElement> = {
   FRIEND_REQUEST: <UserPlus className="w-4 h-4 text-blue-400" />,
   FRIEND_ACCEPT: <UserPlus className="w-4 h-4 text-green-400" />,
   GAME_INVITE: <Gamepad2 className="w-4 h-4 text-purple-400" />,
@@ -21,7 +22,7 @@ const notificationIcons: Record<Notification['type'], JSX.Element> = {
 };
 
 export function Notifications() {
-  const { user } = useAuthStore();
+  const { user } = useUser();
   const { notifications, unreadCount, loadNotifications, loadUnreadCount, markRead, markAllRead, addNotification } = useNotificationStore();
   const { socket } = useSocket();
   const [open, setOpen] = useState(false);
@@ -37,7 +38,9 @@ export function Notifications() {
     if (!socket) return;
     const handler = (notification: Notification) => addNotification(notification);
     socket.on('notification:new', handler);
-    return () => socket.off('notification:new', handler);
+    return () => {
+      socket.off('notification:new', handler);
+    };
   }, [socket, addNotification]);
 
   useEffect(() => {

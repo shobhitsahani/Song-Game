@@ -6,7 +6,9 @@ import { Toaster } from '@/components/ui/toast';
 import { InstallPrompt } from '@/components/shared/InstallPrompt';
 import { BottomNav } from '@/components/shared/BottomNav';
 
-const LoadingScreen = lazy(() => import('@/components/shared/loading-screen'));
+const LoadingScreen = lazy(() =>
+  import('@/components/shared/loading-screen').then(module => ({ default: module.LoadingScreen })),
+);
 
 export function Providers({ children }: { children: ReactNode }) {
   return (

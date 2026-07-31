@@ -40,7 +40,7 @@ export const YouTubePlayer = memo(function YouTubePlayer({
     }
     const tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
-    tag.loading = 'lazy';
+    tag.async = true;
     const first = document.getElementsByTagName('script')[0];
     first.parentNode?.insertBefore(tag, first);
 

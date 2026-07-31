@@ -128,6 +128,7 @@ export interface ChatMessage {
   username: string;
   message: string;
   timestamp: number;
+  reactions?: Record<string, string[]>;
 }
 
 export interface Friend {
