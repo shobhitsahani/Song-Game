@@ -1,0 +1,23 @@
+{
+  "name": "Song Game - Multiplayer Music Trivia",
+  "short_name": "SongGame",
+  "description": "Challenge your friends in real-time music trivia. Listen to song clips, guess the title, and climb the leaderboard.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a1a",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icons/icon-192x192.svg", "sizes": "192x192", "type": "image/svg+xml" },
+    { "src": "/icons/icon-512x512.svg", "sizes": "512x512", "type": "image/svg+xml" },
+    { "src": "/icons/icon-512x512.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "screenshots": [],
+  "categories": ["games", "music", "entertainment"],
+  "lang": "en",
+  "dir": "ltr",
+  "display_override": ["standalone", "minimal-ui"],
+  "prefer_related_applications": false,
+  "scope": "/",
+  "edge_side_panel": {}
+}
