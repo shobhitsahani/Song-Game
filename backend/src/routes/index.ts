@@ -1,0 +1,10 @@
+export { default as authRoutes } from './auth';
+export { default as userRoutes } from './users';
+export { default as gameRoutes } from './games';
+export { default as friendRoutes } from './friends';
+export { default as notificationRoutes } from './notifications';
+export { default as playlistRoutes } from './playlists';
+export { default as leaderboardRoutes } from './leaderboards';
+export { default as leaderboardFriendsRoutes } from './leaderboard-routes';
+export { default as dailyRoutes } from './daily';
+export { default as achievementRoutes } from './achievements';

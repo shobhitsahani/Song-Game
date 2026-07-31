@@ -1,0 +1,375 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum GameStatus {
+  WAITING
+  PLAYING
+  FINISHED
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
+
+enum GameMode {
+  CLASSIC
+  ARTIST
+  ALBUM
+  LYRICS
+  GENRE
+  DECADE
+  YEAR
+  HARDCORE
+  SURVIVAL
+  PARTY
+  CUSTOM
+}
+
+enum NotificationType {
+  FRIEND_REQUEST
+  FRIEND_ACCEPT
+  GAME_INVITE
+  ACHIEVEMENT_UNLOCK
+  LEVEL_UP
+  DAILY_CHALLENGE
+  MATCH_START
+}
+
+enum LeaderboardType {
+  GLOBAL
+  FRIENDS
+  WEEKLY
+  MONTHLY
+  COUNTRY
+  ACCURACY
+  WINS
+  XP
+}
+
+enum TitleEquipped {
+  NONE
+  TITLE_1
+  TITLE_2
+  TITLE_3
+  TITLE_4
+  TITLE_5
+}
+
+model User {
+  id        String   @id @default(uuid())
+  deezerId  String   @unique
+  username  String
+  email     String?
+  avatar    String?
+  xp        Int      @default(0)
+  level     Int      @default(1)
+  title     String?
+  border    String?
+  wins      Int      @default(0)
+  totalGames Int     @default(0)
+  accuracy  Float    @default(0)
+  fastestAnswer Int  @default(0)
+  winStreak Int      @default(0)
+  longestWinStreak Int @default(0)
+  favoriteGenres Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  games     GamePlayer[]
+  achievements Achievement[]
+  friends   Friend[]      @relation("UserFriends")
+  friendOf  Friend[]      @relation("FriendOf")
+  notifications Notification[]
+  xpTransactions XPTransaction[]
+  playlists UserPlaylist[]
+  dailyChallenges DailyChallenge[]
+  recentTeammates RecentTeammate[] @relation("UserTeammate")
+  teammateOf    RecentTeammate[] @relation("TeammateOf")
+  favoritePlayers FavoritePlayer[] @relation("UserFav")
+  favoritedBy   FavoritePlayer[] @relation("FavOf")
+
+  @@index([username])
+  @@index([deezerId])
+  @@index([xp(sort: Desc)])
+  @@index([level(sort: Desc)])
+  @@index([wins(sort: Desc)])
+  @@index([accuracy(sort: Desc)])
+  @@index([createdAt(sort: Desc)])
+  @@index([totalGames(sort: Desc)])
+}
+
+model Game {
+  id        String   @id @default(uuid())
+  roomCode  String
+  mode      GameMode @default(CLASSIC)
+  status    GameStatus @default(WAITING)
+  settings  Json
+  createdAt DateTime @default(now())
+  endedAt   DateTime?
+
+  players GamePlayer[]
+  rounds  GameRound[]
+
+  @@index([roomCode])
+  @@index([status])
+  @@index([mode])
+  @@index([createdAt(sort: Desc)])
+  @@index([status, createdAt])
+}
+
+model GameRound {
+  id         String   @id @default(uuid())
+  gameId     String
+  roundNumber Int
+  mode       GameMode @default(CLASSIC)
+  songTitle  String
+  artist     String
+  album      String?
+  albumArt   String?
+  previewUrl String?
+  lyrics     String?
+  genre      String?
+  decade     String?
+  youtubeUrl String?
+  startTime  Int?
+  duration   Int      @default(30)
+  createdAt  DateTime @default(now())
+
+  game    Game          @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  guesses RoundGuess[]
+
+  @@unique([gameId, roundNumber])
+  @@index([gameId])
+  @@index([gameId, roundNumber])
+}
+
+model RoundGuess {
+  id           String   @id @default(uuid())
+  roundId      String
+  gamePlayerId String
+  guess        String?
+  isCorrect    Boolean  @default(false)
+  responseTime Int      @default(0)
+  scoreEarned  Int      @default(0)
+  submittedAt  DateTime @default(now())
+
+  round     GameRound  @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  gamePlayer GamePlayer @relation(fields: [gamePlayerId], references: [id], onDelete: Cascade)
+
+  @@unique([roundId, gamePlayerId])
+  @@index([roundId])
+  @@index([gamePlayerId])
+  @@index([submittedAt])
+}
+
+model GamePlayer {
+  id              String   @id @default(uuid())
+  gameId          String
+  userId          String?
+  username        String
+  avatar          String?
+  score           Int      @default(0)
+  correctAnswers  Int      @default(0)
+  totalAnswers    Int      @default(0)
+  avgResponseTime Float    @default(0)
+  rank            Int      @default(0)
+  isHost          Boolean  @default(false)
+  isReady         Boolean  @default(false)
+  isSpectator     Boolean  @default(false)
+  isAlive         Boolean  @default(true)
+  hasGuessed      Boolean  @default(false)
+  guessTime       Int?
+  eliminatedAt    Int?
+
+  game     Game         @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  user     User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  guesses  RoundGuess[]
+
+  @@index([gameId])
+  @@index([userId])
+  @@index([score(sort: Desc)])
+  @@index([userId, rank])
+}
+
+model Achievement {
+  id          String   @id @default(uuid())
+  userId      String
+  type        String
+  title       String
+  description String
+  icon        String
+  rarity      String   @default("common")
+  xpReward    Int      @default(0)
+  unlockedAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, type])
+  @@unique([userId, type])
+  @@index([unlockedAt])
+}
+
+model Friend {
+  id        String       @id @default(uuid())
+  userId    String
+  friendId  String
+  status    FriendStatus @default(PENDING)
+  createdAt DateTime     @default(now())
+
+  user   User @relation("UserFriends", fields: [userId], references: [id], onDelete: Cascade)
+  friend User @relation("FriendOf", fields: [friendId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, friendId])
+  @@index([userId])
+  @@index([friendId])
+  @@index([status])
+  @@index([userId, status])
+  @@index([friendId, status])
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  data      Json?
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+  @@index([createdAt(sort: Desc)])
+  @@index([userId, read, createdAt(sort: Desc)])
+}
+
+model XPTransaction {
+  id        String   @id @default(uuid())
+  userId    String
+  amount    Int
+  reason    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+model UserPlaylist {
+  id         String   @id @default(uuid())
+  userId     String
+  playlistId String
+  name       String
+  description String?
+  image      String?
+  ownerName  String?
+  trackCount Int      @default(0)
+  isFavorite Boolean  @default(false)
+  importedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, playlistId])
+  @@index([userId])
+  @@index([isFavorite])
+}
+
+model DailyChallenge {
+  id         String   @id @default(uuid())
+  userId     String
+  date       DateTime
+  playlistId String?
+  score      Int      @default(0)
+  completed  Boolean  @default(false)
+  rewardClaimed Boolean @default(false)
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date(sort: Desc)])
+  @@index([userId, date])
+}
+
+model LeaderboardEntry {
+  id        String           @id @default(uuid())
+  userId    String
+  type      LeaderboardType
+  score     Int
+  rank      Int
+  period    String?
+  updatedAt DateTime         @updatedAt
+
+  @@unique([userId, type])
+  @@index([type, rank])
+  @@index([type, score(sort: Desc)])
+  @@index([type, period])
+  @@index([updatedAt])
+}
+
+model RecentTeammate {
+  id         String   @id @default(uuid())
+  userId     String
+  teammateId String
+  gamesPlayed Int     @default(1)
+  lastPlayed DateTime @default(now())
+
+  user     User @relation("UserTeammate", fields: [userId], references: [id], onDelete: Cascade)
+  teammate User @relation("TeammateOf", fields: [teammateId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teammateId])
+  @@index([userId])
+  @@index([teammateId])
+  @@index([lastPlayed(sort: Desc)])
+}
+
+model FavoritePlayer {
+  id       String   @id @default(uuid())
+  userId   String
+  targetId String
+  createdAt DateTime @default(now())
+
+  user   User @relation("UserFav", fields: [userId], references: [id], onDelete: Cascade)
+  target User @relation("FavOf", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetId])
+  @@index([userId])
+  @@index([targetId])
+}
+
+model RoomBan {
+  id        String   @id @default(uuid())
+  roomCode  String
+  userId    String
+  bannedBy  String
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@index([roomCode])
+  @@index([userId])
+  @@unique([roomCode, userId])
+}
+
+model RoomPassword {
+  id        String   @id @default(uuid())
+  roomCode  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  @@index([roomCode])
+}
