@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Play, User, Sparkles } from 'lucide-react';
@@ -11,20 +11,34 @@ import { useSocket } from '@/providers/socket-provider';
 
 export default function CreateRoomPage() {
   const router = useRouter();
-  const { socket, connected } = useSocket();
+  const { socket, connected, error } = useSocket();
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const createTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (createTimeoutRef.current) clearTimeout(createTimeoutRef.current);
+    };
+  }, []);
 
   const handleCreate = useCallback(() => {
     if (!socket || !connected || creating) return;
     if (!name.trim() || !avatar) return;
     setCreating(true);
+    setCreateError(null);
 
     socket.emit('room:create', { username: name.trim(), avatar });
     socket.once('room:joined', (room) => {
       router.push(`/room/${room.code}`);
     });
+
+    createTimeoutRef.current = setTimeout(() => {
+      setCreating(false);
+      setCreateError('The server did not respond. Please try again.');
+    }, 10000);
   }, [socket, connected, creating, name, avatar, router]);
 
   if (creating) {
@@ -82,8 +96,11 @@ export default function CreateRoomPage() {
             </Button>
             {!connected && (
               <p className="text-xs text-muted-foreground text-center">
-                Connecting to server...
+                {error || 'Connecting to server...'}
               </p>
+            )}
+            {createError && (
+              <p className="text-xs text-red-400 text-center">{createError}</p>
             )}
           </div>
         </div>

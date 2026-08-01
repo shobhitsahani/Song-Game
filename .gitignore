@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.next/
+*.env
+.env.local
+.env.production
+.turbo/
+*.log
+.DS_Store
+coverage/
+*.tsbuildinfo
+
+.vercel
+.vercel.songgame-backup/
+.env*
