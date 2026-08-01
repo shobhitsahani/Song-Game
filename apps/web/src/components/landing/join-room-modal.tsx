@@ -3,9 +3,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Copy, ArrowRight, X, User } from 'lucide-react';
+import { Copy, ArrowRight, X, User, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { AvatarPicker } from '@/components/avatar-picker';
 
 interface JoinRoomModalProps {
   open: boolean;
@@ -17,6 +18,7 @@ export function JoinRoomModal({ open, onClose }: JoinRoomModalProps) {
   const [step, setStep] = useState<'code' | 'name'>('code');
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState<string | null>(null);
 
   const handleCodeNext = useCallback(() => {
     if (code.trim().length >= 4) {
@@ -25,14 +27,12 @@ export function JoinRoomModal({ open, onClose }: JoinRoomModalProps) {
   }, [code]);
 
   const handleJoin = useCallback(() => {
-    if (code.trim().length >= 4) {
-      const params = new URLSearchParams();
-      if (name.trim()) params.set('name', name.trim());
-      const qs = params.toString();
-      router.push(`/room/${code.trim().toUpperCase()}${qs ? `?${qs}` : ''}`);
+    if (code.trim().length >= 4 && name.trim() && avatar) {
+      const params = new URLSearchParams({ name: name.trim(), avatar });
+      router.push(`/room/${code.trim().toUpperCase()}?${params.toString()}`);
       onClose();
     }
-  }, [code, name, router, onClose]);
+  }, [code, name, avatar, router, onClose]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -49,7 +49,7 @@ export function JoinRoomModal({ open, onClose }: JoinRoomModalProps) {
   }, [open, onClose, step, handleCodeNext, handleJoin]);
 
   useEffect(() => {
-    if (!open) { setCode(''); setName(''); setStep('code'); }
+    if (!open) { setCode(''); setName(''); setAvatar(null); setStep('code'); }
   }, [open]);
 
   return (
@@ -109,29 +109,40 @@ export function JoinRoomModal({ open, onClose }: JoinRoomModalProps) {
                 </>
               ) : (
                 <>
-                  <div className="text-center mb-8">
+                  <div className="text-center mb-6">
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center mx-auto mb-4">
                       <User className="w-8 h-8 text-purple-400" />
                     </div>
-                    <h2 className="text-2xl font-bold mb-2">Your Name</h2>
+                    <h2 className="text-2xl font-bold mb-2">Your Identity</h2>
                     <p className="text-muted-foreground text-sm">
-                      Choose your display name for room <span className="font-bold text-foreground">{code}</span>
+                      Set your name and avatar for room <span className="font-bold text-foreground">{code}</span>
                     </p>
                   </div>
                   <div className="space-y-4">
-                    <Input
-                      placeholder="Your display name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      maxLength={20}
-                      autoFocus
-                      className="text-center text-lg h-12"
-                    />
-                    <div className="flex gap-2">
+                    <div>
+                      <p className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
+                        <User className="w-4 h-4 text-purple-400" /> Your display name
+                      </p>
+                      <Input
+                        placeholder="Your display name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        maxLength={20}
+                        autoFocus
+                        className="text-center text-lg h-12"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-purple-400" /> Choose your avatar
+                      </p>
+                      <AvatarPicker value={avatar} onChange={setAvatar} />
+                    </div>
+                    <div className="flex gap-2 pt-2">
                       <Button variant="ghost" className="flex-1" onClick={() => setStep('code')}>
                         Back
                       </Button>
-                      <Button className="flex-1 gap-2" onClick={handleJoin}>
+                      <Button className="flex-1 gap-2" disabled={!name.trim() || !avatar} onClick={handleJoin}>
                         Join Room <ArrowRight className="w-4 h-4" />
                       </Button>
                     </div>
