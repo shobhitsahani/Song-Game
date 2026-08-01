@@ -337,9 +337,10 @@ export default function RoomPage() {
   }, [socket, chatInput]);
 
   const handleCopyLink = useCallback(() => {
-    navigator.clipboard.writeText(window.location.href);
-    toast.success('Room link copied!');
-  }, []);
+    if (!room?.code) return;
+    navigator.clipboard.writeText(room.code);
+    toast.success('Room code copied!');
+  }, [room?.code]);
 
   const activePlayers = players.filter((p) => !p.isSpectator);
   const localPlayer = players.find((p) => p.id === localPlayerId);
