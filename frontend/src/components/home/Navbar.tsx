@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, Menu, X, User, Users, Trophy } from 'lucide-react';
+import { Music, Menu, X, Users, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUser } from '@/providers/UserProvider';
 import { useNotificationStore } from '@/store/notifications';
@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { useSocket } from '@/hooks/useSocket';
 
 export function Navbar() {
-  const { user, login } = useUser();
+  const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const { loadUnreadCount } = useNotificationStore();
   const { socket } = useSocket();
@@ -79,12 +79,7 @@ export function Navbar() {
                 </div>
               </div>
             </div>
-          ) : (
-            <Button onClick={login} className="gap-2 ml-2">
-              <User className="w-4 h-4" />
-              Sign in with Deezer
-            </Button>
-          )}
+          ) : null}
         </div>
 
         <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
@@ -109,9 +104,7 @@ export function Navbar() {
                   <Link href="/leaderboard" className="block"><Button variant="ghost" className="w-full justify-start"><Trophy className="w-4 h-4 mr-2" />Leaderboard</Button></Link>
                   <Link href="/daily" className="block"><Button variant="ghost" className="w-full justify-start">Daily</Button></Link>
                 </>
-              ) : (
-                <Button onClick={login} className="w-full gap-2"><User className="w-4 h-4" />Sign in with Deezer</Button>
-              )}
+              ) : null}
             </div>
           </motion.div>
         )}
