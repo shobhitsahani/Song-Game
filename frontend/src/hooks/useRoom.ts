@@ -9,6 +9,11 @@ interface TypingUser {
   username: string;
 }
 
+export interface JoinRoomOptions {
+  username?: string;
+  avatar?: string;
+}
+
 export function useRoom(socket: Socket | null, roomCode?: string) {
   const [room, setRoom] = useState<Room | null>(null);
   const [players, setPlayers] = useState<GamePlayer[]>([]);
@@ -116,8 +121,8 @@ export function useRoom(socket: Socket | null, roomCode?: string) {
     return () => handlersRef.current?.();
   }, [socket]);
 
-  const joinRoom = useCallback((code: string) => {
-    socket?.emit('room:join', code);
+  const joinRoom = useCallback((code: string, opts?: JoinRoomOptions) => {
+    socket?.emit('room:join', code, opts);
   }, [socket]);
 
   const leaveRoom = useCallback(() => {
