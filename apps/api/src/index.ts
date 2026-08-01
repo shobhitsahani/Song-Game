@@ -44,6 +44,14 @@ app.use((_req, res, next) => {
 });
 
 // ─── Routes ──────────────────────────────────────────
+app.get('/', (_req, res) => {
+  res.json({
+    name: 'Song-Game API',
+    status: 'ok',
+    socket: '/socket.io/',
+    health: '/api/health',
+  });
+});
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/friends', friendRoutes);
