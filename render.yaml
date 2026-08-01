@@ -3,7 +3,7 @@ services:
     name: song-game-api
     runtime: node
     plan: free
-    buildCommand: npm install && npm run build:packages && npm run build -w apps/api
+    buildCommand: npm install --include=dev && npm run build:packages && npm run db:generate -w apps/api && npm run build -w apps/api
     startCommand: npm run start -w apps/api
     healthCheckPath: /api/health
     envVars:

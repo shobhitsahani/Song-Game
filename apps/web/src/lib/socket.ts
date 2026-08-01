@@ -12,12 +12,12 @@ export function getSocket(): Socket {
     socket = io(SOCKET_URL, {
       autoConnect: false,
       withCredentials: true,
-      transports: ['websocket'],
+      transports: ['websocket', 'polling'],
       reconnection: true,
-      reconnectionAttempts: Infinity,
+      reconnectionAttempts: 10,
       reconnectionDelay: 2000,
       reconnectionDelayMax: 10000,
-      timeout: 20000,
+      timeout: 10000,
     });
   }
   return socket;
@@ -31,12 +31,25 @@ export function connectSocket(token?: string): Socket {
     s.auth = { token };
   }
   if (!s.connected) {
-    connectionPromise = new Promise((resolve) => {
+    connectionPromise = new Promise((resolve, reject) => {
       if (s.connected) {
         resolve(s);
         return;
       }
-      s.once('connect', () => resolve(s));
+      const onConnect = () => {
+        cleanup();
+        resolve(s);
+      };
+      const onError = (err: Error) => {
+        cleanup();
+        reject(err);
+      };
+      const cleanup = () => {
+        s.off('connect', onConnect);
+        s.off('connect_error', onError);
+      };
+      s.once('connect', onConnect);
+      s.once('connect_error', onError);
       s.connect();
     });
   }
