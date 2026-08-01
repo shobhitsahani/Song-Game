@@ -20,8 +20,6 @@ import { useAuthStore } from '@/store/auth';
 import { useGameStore } from '@/store/game';
 import { useFriendStore as useFriendsStore } from '@/store/friends';
 import { LobbyScreen } from '@/components/lobby/lobby-screen';
-import { PlayerProfileForm } from '@/components/join/PlayerProfileForm';
-import { loadRoomJoinProfile, saveRoomJoinProfile, RoomJoinProfile } from '@/lib/avatars';
 import { GameMode, GameSettings } from '@/types';
 
 const GameScreen = dynamic(() => import('@/components/game/game-screen').then(m => ({ default: m.GameScreen })), { ssr: false });
@@ -55,20 +53,6 @@ export default function RoomPage() {
   const mode: GameMode = (searchParams.get('mode') as GameMode) || room?.mode || room?.settings?.mode || 'CLASSIC';
 
   const createdRef = useRef(false);
-  const [profile, setProfile] = useState<RoomJoinProfile | null>(null);
-  const [profileReady, setProfileReady] = useState(false);
-  const [needsProfile, setNeedsProfile] = useState(false);
-
-  useEffect(() => {
-    setProfile(loadRoomJoinProfile());
-    setProfileReady(true);
-  }, []);
-
-  const handleProfileSubmit = useCallback((name: string, avatar: string) => {
-    saveRoomJoinProfile({ name, avatar });
-    setProfile({ name, avatar });
-    setNeedsProfile(false);
-  }, []);
 
   const initialSettings = useMemo(() => {
     if (code !== 'CREATE') return null;
@@ -95,19 +79,15 @@ export default function RoomPage() {
   }, []);
 
   useEffect(() => {
-    if (!socket || !connected || !profileReady) return;
+    if (!socket || !connected) return;
     if (code === 'CREATE') {
       if (createdRef.current) return;
       createdRef.current = true;
-      joinRoom('CREATE', profile ? { username: profile.name, avatar: profile.avatar } : undefined);
+      joinRoom('CREATE');
     } else if (code?.length === 6) {
-      if (profile) {
-        joinRoom(code, { username: profile.name, avatar: profile.avatar });
-      } else if (!needsProfile) {
-        setNeedsProfile(true);
-      }
+      joinRoom(code);
     }
-  }, [socket, connected, code, joinRoom, profile, profileReady, needsProfile]);
+  }, [socket, connected, code, joinRoom]);
 
   useEffect(() => {
     if (room && code === 'CREATE' && room.code !== 'CREATE') {
@@ -287,34 +267,6 @@ export default function RoomPage() {
       </Dialog>
 
       <CountdownOverlay countdown={countdown} isActive={gameStatus === 'COUNTDOWN'} />
-
-      {needsProfile && !room && (
-        <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto">
-          <div className="w-full max-w-lg">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="glass rounded-2xl p-6"
-            >
-              <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold mb-1">
-                  <span className="text-gradient">Set Your Identity</span>
-                </h2>
-                <p className="text-muted-foreground text-sm">
-                  Choose the name and avatar you want to use in room <span className="font-mono font-bold">{code}</span>
-                </p>
-              </div>
-              <PlayerProfileForm
-                initialName={effectiveUser?.username || ''}
-                initialAvatar={effectiveUser?.avatar || ''}
-                accountAvatar={effectiveUser?.avatar}
-                submitLabel="Join Room"
-                onSubmit={handleProfileSubmit}
-              />
-            </motion.div>
-          </div>
-        </div>
-      )}
 
       <AnimatePresence>
         {showResults && (

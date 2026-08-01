@@ -79,9 +79,6 @@ export interface AuthenticatedSocket extends Socket {
   userId?: string;
   username?: string;
   avatar?: string;
-  data: {
-    [key: string]: any;
-  };
 }
 
 export interface ServerToClientEvents {
@@ -126,7 +123,7 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  'room:join': (code: string, opts?: { username?: string; avatar?: string }) => void;
+  'room:join': (code: string) => void;
   'room:leave': () => void;
   'room:ready': () => void;
   'room:chat': (message: string) => void;

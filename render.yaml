@@ -3,13 +3,11 @@ services:
     name: song-game-api
     runtime: node
     plan: free
-    buildCommand: cd backend && npm install --include=dev && npx prisma generate && npm run build
-    startCommand: cd backend && npm start
-    healthCheckPath: /health
+    buildCommand: npm install --include=dev && npm run build:packages && npm run db:generate -w apps/api && npm run build -w apps/api
+    startCommand: npm run start -w apps/api
+    healthCheckPath: /api/health
     envVars:
       - key: FRONTEND_URL
-        value: https://song-game-web.vercel.app
-      - key: CORS_ORIGIN
         value: https://song-game-web.vercel.app
       - key: NODE_ENV
         value: production
