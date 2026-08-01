@@ -17,11 +17,23 @@ import { logger } from '../utils/logger';
 import { getRedis } from '../redis';
 import { getPrisma } from '../database';
 
+export interface JoinOptions {
+  username?: string;
+  avatar?: string;
+}
+
 const PREVIEW_DURATION = 10;
 const ANSWER_DURATION = 15;
 const COUNTDOWN_SECONDS = 3;
 
 const userSocketMap = new Map<string, string>();
+
+function sanitizeJoinOpts(opts?: JoinOptions): { username: string; avatar: string } {
+  return {
+    username: typeof opts?.username === 'string' ? opts.username.trim().slice(0, 20) : '',
+    avatar: typeof opts?.avatar === 'string' ? opts.avatar.trim().slice(0, 500) : '',
+  };
+}
 
 function getUserIdFromToken(token?: string): { userId?: string } | null {
   if (!token) return null;
@@ -55,7 +67,7 @@ export function setupSocketHandlers(io: Server, prisma: PrismaClient, redis: Red
       }
     }
 
-    socket.on('room:join', (code: string) => handleJoin(socket, code, io, prisma, roomService));
+    socket.on('room:join', (code: string, opts?: JoinOptions) => handleJoin(socket, code, opts, io, prisma, roomService));
     socket.on('room:leave', () => handleLeave(socket, io, roomService));
     socket.on('room:ready', () => handleReady(socket, io, roomService));
     socket.on('room:chat', (message: string) => handleChat(socket, message, io, roomService));
@@ -155,7 +167,11 @@ function calculateScore(responseTimeSeconds: number): { basePoints: number; spee
   return { basePoints, speedBonus, totalPoints, speedTier };
 }
 
-async function handleJoin(socket: AuthenticatedSocket, code: string, io: Server, prisma: PrismaClient, roomService: RoomService) {
+async function handleJoin(socket: AuthenticatedSocket, code: string, opts: JoinOptions | undefined, io: Server, prisma: PrismaClient, roomService: RoomService) {
+  const joinOpts = sanitizeJoinOpts(opts);
+  const username = joinOpts.username || socket.username || '';
+  const avatar = joinOpts.avatar || socket.avatar || '';
+
   if (code === 'CREATE') {
     const roomCode = await generateUniqueRoomCode(getRedis());
     const playerId = uuidv4();
@@ -163,8 +179,8 @@ async function handleJoin(socket: AuthenticatedSocket, code: string, io: Server,
     const player: PlayerSession = {
       id: playerId,
       userId: socket.userId,
-      username: socket.username || `Player${playerId.slice(0, 4)}`,
-      avatar: socket.avatar || '',
+      username: username || `Player${playerId.slice(0, 4)}`,
+      avatar,
       score: 0, correctAnswers: 0, totalAnswers: 0,
       avgResponseTime: 0, rank: 0,
       isHost: true, isReady: false, isSpectator: false, isAlive: true,
@@ -201,6 +217,9 @@ async function handleJoin(socket: AuthenticatedSocket, code: string, io: Server,
   const existingPlayer = [...room.players.values(), ...room.spectators.values()]
     .find(p => p.socketId === socket.id);
   if (existingPlayer) {
+    if (joinOpts.username) { existingPlayer.username = username; }
+    if (joinOpts.avatar) { existingPlayer.avatar = avatar; }
+    await roomService.createRoom(room);
     socket.join(code);
     socket.data.roomCode = code;
     socket.emit('room:joined', serializeRoom(room));
@@ -211,6 +230,8 @@ async function handleJoin(socket: AuthenticatedSocket, code: string, io: Server,
     .find(p => socket.userId && p.userId && p.userId === socket.userId);
   if (existingUser) {
     existingUser.socketId = socket.id;
+    if (joinOpts.username) { existingUser.username = username; }
+    if (joinOpts.avatar) { existingUser.avatar = avatar; }
     await roomService.createRoom(room);
     socket.join(code);
     socket.data.roomCode = code;
@@ -226,6 +247,7 @@ async function handleJoin(socket: AuthenticatedSocket, code: string, io: Server,
   if (room.password && !socket.data.passwordVerified) {
     socket.emit('room:password-required');
     socket.data.pendingRoom = code;
+    socket.data.pendingJoinOpts = opts;
     return;
   }
 
@@ -244,8 +266,8 @@ async function handleJoin(socket: AuthenticatedSocket, code: string, io: Server,
   const player: PlayerSession = {
     id: playerId,
     userId: socket.userId,
-    username: socket.username || `Player${playerId.slice(0, 4)}`,
-    avatar: socket.avatar || '',
+    username: username || `Player${playerId.slice(0, 4)}`,
+    avatar,
     score: 0, correctAnswers: 0, totalAnswers: 0,
     avgResponseTime: 0, rank: 0,
     isHost: room.players.size === 0 && room.status === 'WAITING',
@@ -385,7 +407,9 @@ async function handlePassword(socket: AuthenticatedSocket, password: string, io:
 
   socket.data.passwordVerified = true;
   socket.emit('room:password-correct');
-  await handleJoin(socket, code, io, getPrisma(), roomService);
+  const pendingOpts = socket.data.pendingJoinOpts;
+  socket.data.pendingJoinOpts = undefined;
+  await handleJoin(socket, code, pendingOpts, io, getPrisma(), roomService);
 }
 
 async function handleReady(socket: AuthenticatedSocket, io: Server, roomService: RoomService) {

@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LogIn, ArrowRight, ArrowLeft, Swords, Shuffle, Clock,
   Hash, History, X, Search, Users, Music, Sparkles,
-  DoorOpen, AlertCircle, CheckCircle2
+  DoorOpen, AlertCircle, CheckCircle2, User
 } from 'lucide-react';
 import { useAuthStore } from '@/store/auth';
 import { useSocket } from '@/hooks/useSocket';
@@ -16,6 +16,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Avatar } from '@/components/ui/avatar';
+import { PlayerProfileForm } from '@/components/join/PlayerProfileForm';
+import { loadRoomJoinProfile, saveRoomJoinProfile } from '@/lib/avatars';
 import { GAME_MODES } from '@/types';
 
 const RECENT_ROOMS_KEY = 'sg-recent-rooms';
@@ -25,6 +27,12 @@ interface RecentRoom {
   mode: string;
   timestamp: number;
 }
+
+type PendingAction =
+  | { type: 'code'; code: string }
+  | { type: 'recent'; code: string }
+  | { type: 'quick' }
+  | { type: 'random' };
 
 function getTimeAgo(timestamp: number): string {
   const diff = Date.now() - timestamp;
@@ -73,6 +81,10 @@ export default function JoinRoomPage() {
   const [joining, setJoining] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [recentRooms, setRecentRooms] = useState<RecentRoom[]>([]);
+  const [step, setStep] = useState<'code' | 'profile'>('code');
+  const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
+  const [profileName, setProfileName] = useState('');
+  const [profileAvatar, setProfileAvatar] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { initialize(); }, [initialize]);
@@ -97,14 +109,14 @@ export default function JoinRoomPage() {
     setError(null);
   };
 
-  const joinRoom = useCallback((roomCode: string, roomPassword?: string) => {
+  const joinRoom = useCallback((roomCode: string, opts?: { username?: string; avatar?: string }, roomPassword?: string) => {
     if (!socket || !connected) { setError('Not connected to server. Please try again.'); return; }
     if (roomCode.length !== 6) { setError('Room code must be 6 characters.'); return; }
 
     setJoining(true);
     setError(null);
 
-    socket.emit('room:join', roomCode);
+    socket.emit('room:join', roomCode, opts);
 
     const onJoined = (data: any) => {
       socket.off('room:joined', onJoined);
@@ -133,14 +145,22 @@ export default function JoinRoomPage() {
     }, 10000);
   }, [socket, connected, router]);
 
-  const handleJoin = () => joinRoom(code);
+  const beginJoin = useCallback((action: PendingAction) => {
+    if (!socket || !connected) { setError('Not connected to server. Please try again.'); return; }
+    const saved = loadRoomJoinProfile();
+    setProfileName(saved?.name || user?.username || '');
+    setProfileAvatar(saved?.avatar || user?.avatar || '');
+    setPendingAction(action);
+    setStep('profile');
+    setError(null);
+  }, [socket, connected, user]);
 
-  const handleQuickMatch = useCallback(() => {
+  const handleQuickMatchWith = useCallback((name: string, avatar: string) => {
     if (!socket || !connected) { setError('Not connected to server.'); return; }
     setJoining(true);
     setError(null);
 
-    socket.emit('room:quick-match');
+    socket.emit('room:quick-match', { username: name, avatar });
 
     const onJoined = (data: any) => {
       socket.off('room:joined', onJoined);
@@ -168,12 +188,12 @@ export default function JoinRoomPage() {
     }, 15000);
   }, [socket, connected, router]);
 
-  const handleRandomRoom = useCallback(() => {
+  const handleRandomRoomWith = useCallback((name: string, avatar: string) => {
     if (!socket || !connected) { setError('Not connected to server.'); return; }
     setJoining(true);
     setError(null);
 
-    socket.emit('room:random');
+    socket.emit('room:random', { username: name, avatar });
 
     const onJoined = (data: any) => {
       socket.off('room:joined', onJoined);
@@ -200,6 +220,23 @@ export default function JoinRoomPage() {
       setError('Finding a room timed out.');
     }, 15000);
   }, [socket, connected, router]);
+
+  const handleProfileSubmit = useCallback((name: string, avatar: string) => {
+    saveRoomJoinProfile({ name, avatar });
+    if (!pendingAction) return;
+    switch (pendingAction.type) {
+      case 'code':
+      case 'recent':
+        joinRoom(pendingAction.code, { username: name, avatar });
+        break;
+      case 'quick':
+        handleQuickMatchWith(name, avatar);
+        break;
+      case 'random':
+        handleRandomRoomWith(name, avatar);
+        break;
+    }
+  }, [pendingAction, joinRoom, handleQuickMatchWith, handleRandomRoomWith]);
 
   const clearRecentRooms = () => {
     localStorage.removeItem(RECENT_ROOMS_KEY);
@@ -235,9 +272,11 @@ export default function JoinRoomPage() {
 
           <motion.div variants={itemVariants} className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold mb-2">
-              <span className="text-gradient">Join a Room</span>
+              <span className="text-gradient">{step === 'profile' ? 'Set Your Identity' : 'Join a Room'}</span>
             </h1>
-            <p className="text-muted-foreground">Enter a room code or find a game to join</p>
+            <p className="text-muted-foreground">
+              {step === 'profile' ? 'Choose the name and avatar you want to use in the room' : 'Enter a room code or find a game to join'}
+            </p>
           </motion.div>
 
           {error && (
@@ -251,7 +290,45 @@ export default function JoinRoomPage() {
             </motion.div>
           )}
 
-          <motion.div variants={itemVariants}>
+          <AnimatePresence mode="wait">
+            {step === 'profile' ? (
+              <motion.div
+                key="profile"
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                exit={{ opacity: 0, y: -10 }}
+              >
+                <Card className="glass mb-6 border-white/10">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <User className="w-5 h-5 text-purple-400" />
+                      Your Identity
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <PlayerProfileForm
+                      initialName={profileName}
+                      initialAvatar={profileAvatar}
+                      accountAvatar={user?.avatar}
+                      submitting={joining}
+                      submitLabel={joining ? 'Joining...' : 'Join Room'}
+                      onSubmit={handleProfileSubmit}
+                    />
+                    <Button
+                      variant="ghost"
+                      className="w-full mt-3"
+                      disabled={joining}
+                      onClick={() => { setStep('code'); setError(null); }}
+                    >
+                      <ArrowLeft className="w-4 h-4 mr-1" /> Back to room code
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ) : (
+              <motion.div key="code" initial="hidden" animate="visible" variants={containerVariants}>
+                <motion.div variants={itemVariants}>
             <Card className="glass mb-6 border-white/10 overflow-visible">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-lg">
@@ -277,7 +354,7 @@ export default function JoinRoomPage() {
                     placeholder="Enter code"
                     value={code}
                     onChange={(e) => handleCodeChange(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && isValidCode && handleJoin()}
+                    onKeyDown={(e) => e.key === 'Enter' && isValidCode && beginJoin({ type: 'code', code })}
                     maxLength={6}
                     inputMode="text"
                     autoComplete="off"
@@ -308,11 +385,10 @@ export default function JoinRoomPage() {
                   size="lg"
                   className="w-full gap-2 h-12 md:h-14 text-base"
                   disabled={!isValidCode || joining || !connected}
-                  loading={joining}
-                  onClick={handleJoin}
+                  onClick={() => beginJoin({ type: 'code', code })}
                 >
                   <LogIn className="w-4 h-4" />
-                  {joining ? 'Joining...' : 'Join Room'}
+                  Continue
                   <ArrowRight className="w-4 h-4" />
                 </Button>
 
@@ -336,9 +412,8 @@ export default function JoinRoomPage() {
                   variant="gradient"
                   size="lg"
                   className="w-full gap-2"
-                  loading={joining}
                   disabled={joining || !connected}
-                  onClick={handleQuickMatch}
+                  onClick={() => beginJoin({ type: 'quick' })}
                 >
                   <Shuffle className="w-4 h-4" />
                   Quick Match
@@ -347,9 +422,8 @@ export default function JoinRoomPage() {
                   variant="outline"
                   size="lg"
                   className="w-full gap-2"
-                  loading={joining}
                   disabled={joining || !connected}
-                  onClick={handleRandomRoom}
+                  onClick={() => beginJoin({ type: 'random' })}
                 >
                   <Search className="w-4 h-4" />
                   Random Room
@@ -384,7 +458,7 @@ export default function JoinRoomPage() {
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: -10 }}
                           whileHover={{ x: 4 }}
-                          onClick={() => joinRoom(room.code)}
+                          onClick={() => beginJoin({ type: 'recent', code: room.code })}
                           disabled={joining}
                           className="w-full flex items-center gap-3 p-3 rounded-lg glass glass-hover text-left"
                         >
@@ -419,6 +493,9 @@ export default function JoinRoomPage() {
               Home
             </Link>
           </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </div>
     </main>
