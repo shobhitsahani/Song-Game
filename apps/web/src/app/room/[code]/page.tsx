@@ -24,6 +24,7 @@ export default function RoomPage() {
   const searchParams = useSearchParams();
   const codeParam = params.code as string;
   const nameParam = searchParams.get('name') || '';
+  const avatarParam = searchParams.get('avatar') || '';
   const { socket, connected, reconnecting } = useSocket();
   const store = useGameStore();
 
@@ -99,6 +100,7 @@ export default function RoomPage() {
       if (codeRef.current) {
         socket.emit('room:join', codeRef.current, {
           username: nameParam || undefined,
+          avatar: avatarParam || undefined,
           playerId: localPlayerIdRef.current || undefined,
         });
       }
@@ -120,7 +122,7 @@ export default function RoomPage() {
       socket.off('connect', onSocketConnect);
       socket.off('disconnect', onSocketDisconnect);
     };
-  }, [socket, nameParam, resetGameState]);
+  }, [socket, nameParam, avatarParam, resetGameState]);
 
   useEffect(() => {
     if (!socket || !connected) return;

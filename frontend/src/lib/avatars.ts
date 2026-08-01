@@ -1,26 +1,19 @@
-export const AVATAR_BASE = 'https://api.dicebear.com/7.x';
-
 export interface DicebearAvatar {
   id: string;
   url: string;
 }
 
-export const DICEBEAR_AVATARS: DicebearAvatar[] = [
-  'adventurer',
-  'avataaars',
-  'big-ears',
-  'bottts',
-  'croodles',
-  'fun-emoji',
-  'identicon',
-  'lorelei',
-  'micah',
-  'miniavs',
-  'open-peeps',
-  'pixel-art',
-].map((style) => ({
-  id: style,
-  url: `${AVATAR_BASE}/${style}/svg?seed=SongGame`,
+const ANIMALS = ['🦁', '🐯', '🐻', '🐼', '🐨', '🦊', '🐸', '🐵', '🦄', '🐙'];
+const BACKGROUNDS = ['b6e3f4', 'ffd5dc', 'ffdfbf', 'd1f4d9', 'dbeafe', 'fde68a', 'ddd6fe', 'fecdd3', 'a7f3d0', 'fbcfe8'];
+
+function animalAvatar(emoji: string, bg: string): string {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="64" fill="#${bg}"/><text x="64" y="84" font-size="72" text-anchor="middle" dominant-baseline="middle">${emoji}</text></svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
+export const DICEBEAR_AVATARS: DicebearAvatar[] = ANIMALS.map((emoji, i) => ({
+  id: `animal-${i + 1}`,
+  url: animalAvatar(emoji, BACKGROUNDS[i]),
 }));
 
 export const MAX_NAME_LENGTH = 20;
