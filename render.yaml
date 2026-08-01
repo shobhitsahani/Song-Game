@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: song-game-api
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build -w apps/api
+    startCommand: npm run start -w apps/api
+    healthCheckPath: /api/health
+    envVars:
+      - key: FRONTEND_URL
+        value: https://song-game-web.vercel.app
+      - key: NODE_ENV
+        value: production

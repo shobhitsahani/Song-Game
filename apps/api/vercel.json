@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "fluid": true,
+  "installCommand": "echo 'bundle is self-contained, skipping install'",
+  "builds": [
+    {
+      "src": "vercel/api.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/vercel/api.js"
+    }
+  ]
+}
