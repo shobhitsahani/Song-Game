@@ -3,11 +3,12 @@ services:
     name: song-game-api
     runtime: node
     plan: free
-    buildCommand: npm install --include=dev && npm run build:packages && npm run db:generate -w apps/api && npm run build -w apps/api
-    startCommand: npm run start -w apps/api
+    buildCommand: npm install --include=dev && npx turbo run db:generate build --filter=apps-api
+    startCommand: npm run start --workspace=apps-api
     healthCheckPath: /api/health
     envVars:
       - key: FRONTEND_URL
         value: https://song-game-web.vercel.app
       - key: NODE_ENV
         value: production
+

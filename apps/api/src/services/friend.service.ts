@@ -64,18 +64,26 @@ export async function getFriends(userId: string): Promise<Friend[]> {
     },
   });
 
-  const result: Friend[] = friends.map((f) => {
-    const friend = f.userId === userId ? f.friend : f.user;
-    return {
-      id: friend.id,
-      username: friend.username,
-      avatar: friend.avatar,
-      xp: friend.xp,
-      level: friend.level,
-      isOnline: false,
-      since: f.createdAt.toISOString(),
-    };
-  });
+  const result: Friend[] = friends.map(
+    (f: {
+      userId: string;
+      friendId: string;
+      createdAt: Date;
+      user: { id: string; username: string; avatar: string | null; xp: number; level: number };
+      friend: { id: string; username: string; avatar: string | null; xp: number; level: number };
+    }) => {
+      const friend = f.userId === userId ? f.friend : f.user;
+      return {
+        id: friend.id,
+        username: friend.username,
+        avatar: friend.avatar,
+        xp: friend.xp,
+        level: friend.level,
+        isOnline: false,
+        since: f.createdAt.toISOString(),
+      };
+    },
+  );
 
   await redis.setex(cacheKey, 30, JSON.stringify(result)).catch(() => {});
   return result;
@@ -90,14 +98,19 @@ export async function getPendingRequests(userId: string): Promise<FriendRequest[
     },
   });
 
-  return requests.map((r) => ({
-    id: r.user.id,
-    username: r.user.username,
-    avatar: r.user.avatar,
-    xp: r.user.xp,
-    level: r.user.level,
-    createdAt: r.createdAt.toISOString(),
-  }));
+  return requests.map(
+    (r: {
+      createdAt: Date;
+      user: { id: string; username: string; avatar: string | null; xp: number; level: number };
+    }) => ({
+      id: r.user.id,
+      username: r.user.username,
+      avatar: r.user.avatar,
+      xp: r.user.xp,
+      level: r.user.level,
+      createdAt: r.createdAt.toISOString(),
+    }),
+  );
 }
 
 export async function setUserOnline(userId: string, socketId: string): Promise<void> {

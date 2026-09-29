@@ -15,26 +15,17 @@ command -v npm >/dev/null 2>&1 || { echo "npm is required but not installed. Abo
 echo "Node.js: $(node --version)"
 echo "npm: $(npm --version)"
 
-# Install backend dependencies
+# Install all Turborepo workspace dependencies from the repo root
 echo ""
-echo "Installing backend dependencies..."
-cd backend
+echo "Installing workspace dependencies..."
 npm install
-cp .env.example .env 2>/dev/null || true
-echo "Backend dependencies installed."
+echo "Workspace dependencies installed."
 
-# Generate Prisma client
+# Generate Prisma client via Turbo
 echo ""
 echo "Generating Prisma client..."
-npx prisma generate
+npm run db:generate
 echo "Prisma client generated."
-
-# Install frontend dependencies
-echo ""
-echo "Installing frontend dependencies..."
-cd ../frontend
-npm install
-echo "Frontend dependencies installed."
 
 # Setup complete
 echo ""
@@ -43,13 +34,13 @@ echo "  Setup Complete!"
 echo "================================"
 echo ""
 echo "Next steps:"
-echo "  1. Configure environment variables in backend/.env"
+echo "  1. Configure environment variables in apps/api/.env"
 echo "  2. Start PostgreSQL and Redis"
-echo "  3. Run database migrations: cd backend && npm run db:migrate"
-echo "  4. Seed the database: cd backend && npm run db:seed"
-echo "  5. Start backend: cd backend && npm run dev"
-echo "  6. Start frontend: cd frontend && npm run dev"
+echo "  3. Push the schema: npm run db:push"
+echo "  4. Start everything: npm run dev"
+echo "  5. Start API only: npm run dev:api"
+echo "  6. Start web only: npm run dev:web"
 echo ""
-echo "Backend: http://localhost:4000"
-echo "Frontend: http://localhost:3000"
+echo "API: http://localhost:3001"
+echo "Web: http://localhost:3000"
 echo ""

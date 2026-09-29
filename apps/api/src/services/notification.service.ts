@@ -31,15 +31,25 @@ export async function getNotifications(userId: string, limit = 50): Promise<AppN
     take: limit,
   });
 
-  return notifications.map((n) => ({
-    id: n.id,
-    type: n.type as NotificationType,
-    title: n.title,
-    message: n.message,
-    data: (n.data as Record<string, unknown>) || {},
-    read: n.read,
-    createdAt: n.createdAt.toISOString(),
-  }));
+  return notifications.map(
+    (n: {
+      id: string;
+      type: string;
+      title: string;
+      message: string;
+      data: unknown;
+      read: boolean;
+      createdAt: Date;
+    }) => ({
+      id: n.id,
+      type: n.type as NotificationType,
+      title: n.title,
+      message: n.message,
+      data: (n.data as Record<string, unknown>) || {},
+      read: n.read,
+      createdAt: n.createdAt.toISOString(),
+    }),
+  );
 }
 
 export async function markNotificationRead(notificationId: string, userId: string): Promise<void> {

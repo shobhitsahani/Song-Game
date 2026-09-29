@@ -44,16 +44,27 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
       take: 100,
     });
 
-    const entries = users.map((u) => ({
-      userId: u.id,
-      username: u.username,
-      displayName: u.displayName,
-      avatar: u.avatar,
-      xp: u.xp,
-      wins: u.wins,
-      totalGames: u.totalGames,
-      level: u.level,
-    }));
+    const entries = users.map(
+      (u: {
+        id: string;
+        username: string;
+        displayName: string | null;
+        avatar: string | null;
+        xp: number;
+        wins: number;
+        totalGames: number;
+        level: number;
+      }) => ({
+        userId: u.id,
+        username: u.username,
+        displayName: u.displayName,
+        avatar: u.avatar,
+        xp: u.xp,
+        wins: u.wins,
+        totalGames: u.totalGames,
+        level: u.level,
+      }),
+    );
 
     const redisClient = getRedis();
     await redisClient.setex(cacheKey, 60, JSON.stringify(entries));

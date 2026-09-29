@@ -2,25 +2,31 @@
   "name": "song-game",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "npm@11.9.0",
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
-    "dev:api": "npm run dev -w apps/api",
-    "dev:web": "npm run dev -w apps/web",
-    "build": "npm run build -w packages/types && npm run build -w packages/shared && npm run build -w packages/socket && npm run build -w apps/api && npm run build -w apps/web",
-    "build:packages": "npm run build -w packages/types && npm run build -w packages/shared && npm run build -w packages/socket",
-    "lint": "npm run lint -w apps/api && npm run lint -w apps/web",
-    "typecheck": "npm run typecheck -w apps/api && npm run typecheck -w apps/web",
-    "clean": "rm -rf apps/*/dist apps/*/.next packages/*/dist"
+    "dev": "turbo run dev --concurrency=100",
+    "dev:api": "turbo run dev --filter=apps-api --concurrency=100",
+    "dev:web": "turbo run dev --filter=apps-web --concurrency=100",
+    "build": "turbo run build",
+    "build:packages": "turbo run build --filter=@song-game/types --filter=@song-game/shared --filter=@song-game/socket --filter=@song-game/ui",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "db:generate": "turbo run db:generate --filter=apps-api",
+    "db:push": "turbo run db:push --filter=apps-api",
+    "db:migrate": "turbo run db:migrate --filter=apps-api"
   },
   "devDependencies": {
     "concurrently": "^9.0.0",
+    "turbo": "^2.11.5",
     "typescript": "^5.6.0"
   },
   "dependencies": {
     "nodemon": "^3.1.14"
   }
 }
+

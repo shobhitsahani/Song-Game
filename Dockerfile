@@ -1,31 +1,31 @@
 FROM node:22-alpine AS base
-RUN npm i -g pnpm
+RUN npm i -g turbo@^2
 
-FROM base AS deps
+FROM base AS pruner
 WORKDIR /app
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/api/package.json apps/api/
-COPY apps/web/package.json apps/web/
-COPY packages/ ./packages/
-RUN pnpm install --frozen-lockfile
-
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages ./packages
 COPY . .
-ENV NEXT_STANDALONE=1
-RUN cd apps/web && pnpm build
+RUN turbo prune apps/web apps/api --docker
+
+FROM base AS installer
+WORKDIR /app
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/package-lock.json ./package-lock.json
+RUN npm ci
+
+COPY --from=pruner /app/out/full/ .
+RUN npx turbo run build --filter=apps-web --filter=apps-api
 
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=builder /app/apps/api/dist ./apps/api/dist
-COPY --from=builder /app/apps/api/package.json ./apps/api/
-COPY --from=builder /app/apps/web/.next/standalone/apps/web ./apps/web
-COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=builder /app/apps/web/public ./apps/web/public
-COPY --from=builder /app/packages ./packages
-COPY --from=deps /app/node_modules ./node_modules
-COPY package.json .
+ENV NEXT_STANDALONE=1
+COPY --from=installer /app/apps/api/dist ./apps/api/dist
+COPY --from=installer /app/apps/api/package.json ./apps/api/
+COPY --from=installer /app/apps/api/prisma ./apps/api/prisma
+COPY --from=installer /app/apps/web/.next/standalone ./standalone
+COPY --from=installer /app/apps/web/.next/static ./standalone/apps/web/.next/static
+COPY --from=installer /app/apps/web/public ./standalone/apps/web/public
+COPY --from=installer /app/packages ./packages
+COPY --from=installer /app/package.json ./package.json
 EXPOSE 3000 3001
+
