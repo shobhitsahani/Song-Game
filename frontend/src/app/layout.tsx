@@ -1,21 +1,6 @@
 ﻿import type { Metadata, Viewport } from 'next';
-import { Unbounded, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
-
-const display = Unbounded({
-  subsets: ['latin'],
-  weight: ['500', '600', '800'],
-  variable: '--font-display',
-  display: 'swap',
-});
-
-const sans = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-sans',
-  display: 'swap',
-});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://songgame.app';
 
@@ -54,18 +39,19 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 1,
   viewportFit: 'cover',
-  themeColor: '#070610',
+  themeColor: '#0a0a1a',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#f7a83a" />
-        <meta name="msapplication-TileColor" content="#070610" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#7c3aed" />
+        <meta name="msapplication-TileColor" content="#0a0a1a" />
       </head>
-      <body className={`${sans.variable} ${display.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <a href="#main-content" className="skip-link">Skip to content</a>
         <Providers>
           <div id="main-content">{children}</div>

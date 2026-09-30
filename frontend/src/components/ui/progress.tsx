@@ -10,11 +10,11 @@ const progressVariants = cva(
   {
     variants: {
       color: {
-        default: 'bg-[linear-gradient(90deg,hsl(262_84%_66%),hsl(292_84%_61%))] shadow-[0_0_12px_hsla(262_84%_66%/0.5)]',
-        success: 'bg-gradient-to-r from-emerald-500 to-green-500 shadow-[0_0_12px_hsla(160_84%_50%/0.4)]',
-        warning: 'bg-gradient-to-r from-amber-500 to-orange-500 shadow-[0_0_12px_hsla(38_92%_50%/0.4)]',
-        danger: 'bg-gradient-to-r from-rose-500 to-red-500 shadow-[0_0_12px_hsla(0_84%_55%/0.4)]',
-        premium: 'bg-[linear-gradient(90deg,hsl(262_84%_66%),hsl(292_84%_61%)_50%,hsl(217_91%_60%))]',
+        default: 'bg-gradient-to-r from-purple-600 to-pink-600',
+        success: 'bg-gradient-to-r from-green-500 to-emerald-500',
+        warning: 'bg-gradient-to-r from-yellow-500 to-orange-500',
+        danger: 'bg-gradient-to-r from-red-500 to-rose-500',
+        premium: 'bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500',
       },
     },
     defaultVariants: {
@@ -55,7 +55,7 @@ function Progress({
           )}
         </div>
       )}
-      <div className="relative h-2 w-full overflow-hidden rounded-full bg-white/[0.06] ring-1 ring-inset ring-white/[0.05]" role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={max}>
+      <div className="relative h-2 w-full overflow-hidden rounded-full bg-secondary" role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={max}>
         <motion.div
           className={cn(progressVariants({ color }), barClassName)}
           initial={{ width: 0 }}
