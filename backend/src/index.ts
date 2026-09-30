@@ -30,6 +30,12 @@ import achievementRoutes from './routes/achievements';
 const app = express();
 const httpServer = createServer(app);
 
+// Allow a comma-separated list of origins (e.g. "http://localhost:3000,http://localhost:3001")
+const allowedOrigins = [config.CORS_ORIGIN, config.FRONTEND_URL]
+  .flatMap((value) => value.split(','))
+  .map((origin) => origin.trim())
+  .filter((origin, index, list) => origin.length > 0 && list.indexOf(origin) === index);
+
 const prisma = getPrisma();
 const redis = getRedis();
 const roomService = new RoomService(redis);
@@ -42,7 +48,7 @@ app.use(compression({ level: 6, threshold: 256 }));
 app.use(cookieParser(config.JWT_SECRET));
 app.use(express.json({ limit: '1mb' }));
 app.use(cors({
-  origin: config.CORS_ORIGIN,
+  origin: allowedOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -55,7 +61,7 @@ app.set('trust proxy', 1);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: config.CORS_ORIGIN,
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
     credentials: true,
   },
