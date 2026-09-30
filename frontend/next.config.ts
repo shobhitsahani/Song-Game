@@ -2,6 +2,13 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: __dirname,
+  redirects: async () => [
+    {
+      source: '/joinroom',
+      destination: '/join-room',
+      permanent: false,
+    },
+  ],
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'i.scdn.co' },
