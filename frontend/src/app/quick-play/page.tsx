@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Swords, LoaderCircle, Users, Clock, ArrowLeft } from 'lucide-react';
+import { Swords, Loader2, Users, Clock, ArrowLeft } from 'lucide-react';
 import { Navbar } from '@/components/home/Navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -79,7 +79,7 @@ export default function QuickPlayPage() {
             <CardContent>
               {status === 'idle' && (
                 <>
-                  <Swords className="w-16 h-16 text-violet-400 mx-auto mb-6" />
+                  <Swords className="w-16 h-16 text-purple-400 mx-auto mb-6" />
                   <h1 className="text-3xl font-bold mb-2">Quick Match</h1>
                   <p className="text-muted-foreground mb-8">Find a game instantly</p>
                   <Button size="xl" className="w-full gap-2" onClick={handleQuickMatch} disabled={!connected}>
@@ -96,7 +96,7 @@ export default function QuickPlayPage() {
                     transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                     className="w-16 h-16 mx-auto mb-6"
                   >
-                    <LoaderCircle className="w-16 h-16 text-violet-400" />
+                    <Loader2 className="w-16 h-16 text-purple-400" />
                   </motion.div>
                   <h1 className="text-2xl font-bold mb-2">Searching...</h1>
                   <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-6">

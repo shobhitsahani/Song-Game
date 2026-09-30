@@ -1,5 +1,5 @@
 'use client';
-import { AudioLines, Home, Plus, CircleUserRound } from 'lucide-react';
+import { Music, Home, Plus, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -7,8 +7,8 @@ import { cn } from '@/lib/utils';
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/create-room', label: 'Create', icon: Plus },
-  { href: '/join-room', label: 'Join', icon: AudioLines },
-  { href: '/profile', label: 'Profile', icon: CircleUserRound },
+  { href: '/join-room', label: 'Join', icon: Music },
+  { href: '/profile', label: 'Profile', icon: User },
 ];
 
 export function BottomNav() {

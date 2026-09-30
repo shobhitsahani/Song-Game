@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, Save, RotateCcw, Globe, Lock, Users, Clock, ListOrdered, AudioLines, Gamepad2, Sparkles } from 'lucide-react';
+import { Settings, Save, RotateCcw, Globe, Lock, Users, Clock, ListOrdered, Music, Gamepad2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -63,7 +63,7 @@ export function RoomSettingsPanel({ settings, onUpdate, isHost }: RoomSettingsPa
         className="glass rounded-xl p-4"
       >
         <div className="flex items-center gap-2 mb-4">
-          <Settings className="w-4 h-4 text-violet-400" />
+          <Settings className="w-4 h-4 text-purple-400" />
           <h3 className="text-sm font-semibold">Room Settings</h3>
         </div>
         <div className="grid grid-cols-2 gap-3">
@@ -106,7 +106,7 @@ export function RoomSettingsPanel({ settings, onUpdate, isHost }: RoomSettingsPa
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Settings className="w-4 h-4 text-violet-400" />
+          <Settings className="w-4 h-4 text-purple-400" />
           <h3 className="text-sm font-semibold">Room Settings</h3>
         </div>
         <AnimatePresence>
@@ -140,7 +140,7 @@ export function RoomSettingsPanel({ settings, onUpdate, isHost }: RoomSettingsPa
                 onClick={() => handleChange('mode', gm.mode)}
                 className={`text-left px-2.5 py-2 rounded-lg text-xs transition-all ${
                   localSettings.mode === gm.mode
-                    ? 'bg-violet-500/15 text-violet-200 border border-gold/30'
+                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
                     : 'bg-secondary/30 text-muted-foreground border border-transparent hover:bg-secondary/50'
                 }`}
               >
@@ -197,7 +197,7 @@ export function RoomSettingsPanel({ settings, onUpdate, isHost }: RoomSettingsPa
 
         <div>
           <label className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
-            <AudioLines className="w-3.5 h-3.5" /> Music Category
+            <Music className="w-3.5 h-3.5" /> Music Category
           </label>
           <div className="flex flex-wrap gap-1.5">
             {CATEGORIES.map((cat) => (
@@ -206,7 +206,7 @@ export function RoomSettingsPanel({ settings, onUpdate, isHost }: RoomSettingsPa
                 onClick={() => handleChange('category', cat.value)}
                 className={`px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                   localSettings.category === cat.value
-                    ? 'bg-violet-500/15 text-violet-200 border border-gold/30'
+                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
                     : 'bg-secondary/30 text-muted-foreground border border-transparent hover:bg-secondary/50'
                 }`}
               >
@@ -251,7 +251,7 @@ export function RoomSettingsPanel({ settings, onUpdate, isHost }: RoomSettingsPa
               max={16}
               value={localSettings.maxPlayers}
               onChange={(e) => handleChange('maxPlayers', parseInt(e.target.value))}
-              className="flex-1 h-2 rounded-full appearance-none bg-secondary cursor-pointer accent-violet-500"
+              className="flex-1 h-2 rounded-full appearance-none bg-secondary cursor-pointer accent-purple-500"
             />
             <Badge variant="secondary" className="w-10 text-center justify-center">
               {localSettings.maxPlayers}

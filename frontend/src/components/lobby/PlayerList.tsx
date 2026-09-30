@@ -50,7 +50,7 @@ export function PlayerList({ players, hostId, currentUserId, onKick, onBan }: Pl
                   <span className="text-yellow-400 text-xs ml-1">(Host)</span>
                 )}
                 {player.id === currentUserId && (
-                  <span className="text-violet-400 text-xs ml-1">(You)</span>
+                  <span className="text-purple-400 text-xs ml-1">(You)</span>
                 )}
               </p>
             </div>

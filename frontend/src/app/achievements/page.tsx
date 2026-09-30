@@ -32,7 +32,7 @@ export default function AchievementsPage() {
     switch (rarity?.toUpperCase()) {
       case 'COMMON': return 'border-gray-500/30 text-gray-400';
       case 'RARE': return 'border-blue-500/30 text-blue-400';
-      case 'EPIC': return 'border-gold/30 text-violet-400';
+      case 'EPIC': return 'border-purple-500/30 text-purple-400';
       case 'LEGENDARY': return 'border-yellow-500/30 text-yellow-400';
       default: return 'border-gray-500/30 text-gray-400';
     }
@@ -48,7 +48,7 @@ export default function AchievementsPage() {
         <CardContent className="p-5 flex items-start gap-4">
           <div className={cn(
             'w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0',
-            achievement.unlocked ? 'bg-violet-500/10' : 'bg-secondary'
+            achievement.unlocked ? 'bg-purple-500/10' : 'bg-secondary'
           )}>
             {achievement.unlocked ? achievement.icon || '🏆' : <Lock className="w-5 h-5 text-muted-foreground" />}
           </div>
@@ -92,7 +92,7 @@ export default function AchievementsPage() {
           </Button>
 
           <div className="flex items-center gap-3 mb-8">
-            <Award className="w-8 h-8 text-violet-400" />
+            <Award className="w-8 h-8 text-purple-400" />
             <div>
               <h1 className="text-4xl font-bold">
                 <span className="text-gradient">Achievements</span>

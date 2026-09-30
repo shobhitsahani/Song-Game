@@ -19,7 +19,7 @@ export function StatsCard({ icon, label, value, delay = 0 }: StatsCardProps) {
       className="glass rounded-xl p-3 md:p-5 glass-hover"
     >
       <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
-        <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-400">
+        <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
           {icon}
         </div>
         <span className="text-[10px] md:text-sm text-muted-foreground">{label}</span>

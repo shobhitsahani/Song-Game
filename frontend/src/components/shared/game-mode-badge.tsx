@@ -1,12 +1,12 @@
-'use client';
+﻿'use client';
 import * as React from 'react';
-import { AudioLines, MicVocal, Album, FileText, Tag, Calendar, Skull, Heart, PartyPopper, Puzzle, type LucideIcon } from 'lucide-react';
+import { Music, Mic2, Album, FileText, Tag, Calendar, Skull, Heart, PartyPopper, Puzzle, type LucideIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 const gameModes = {
-  classic: { label: 'Classic', icon: AudioLines, color: 'text-violet-400 bg-violet-500/10 border-gold/30' },
-  artist: { label: 'Artist', icon: MicVocal, color: 'text-blue-400 bg-blue-500/10 border-blue-500/30' },
+  classic: { label: 'Classic', icon: Music, color: 'text-purple-400 bg-purple-500/10 border-purple-500/30' },
+  artist: { label: 'Artist', icon: Mic2, color: 'text-blue-400 bg-blue-500/10 border-blue-500/30' },
   album: { label: 'Album', icon: Album, color: 'text-green-400 bg-green-500/10 border-green-500/30' },
   lyrics: { label: 'Lyrics', icon: FileText, color: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30' },
   genre: { label: 'Genre', icon: Tag, color: 'text-pink-400 bg-pink-500/10 border-pink-500/30' },
