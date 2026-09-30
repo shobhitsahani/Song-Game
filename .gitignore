@@ -6,6 +6,10 @@ dist/
 .env.production
 .turbo/
 *.log
+*.err
+_probe*.ps1
+probe-results.txt
+tsc-err*.txt
 .DS_Store
 coverage/
 *.tsbuildinfo
