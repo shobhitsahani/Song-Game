@@ -55,13 +55,13 @@ export default function LeaderboardPage() {
               transition={{ delay: i * 0.02 }}
               className={cn(
                 'flex items-center gap-4 rounded-xl px-4 py-3 transition-all',
-                isCurrentUser ? 'bg-purple-500/10 border border-purple-500/30' : 'bg-card border border-border hover:border-purple-500/30'
+                isCurrentUser ? 'bg-violet-500/10 border border-gold/30' : 'bg-card border border-border hover:border-gold/30'
               )}
             >
               <div className="w-8 text-center font-bold text-lg">
                 {getRankIcon(rank) || <span className={cn('text-muted-foreground', rank <= 10 ? 'text-foreground' : '')}>{rank}</span>}
               </div>
-              <Avatar className="w-10 h-10 ring-2 ring-purple-500/20">
+              <Avatar className="w-10 h-10 ring-2 ring-gold/25">
                 <AvatarImage src={entry.avatar} />
                 <AvatarFallback>{entry.username?.[0]}</AvatarFallback>
               </Avatar>

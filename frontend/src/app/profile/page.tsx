@@ -5,10 +5,10 @@ import {
   motion, AnimatePresence, useInView, stagger, useAnimate,
 } from 'framer-motion';
 import {
-  Trophy, Gamepad2, Target, Zap, Flame, Music, Clock, TrendingUp,
+  Trophy, Gamepad2, Target, Zap, Flame, AudioLines, Clock, TrendingUp,
   Settings, Users, ListMusic, Medal, ChevronUp, ChevronDown,
   Copy, Check, Crown, Sparkles, Lock, Trash2, Bell, BellOff,
-  UserPlus, Search, ExternalLink, Palette, Image as ImageIcon, AlertTriangle,
+  UserPlus, Search, ExternalLink, Palette, Image as ImageIcon, TriangleAlert,
   X, Share2, Star, ChevronRight, Calendar,
 } from 'lucide-react';
 import { cn, formatTime, formatXp, getLevelProgress, getInitials } from '@/lib/utils';
@@ -64,7 +64,7 @@ function useCountUp(end: number, duration = 1500, start = 0) {
 }
 
 function StatCard({
-  icon: Icon, label, value, suffix = '', color = 'text-purple-400',
+  icon: Icon, label, value, suffix = '', color = 'text-violet-400',
 }: {
   icon: React.ElementType; label: string; value: number; suffix?: string; color?: string;
 }) {
@@ -245,7 +245,7 @@ function PlaylistCard({ playlist, onRemove }: { playlist: DeezerPlaylist; onRemo
             <img src={playlist.image} alt={playlist.name} className="w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <Music className="h-8 w-8 text-muted-foreground/40" />
+              <AudioLines className="h-8 w-8 text-muted-foreground/40" />
             </div>
           )}
         </div>
@@ -381,7 +381,7 @@ const mockLeaderboard: LeaderboardEntry[] = [
 
 const titleColors: Record<string, string> = {
   'Music Legend': 'from-yellow-400 to-orange-400',
-  Virtuoso: 'from-purple-400 to-pink-400',
+  Virtuoso: 'from-gold to-ember',
   Maestro: 'from-blue-400 to-cyan-400',
   'Melody Maker': 'from-green-400 to-emerald-400',
   Rookie: 'from-gray-400 to-gray-300',
@@ -508,9 +508,9 @@ export default function ProfilePage() {
           animate="visible"
           className="relative overflow-hidden rounded-2xl border border-border bg-card/50 backdrop-blur-xl"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-pink-900/10 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/10 via-transparent to-ember/10 pointer-events-none" />
           <motion.div
-            className="absolute -top-20 -right-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"
+            className="absolute -top-20 -right-20 w-64 h-64 bg-violet-500/10 rounded-full blur-3xl"
             animate={{ scale: [1, 1.2, 1], rotate: [0, 45, 0] }}
             transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           />
@@ -538,7 +538,7 @@ export default function ProfilePage() {
                   {user.title && (
                     <div className={cn(
                       'inline-block mt-1 text-sm font-semibold bg-gradient-to-r bg-clip-text text-transparent',
-                      titleColors[user.title] || 'from-purple-400 to-pink-400',
+                      titleColors[user.title] || 'from-gold to-ember',
                     )}>
                       <Sparkles className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />
                       {user.title}
@@ -598,7 +598,7 @@ export default function ProfilePage() {
               <StatCard icon={Trophy} label="Total Wins" value={user.wins} color="text-yellow-400" />
               <StatCard icon={Gamepad2} label="Games Played" value={user.totalGames} color="text-blue-400" />
               <StatCard icon={Target} label="Accuracy" value={user.accuracy} suffix="%" color="text-green-400" />
-              <StatCard icon={Zap} label="Fastest" value={user.fastestAnswer} suffix="s" color="text-purple-400" />
+              <StatCard icon={Zap} label="Fastest" value={user.fastestAnswer} suffix="s" color="text-violet-400" />
               <StatCard icon={Flame} label="Best Streak" value={user.longestWinStreak} color="text-orange-400" />
             </motion.div>
 
@@ -662,7 +662,7 @@ export default function ProfilePage() {
                                 2x XP boost on wins
                               </li>
                               <li className="flex items-center gap-2 text-muted-foreground">
-                                <Star className="h-3.5 w-3.5 text-purple-400" />
+                                <Star className="h-3.5 w-3.5 text-violet-400" />
                                 Exclusive title unlock
                               </li>
                               <li className="flex items-center gap-2 text-muted-foreground">
@@ -689,7 +689,7 @@ export default function ProfilePage() {
                               className={cn(
                                 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border',
                                 badge.tier === 'legendary' ? 'bg-yellow-500/10 border-yellow-500/30 text-yellow-400' :
-                                badge.tier === 'epic' ? 'bg-purple-500/10 border-purple-500/30 text-purple-400' :
+                                badge.tier === 'epic' ? 'bg-violet-500/10 border-gold/30 text-violet-400' :
                                 badge.tier === 'rare' ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' :
                                 'bg-white/5 border-white/10 text-muted-foreground',
                               )}
@@ -950,7 +950,7 @@ export default function ProfilePage() {
                           <DialogContent>
                             <DialogHeader>
                               <DialogTitle className="flex items-center gap-2 text-destructive">
-                                <AlertTriangle className="h-5 w-5" />
+                                <TriangleAlert className="h-5 w-5" />
                                 Delete Account
                               </DialogTitle>
                               <DialogDescription>
@@ -992,7 +992,7 @@ export default function ProfilePage() {
               <Card className="p-5">
                 <CardHeader className="p-0 pb-4">
                   <CardTitle className="text-base flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-purple-400" />
+                    <TrendingUp className="h-4 w-4 text-violet-400" />
                     Leaderboard
                   </CardTitle>
                 </CardHeader>
@@ -1059,7 +1059,7 @@ export default function ProfilePage() {
               exit={{ opacity: 0, y: 40, scale: 0.95 }}
               className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40"
             >
-              <Card className="p-3 shadow-xl border-purple-500/30 bg-card/90 backdrop-blur-xl">
+              <Card className="p-3 shadow-xl border-gold/30 bg-card/90 backdrop-blur-xl">
                 <div className="flex items-center gap-3">
                   <motion.div
                     animate={{ rotate: [0, -10, 10, -5, 0] }}
@@ -1122,7 +1122,7 @@ export default function ProfilePage() {
                         b === 'platinum' ? 'border-cyan-400 bg-cyan-400/20' :
                         b === 'diamond' ? 'border-blue-400 bg-blue-400/20' :
                         'border-border bg-secondary'
-                      } ${(user.border || null) === b ? 'ring-2 ring-purple-400 scale-110' : ''}`}
+                      } ${(user.border || null) === b ? 'ring-2 ring-gold scale-110' : ''}`}
                       title={b || 'None'}
                     />
                   ))}

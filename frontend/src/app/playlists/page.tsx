@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Music, Plus, ArrowLeft, Heart, Trash2 } from 'lucide-react';
+import { AudioLines, Plus, ArrowLeft, Heart, Trash2 } from 'lucide-react';
 import { Navbar } from '@/components/home/Navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -74,7 +74,7 @@ export default function PlaylistsPage() {
             </div>
           ) : playlists.length === 0 ? (
             <div className="text-center py-16">
-              <Music className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+              <AudioLines className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-xl font-semibold mb-2">No playlists yet</h3>
               <p className="text-muted-foreground mb-6">Import your Deezer playlists to use in games</p>
               <Link href="/playlists/add">
@@ -88,7 +88,7 @@ export default function PlaylistsPage() {
                   <Card>
                     <CardContent className="p-4 flex gap-4">
                       <div className="w-16 h-16 rounded-lg bg-secondary shrink-0 overflow-hidden">
-                        {pl.image ? <img src={pl.image} alt={pl.name} className="w-full h-full object-cover" /> : <Music className="w-8 h-8 text-muted-foreground m-4" />}
+                        {pl.image ? <img src={pl.image} alt={pl.name} className="w-full h-full object-cover" /> : <AudioLines className="w-8 h-8 text-muted-foreground m-4" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-sm truncate">{pl.name}</h3>

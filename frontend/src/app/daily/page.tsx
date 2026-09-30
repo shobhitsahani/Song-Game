@@ -67,7 +67,7 @@ export default function DailyPage() {
           </Button>
 
           <div className="flex items-center gap-3 mb-8">
-            <Calendar className="w-8 h-8 text-purple-400" />
+            <Calendar className="w-8 h-8 text-violet-400" />
             <div>
               <h1 className="text-4xl font-bold">
                 <span className="text-gradient">Daily Challenge</span>
@@ -109,7 +109,7 @@ export default function DailyPage() {
           <Card className="mb-8">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-purple-400" />
+                <Calendar className="w-5 h-5 text-violet-400" />
                 Today&apos;s Challenge
               </CardTitle>
             </CardHeader>

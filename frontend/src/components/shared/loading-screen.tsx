@@ -15,8 +15,8 @@ export function LoadingScreen({ text, message, size = 'md', fullScreen = true, c
     <div className={cn(fullScreen ? 'min-h-screen' : 'min-h-[200px]', 'flex items-center justify-center', className)} role="status" aria-label={text || message || 'Loading'}>
       <div className="text-center">
         <div className={cn('relative mx-auto mb-4', dotSize)}>
-          <div className={cn('absolute inset-0 rounded-full border border-purple-500/20', dotSize)} />
-          <div className={cn('absolute inset-0 rounded-full border-2 border-transparent border-t-purple-500 animate-spin', dotSize)} />
+          <div className={cn('absolute inset-0 rounded-full border border-gold/25', dotSize)} />
+          <div className={cn('absolute inset-0 rounded-full border-2 border-transparent border-t-gold animate-spin', dotSize)} />
         </div>
         <p className="text-muted-foreground">{text || message || 'Loading...'}</p>
       </div>

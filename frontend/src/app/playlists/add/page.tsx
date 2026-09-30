@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Search, Music, ArrowLeft, Loader2 } from 'lucide-react';
+import { Search, AudioLines, ArrowLeft, LoaderCircle } from 'lucide-react';
 import { Navbar } from '@/components/home/Navbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -65,21 +65,21 @@ export default function AddPlaylistPage() {
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             />
             <Button onClick={handleSearch} disabled={!query.trim() || searching}>
-              {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+              {searching ? <LoaderCircle className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
               Search
             </Button>
           </div>
 
           {searching && (
             <div className="text-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-purple-400 mx-auto" />
+              <LoaderCircle className="w-8 h-8 animate-spin text-violet-400 mx-auto" />
               <p className="text-muted-foreground mt-2">Searching...</p>
             </div>
           )}
 
           {!searching && results.length === 0 && query && (
             <div className="text-center py-12">
-              <Music className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <AudioLines className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
               <p className="text-muted-foreground">No playlists found. Try a different search.</p>
             </div>
           )}
@@ -90,7 +90,7 @@ export default function AddPlaylistPage() {
                 <Card>
                   <CardContent className="p-4 flex items-center gap-4">
                     <div className="w-14 h-14 rounded-lg bg-secondary shrink-0 overflow-hidden">
-                      {pl.image ? <img src={pl.image} alt={pl.name} className="w-full h-full object-cover" /> : <Music className="w-6 h-6 text-muted-foreground m-4" />}
+                      {pl.image ? <img src={pl.image} alt={pl.name} className="w-full h-full object-cover" /> : <AudioLines className="w-6 h-6 text-muted-foreground m-4" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-sm truncate">{pl.name}</h3>

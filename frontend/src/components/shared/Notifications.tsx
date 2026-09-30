@@ -14,9 +14,9 @@ import type { Notification } from '@/types';
 const notificationIcons: Record<Notification['type'], ReactElement> = {
   FRIEND_REQUEST: <UserPlus className="w-4 h-4 text-blue-400" />,
   FRIEND_ACCEPT: <UserPlus className="w-4 h-4 text-green-400" />,
-  GAME_INVITE: <Gamepad2 className="w-4 h-4 text-purple-400" />,
+  GAME_INVITE: <Gamepad2 className="w-4 h-4 text-violet-400" />,
   ACHIEVEMENT_UNLOCK: <Trophy className="w-4 h-4 text-yellow-400" />,
-  LEVEL_UP: <Zap className="w-4 h-4 text-orange-400" />,
+  LEVEL_UP: <Zap className="w-4 h-4 text-fuchsia-400" />,
   DAILY_CHALLENGE: <Calendar className="w-4 h-4 text-pink-400" />,
   MATCH_START: <Users className="w-4 h-4 text-indigo-400" />,
 };
@@ -109,7 +109,7 @@ export function Notifications() {
                       exit={{ opacity: 0, x: 20 }}
                       className={cn(
                         'border-b border-white/5 p-3 last:border-0 transition-colors',
-                        !notification.read && 'bg-purple-500/5',
+                        !notification.read && 'bg-amber-500/5',
                       )}
                     >
                       <div className="flex items-start gap-3">
@@ -125,7 +125,7 @@ export function Notifications() {
                         </div>
                         {!notification.read && (
                           <div className="shrink-0">
-                            <div className="h-2 w-2 rounded-full bg-purple-500" />
+                            <div className="h-2 w-2 rounded-full bg-amber-500" />
                           </div>
                         )}
                       </div>

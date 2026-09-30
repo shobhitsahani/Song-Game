@@ -47,7 +47,7 @@ function MusicNoteParticle({ index }: { index: number }) {
 
   return (
     <motion.div
-      className="absolute text-purple-400/10 pointer-events-none select-none"
+      className="absolute text-violet-400/10 pointer-events-none select-none"
       style={{ left: `${left}%`, fontSize: size, top: -30 }}
       initial={{ y: -30, opacity: 0, rotate: 0 }}
       animate={{ y: typeof window !== 'undefined' ? window.innerHeight + 50 : 800, opacity: [0, 0.4, 0], rotate: 360 }}
@@ -94,7 +94,7 @@ export function LobbyScreen({
             animate={{ opacity: 1, y: 0 }}
             className="glass rounded-2xl p-6 relative overflow-hidden"
           >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/5 to-transparent rounded-full -mr-20 -mt-20" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-gold/5 to-transparent rounded-full -mr-20 -mt-20" />
 
             <div className="flex items-start justify-between mb-4 relative z-10">
               <div>
@@ -132,7 +132,7 @@ export function LobbyScreen({
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-purple-400" />
+                <Users className="w-5 h-5 text-violet-400" />
                 <h2 className="text-lg font-semibold">Players ({activePlayers.length})</h2>
                 {spectators.length > 0 && (
                   <Badge variant="secondary" size="sm">
@@ -162,9 +162,9 @@ export function LobbyScreen({
                     className="glass rounded-xl p-3 flex items-center gap-3 glass-hover relative group"
                   >
                     <div className="relative shrink-0">
-                      <Avatar className="w-10 h-10 ring-2 ring-purple-500/20">
+                      <Avatar className="w-10 h-10 ring-2 ring-gold/25">
                         <AvatarImage src={player.avatar} />
-                        <AvatarFallback className="bg-gradient-to-br from-purple-600 to-pink-600 text-white text-sm">
+                        <AvatarFallback className="bg-gradient-to-br from-gold to-ember text-white text-sm">
                           {player.username[0]?.toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
@@ -305,7 +305,7 @@ export function LobbyScreen({
             {isHost && (
               <Button
                 onClick={onStartGame}
-                className="gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25"
+                className="gap-2 bg-gradient-to-r from-gold to-ember hover:brightness-110 shadow-lg shadow-gold/25"
                 disabled={activePlayers.length < 1}
               >
                 <Play className="w-4 h-4" /> Start Game

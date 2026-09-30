@@ -114,7 +114,7 @@ export function ChatPanel({
   return (
     <div className="glass rounded-xl flex flex-col h-full">
       <div className="p-3 border-b border-white/5 flex items-center gap-2">
-        <MessageSquare className="w-4 h-4 text-purple-400" />
+        <MessageSquare className="w-4 h-4 text-violet-400" />
         <p className="text-sm font-medium">Room Chat</p>
         {messages.length > 0 && (
           <span className="text-[10px] text-muted-foreground ml-auto">{messages.length} messages</span>
@@ -166,17 +166,17 @@ export function ChatPanel({
                     </div>
                   ) : (
                     <div className={`flex items-start gap-2 px-2 py-1 rounded-lg ${
-                      isCurrent ? 'bg-purple-500/5' : ''
+                      isCurrent ? 'bg-amber-500/5' : ''
                     }`}>
                       <Avatar className="w-6 h-6 mt-0.5 shrink-0">
                         <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${msg.username}`} />
-                        <AvatarFallback className="text-[8px] bg-gradient-to-br from-purple-600 to-pink-600 text-white">
+                        <AvatarFallback className="text-[8px] bg-gradient-to-br from-gold to-ember text-white">
                           {msg.username[0]?.toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-medium text-purple-400 truncate">
+                          <span className="text-xs font-medium text-violet-400 truncate">
                             {msg.username}
                             {isCurrent && <span className="text-muted-foreground text-[10px] ml-1">(you)</span>}
                           </span>
@@ -203,7 +203,7 @@ export function ChatPanel({
                                 onClick={(e) => handleReactionClick(msg.id, emoji, e)}
                                 className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs transition-colors ${
                                   users.includes(currentUserId || '')
-                                    ? 'bg-purple-500/20 text-purple-300'
+                                    ? 'bg-violet-500/15 text-violet-200'
                                     : 'bg-white/5 text-muted-foreground hover:bg-white/10'
                                 }`}
                               >
