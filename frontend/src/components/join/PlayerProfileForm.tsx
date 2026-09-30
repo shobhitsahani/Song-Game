@@ -54,7 +54,7 @@ export function PlayerProfileForm({
     <div className="space-y-5">
       <div>
         <label className="flex items-center gap-2 text-sm font-medium mb-2">
-          <User className="w-4 h-4 text-gold" />
+          <User className="w-4 h-4 text-purple-400" />
           Your Name
         </label>
         <input
@@ -69,7 +69,7 @@ export function PlayerProfileForm({
           spellCheck={false}
           className={cn(
             'w-full h-12 rounded-xl border bg-secondary/50 backdrop-blur-xl px-4 text-base ring-offset-background transition-all duration-300 placeholder:text-muted-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50',
-            nameError ? 'border-destructive/50' : 'border-border focus-visible:ring-gold/50'
+            nameError ? 'border-destructive/50' : 'border-border focus-visible:ring-purple-500/50'
           )}
           aria-label="Your name"
         />
@@ -83,7 +83,7 @@ export function PlayerProfileForm({
 
       <div>
         <label className="flex items-center gap-2 text-sm font-medium mb-2">
-          <Shuffle className="w-4 h-4 text-gold" />
+          <Shuffle className="w-4 h-4 text-purple-400" />
           Choose Your Avatar
         </label>
         <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
@@ -95,7 +95,7 @@ export function PlayerProfileForm({
               className={cn(
                 'relative aspect-square rounded-xl overflow-hidden transition-all duration-200 border-2',
                 avatar === accountAvatar
-                  ? 'border-gold ring-2 ring-gold/40 scale-105'
+                  ? 'border-purple-500 ring-2 ring-purple-500/40 scale-105'
                   : 'border-white/10 hover:border-white/30'
               )}
               aria-pressed={avatar === accountAvatar}
@@ -103,7 +103,7 @@ export function PlayerProfileForm({
             >
               <Avatar className="w-full h-full rounded-none">
                 <AvatarImage src={accountAvatar} />
-                <AvatarFallback className="bg-gradient-to-br from-gold to-ember text-gold-foreground">
+                <AvatarFallback className="bg-gradient-to-br from-purple-600 to-pink-600 text-white">
                   {initialName?.[0]?.toUpperCase() || '?'}
                 </AvatarFallback>
               </Avatar>
@@ -118,7 +118,7 @@ export function PlayerProfileForm({
               className={cn(
                 'relative aspect-square rounded-xl overflow-hidden transition-all duration-200 border-2 bg-secondary/30',
                 avatar === a.url
-                  ? 'border-gold ring-2 ring-gold/40 scale-105'
+                  ? 'border-purple-500 ring-2 ring-purple-500/40 scale-105'
                   : 'border-white/10 hover:border-white/30'
               )}
               aria-pressed={avatar === a.url}
