@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AudioLines, Menu, X, Users, Trophy } from 'lucide-react';
+import { Music, Menu, X, Users, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUser } from '@/providers/UserProvider';
 import { useNotificationStore } from '@/store/notifications';
@@ -33,13 +33,13 @@ export function Navbar() {
   }, [socket]);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-6 pt-3 sm:pt-4">
-      <div className="glass rounded-2xl max-w-6xl mx-auto h-14 px-3 sm:px-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-xl bg-[linear-gradient(120deg,hsl(262_84%_66%),hsl(292_84%_61%)_50%,hsl(217_91%_60%))] flex items-center justify-center shadow-lg shadow-violet-600/30 group-hover:scale-105 transition-transform">
-            <AudioLines className="w-4 h-4 text-white" />
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-white/5">
+      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
+            <Music className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-[linear-gradient(100deg,#c7d2fe,#d8b4fe_55%,#f0abfc)]">SongGame</span>
+          <span className="font-bold text-lg">SongGame</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-1">
@@ -70,8 +70,8 @@ export function Navbar() {
             <div className="flex items-center gap-2 ml-2">
               <Notifications />
               <div className="flex items-center gap-2 ml-2">
-                <div className="flex items-center gap-2 rounded-full pl-1 pr-4 py-1 bg-white/[0.06] border border-white/[0.09] backdrop-blur-xl">
-                  <Avatar className="w-8 h-8 ring-2 ring-gold/40">
+                <div className="flex items-center gap-2 glass rounded-full pl-1 pr-4 py-1">
+                  <Avatar className="w-8 h-8">
                     <AvatarImage src={user.avatar} />
                     <AvatarFallback>{user.username[0]}</AvatarFallback>
                   </Avatar>
@@ -82,7 +82,7 @@ export function Navbar() {
           ) : null}
         </div>
 
-        <button className="md:hidden rounded-lg p-1.5 -m-1.5 hover:bg-white/[0.06] transition-colors" onClick={() => setIsOpen(!isOpen)} aria-label={isOpen ? 'Close menu' : 'Open menu'} aria-expanded={isOpen}>
+        <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X /> : <Menu />}
         </button>
       </div>
@@ -93,7 +93,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glass rounded-b-2xl mt-1 max-w-6xl mx-auto"
+            className="md:hidden border-t border-white/5 bg-background/95 backdrop-blur-xl"
           >
             <div className="px-4 py-4 space-y-2">
               <Link href="/create-room" className="block"><Button variant="ghost" className="w-full justify-start">Create Room</Button></Link>
