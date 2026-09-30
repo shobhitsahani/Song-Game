@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LogIn, ArrowRight, ArrowLeft, Swords, Shuffle, Clock,
-  Hash, History, X, Search, Users, Music, Sparkles,
-  DoorOpen, AlertCircle, CheckCircle2, User
+  Hash, History, X, Search, Users, AudioLines, Sparkles,
+  DoorOpen, TriangleAlert, CircleCheckBig, User
 } from 'lucide-react';
 import { useAuthStore } from '@/store/auth';
 import { useSocket } from '@/hooks/useSocket';
@@ -17,8 +17,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Avatar } from '@/components/ui/avatar';
 import { PlayerProfileForm } from '@/components/join/PlayerProfileForm';
+import { RoomModeSwitch } from '@/components/shared/RoomModeSwitch';
 import { loadRoomJoinProfile, saveRoomJoinProfile } from '@/lib/avatars';
 import { GAME_MODES } from '@/types';
+import { Logo } from '@/components/shared/Logo';
 
 const RECENT_ROOMS_KEY = 'sg-recent-rooms';
 
@@ -252,7 +254,7 @@ export default function JoinRoomPage() {
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
         >
-          <Music className="w-8 h-8 text-purple-400" />
+          <AudioLines className="w-8 h-8 text-gold drop-shadow-[0_0_14px_rgba(168,85,247,0.5)]" />
         </motion.div>
       </main>
     );
@@ -260,22 +262,59 @@ export default function JoinRoomPage() {
 
   return (
     <main className="min-h-screen relative overflow-hidden">
-      <div className="fixed inset-0 bg-gradient-to-br from-blue-900/20 via-background to-purple-900/20 pointer-events-none" />
+      {/* Stage-light ambience */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-44 left-1/2 -translate-x-1/2 w-[44rem] h-[44rem] rounded-full bg-gold/15 blur-[130px] animate-float-slow" />
+        <div className="absolute top-1/2 -left-44 w-96 h-96 rounded-full bg-ember/10 blur-[120px]" />
+        <div className="absolute -right-32 bottom-0 w-[30rem] h-[30rem] rounded-full bg-mint/10 blur-[120px] animate-float-slow" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(247,168,58,0.10),transparent_62%)]" />
+      </div>
 
-      <div className="relative z-10 pt-20 pb-16 px-4 max-w-lg mx-auto">
+      <div className="relative z-10 pt-10 pb-16 px-4 max-w-5xl mx-auto">
         <motion.div variants={containerVariants} initial="hidden" animate="visible">
-          <motion.div variants={itemVariants}>
-            <Button variant="ghost" className="mb-4 -ml-2" onClick={() => router.push('/')}>
-              <ArrowLeft className="w-4 h-4 mr-1" /> Home
+          <motion.div variants={itemVariants} className="flex items-center justify-between mb-6">
+            <Logo />
+            <Button variant="ghost" size="sm" className="-mr-2 hover:text-gold" onClick={() => router.push('/')}>
+              <ArrowLeft className="w-4 h-4 mr-1" /> Back to Home
             </Button>
           </motion.div>
 
+          <motion.div variants={itemVariants} className="mb-8 flex justify-center">
+            <RoomModeSwitch active="join" />
+          </motion.div>
+
           <motion.div variants={itemVariants} className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold mb-2">
-              <span className="text-gradient">{step === 'profile' ? 'Set Your Identity' : 'Join a Room'}</span>
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <span className="flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                <span className="relative flex h-2 w-2" aria-hidden>
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-ember opacity-60 animate-ping" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-ember" />
+                </span>
+                Song Game · Live Lobby
+              </span>
+            </div>
+
+            <div aria-hidden className="eq mx-auto mb-6" style={{ height: 32 }}>
+              {[0, 1, 2, 3, 4, 5].map((i) => (
+                <span
+                  key={i}
+                  className="eq-bar animate-eq"
+                  style={{ height: `${52 + (i % 3) * 16}%`, animationDelay: `${i * 0.1}s` }}
+                />
+              ))}
+            </div>
+
+            <h1 className="font-display text-4xl md:text-[2.75rem] leading-tight font-bold mb-3 tracking-wide">
+              {step === 'profile' ? (
+                <span className="text-gradient-primary">Your Stage Name</span>
+              ) : (
+                <>Join the <span className="text-gradient-primary">Room</span></>
+              )}
             </h1>
-            <p className="text-muted-foreground">
-              {step === 'profile' ? 'Choose the name and avatar you want to use in the room' : 'Enter a room code or find a game to join'}
+            <p className="text-muted-foreground max-w-md mx-auto">
+              {step === 'profile'
+                ? 'Pick the name and avatar your crew will see when you step on stage.'
+                : 'Drop a 6-character room code, jump into quick match, or spin for a random room.'}
             </p>
           </motion.div>
 
@@ -283,13 +322,14 @@ export default function JoinRoomPage() {
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm text-center flex items-center justify-center gap-2"
+              className="mb-6 p-3 rounded-xl bg-destructive/10 border border-destructive/40 text-destructive text-sm text-center flex items-center justify-center gap-2"
             >
-              <AlertCircle className="w-4 h-4 shrink-0" />
+              <TriangleAlert className="w-4 h-4 shrink-0" />
               {error}
             </motion.div>
           )}
 
+          <div className="lg:grid lg:grid-cols-5 lg:gap-6 lg:items-start">
           <AnimatePresence mode="wait">
             {step === 'profile' ? (
               <motion.div
@@ -298,11 +338,12 @@ export default function JoinRoomPage() {
                 initial="hidden"
                 animate="visible"
                 exit={{ opacity: 0, y: -10 }}
+                className="lg:col-span-5"
               >
-                <Card className="glass mb-6 border-white/10">
+                <Card className="liquid mb-6 border-white/10 max-w-2xl mx-auto">
                   <CardHeader className="pb-3">
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <User className="w-5 h-5 text-purple-400" />
+                    <CardTitle className="flex items-center gap-2 text-lg font-display uppercase tracking-[0.15em]">
+                      <User className="w-5 h-5 text-gold" />
                       Your Identity
                     </CardTitle>
                   </CardHeader>
@@ -312,7 +353,7 @@ export default function JoinRoomPage() {
                       initialAvatar={profileAvatar}
                       accountAvatar={user?.avatar}
                       submitting={joining}
-                      submitLabel={joining ? 'Joining...' : 'Join Room'}
+                      submitLabel={joining ? 'Joining…' : 'Join Room'}
                       onSubmit={handleProfileSubmit}
                     />
                     <Button
@@ -327,19 +368,23 @@ export default function JoinRoomPage() {
                 </Card>
               </motion.div>
             ) : (
-              <motion.div key="code" initial="hidden" animate="visible" variants={containerVariants}>
+              <motion.div key="code" initial="hidden" animate="visible" variants={containerVariants} className="lg:col-span-5 lg:grid lg:grid-cols-5 lg:gap-6 lg:items-start">
+                <div className="lg:col-span-3 min-w-0">
                 <motion.div variants={itemVariants}>
-            <Card className="glass mb-6 border-white/10 overflow-visible">
+            <Card className="liquid mb-6">
               <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <DoorOpen className="w-5 h-5 text-purple-400" />
+                <CardTitle className="flex items-center gap-2 text-lg font-display uppercase tracking-[0.15em]">
+                  <DoorOpen className="w-5 h-5 text-gold" />
                   Enter Room Code
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {user && (
-                  <div className="flex items-center gap-3 mb-2 p-2 rounded-lg bg-secondary/30">
-                    <Avatar src={user.avatar} alt={user.username} fallback={user.username?.[0] ?? '?'} className="w-8 h-8" />
+                  <div className="flex items-center gap-3 p-2 rounded-xl bg-secondary/40 border border-white/5">
+                    <div className="relative">
+                      <Avatar src={user.avatar} alt={user.username} fallback={user.username?.[0] ?? '?'} className="w-9 h-9" />
+                      <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-mint ring-2 ring-background" aria-hidden />
+                    </div>
                     <div className="text-sm">
                       <span className="text-muted-foreground">Joining as </span>
                       <span className="font-semibold">{user.username}</span>
@@ -351,7 +396,7 @@ export default function JoinRoomPage() {
                   <input
                     ref={inputRef}
                     type="text"
-                    placeholder="Enter code"
+                    placeholder="ABC 123"
                     value={code}
                     onChange={(e) => handleCodeChange(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && isValidCode && beginJoin({ type: 'code', code })}
@@ -360,24 +405,32 @@ export default function JoinRoomPage() {
                     autoComplete="off"
                     autoCorrect="off"
                     spellCheck={false}
-                    className={`w-full text-center text-2xl md:text-3xl font-bold tracking-[0.5em] h-14 md:h-16 rounded-xl border bg-secondary/50 backdrop-blur-xl px-3 py-2 ring-offset-background transition-all duration-300 placeholder:text-muted-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                    className={`w-full text-center font-mono text-2xl md:text-3xl font-semibold tracking-[0.45em] h-14 md:h-16 rounded-xl border bg-secondary/50 backdrop-blur-xl px-3 py-2 ring-offset-background transition-all duration-300 placeholder:text-muted-foreground/30 placeholder:tracking-[0.25em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
                       isValidCode
-                        ? 'border-purple-500/70 ring-2 ring-purple-500/30 shadow-lg shadow-purple-500/20'
+                        ? 'border-gold/70 ring-2 ring-gold/40 shadow-lg shadow-gold/20'
                         : code.length > 0
-                          ? 'border-destructive/50'
+                          ? 'border-destructive/60'
                           : 'border-border'
                     }`}
-                    style={{ fontFamily: "'Courier New', monospace" }}
                     aria-label="Room code"
                   />
                   {isValidCode && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="absolute right-3 top-1/2 -translate-y-1/2"
-                    >
-                      <CheckCircle2 className="w-5 h-5 text-green-400" />
-                    </motion.div>
+                    <>
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2"
+                      >
+                        <CircleCheckBig className="w-6 h-6 text-mint drop-shadow-[0_0_8px_rgba(53,167,124,0.6)]" />
+                      </motion.div>
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="absolute -top-2 right-4 px-1.5 rounded bg-background text-[10px] font-semibold uppercase tracking-[0.2em] text-mint"
+                      >
+                        Ready
+                      </motion.span>
+                    </>
                   )}
                 </div>
 
@@ -400,18 +453,19 @@ export default function JoinRoomPage() {
           </motion.div>
 
           <motion.div variants={itemVariants}>
-            <Card className="glass mb-6 border-white/10">
+            <Card className="liquid mb-6 liquid-hover">
               <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Swords className="w-5 h-5 text-purple-400" />
-                  Quick Join
+                <CardTitle className="flex items-center gap-2 text-lg font-display uppercase tracking-[0.15em]">
+                  <Swords className="w-5 h-5 text-ember" />
+                  Fast Track
                 </CardTitle>
+                <p className="text-xs text-muted-foreground">Skip the code — get matched right now</p>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button
                   variant="gradient"
                   size="lg"
-                  className="w-full gap-2"
+                  className="liquid-btn w-full gap-2"
                   disabled={joining || !connected}
                   onClick={() => beginJoin({ type: 'quick' })}
                 >
@@ -421,7 +475,7 @@ export default function JoinRoomPage() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="w-full gap-2"
+                  className="w-full gap-2 border-mint/40 text-mint hover:bg-mint/10 hover:text-mint hover:border-mint/60"
                   disabled={joining || !connected}
                   onClick={() => beginJoin({ type: 'random' })}
                 >
@@ -431,15 +485,37 @@ export default function JoinRoomPage() {
               </CardContent>
             </Card>
           </motion.div>
+                </div>
 
-          <AnimatePresence>
-            {recentRooms.length > 0 && (
+                <div className="lg:col-span-2 lg:sticky lg:top-8 self-start min-w-0">
+                <motion.div variants={itemVariants} className="mb-6">
+                  <Card className="liquid overflow-hidden border-gold/25">
+                    <span aria-hidden className="liquid-shine" />
+                    <CardContent className="p-5">
+                      <p className="font-display text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-1.5">
+                        Hosting tonight?
+                      </p>
+                      <p className="text-sm leading-relaxed text-muted-foreground mb-4">
+                        Skip the code — spin up your own room and deal your friends in.
+                      </p>
+                      <Link href="/create-room" className="block">
+                        <Button variant="gradient" size="lg" fullWidth className="liquid-btn group">
+                          <Sparkles className="w-4 h-4 transition-transform group-hover:rotate-12" />
+                          Start a Room
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+
+                <AnimatePresence>
+                {recentRooms.length > 0 && (
               <motion.div variants={itemVariants}>
-                <Card className="glass mb-6 border-white/10">
+                <Card className="liquid mb-6">
                   <CardHeader className="pb-3 flex-row items-center justify-between">
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <History className="w-5 h-5 text-purple-400" />
-                      Recent Rooms
+                    <CardTitle className="flex items-center gap-2 text-lg font-display uppercase tracking-[0.15em]">
+                      <History className="w-5 h-5 text-mint" />
+                      On Repeat
                     </CardTitle>
                     <button
                       onClick={clearRecentRooms}
@@ -448,8 +524,8 @@ export default function JoinRoomPage() {
                       <X className="w-3 h-3" /> Clear
                     </button>
                   </CardHeader>
-                  <CardContent className="space-y-2">
-                    {recentRooms.slice(0, 5).map((room) => {
+                  <CardContent className="space-y-1">
+                    {recentRooms.slice(0, 5).map((room, index) => {
                       const modeInfo = GAME_MODES.find((m) => m.mode === room.mode);
                       return (
                         <motion.button
@@ -457,45 +533,42 @@ export default function JoinRoomPage() {
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: -10 }}
-                          whileHover={{ x: 4 }}
+                          whileTap={{ scale: 0.98 }}
                           onClick={() => beginJoin({ type: 'recent', code: room.code })}
                           disabled={joining}
-                          className="w-full flex items-center gap-3 p-3 rounded-lg glass glass-hover text-left"
+                          className="group w-full flex items-center gap-3 p-3 rounded-xl text-left border border-transparent hover:border-white/10 hover:bg-white/[0.05] transition-colors"
                         >
-                          <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-lg shrink-0">
+                          <span className="w-6 text-center font-mono text-xs text-muted-foreground/60 group-hover:text-gold transition-colors">
+                            {String(index + 1).padStart(2, '0')}
+                          </span>
+                          <div className="w-9 h-9 rounded-lg bg-gold/10 border border-gold/15 flex items-center justify-center text-base shrink-0 group-hover:bg-gold/20 transition-colors">
                             {modeInfo?.icon || '🎵'}
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <span className="font-mono font-bold text-sm tracking-wider">{room.code}</span>
+                              <span className="font-mono font-semibold text-sm tracking-wider">{room.code}</span>
                               <span className="text-xs text-muted-foreground">{modeInfo?.label || room.mode}</span>
                             </div>
                             <p className="text-xs text-muted-foreground mt-0.5">{getTimeAgo(room.timestamp)}</p>
                           </div>
-                          <LogIn className="w-4 h-4 text-muted-foreground shrink-0" />
+                          <LogIn className="w-4 h-4 text-gold shrink-0 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                         </motion.button>
                       );
                     })}
                   </CardContent>
                 </Card>
               </motion.div>
-            )}
-          </AnimatePresence>
+                )}
+                </AnimatePresence>
 
-          <motion.div variants={itemVariants} className="text-center space-y-3">
-            <p className="text-sm text-muted-foreground">
-              Don&apos;t have a code?{' '}
-              <Link href="/create-room" className="text-purple-400 hover:text-purple-300 font-semibold transition-colors">
-                Create a Room
-              </Link>
-            </p>
-            <Link href="/" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Home
-            </Link>
-          </motion.div>
+                <p className="text-center text-xs text-muted-foreground/70 pt-1">
+                  Codes are 6 characters — share yours with the crew.
+                </p>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
+          </div>
         </motion.div>
       </div>
     </main>
