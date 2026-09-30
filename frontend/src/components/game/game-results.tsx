@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Home, RotateCcw, Target, Clock, CheckCircle, Sparkles, Medal, Share2, ArrowLeft, Star, Zap } from 'lucide-react';
+import { Trophy, Home, RotateCcw, Target, Clock, BadgeCheck, Sparkles, Medal, Share2, ArrowLeft, Star, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -89,7 +89,7 @@ export function GameResults({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-gradient-to-b from-black/95 via-purple-950/30 to-black/95 backdrop-blur-md flex flex-col overflow-hidden"
+      className="fixed inset-0 z-50 bg-gradient-to-b from-black/95 via-purple-950/25 to-black/95 backdrop-blur-md flex flex-col overflow-hidden"
     >
       {showConfetti && <Confetti />}
 
@@ -250,7 +250,7 @@ export function GameResults({
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ delay: i * 0.05 }}
                         className={`glass rounded-xl p-3 flex items-center gap-3 ${
-                          isCurrent ? 'ring-2 ring-purple-500/30 bg-purple-500/5' : ''
+                          isCurrent ? 'ring-2 ring-gold/30 bg-amber-500/5' : ''
                         } ${i === 0 ? 'ring-1 ring-yellow-500/30' : ''}`}
                       >
                         <div className="w-8 text-center shrink-0">
@@ -267,11 +267,11 @@ export function GameResults({
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium truncate">
                             {player.username}
-                            {isCurrent && <span className="text-purple-400 text-xs ml-1">(You)</span>}
+                            {isCurrent && <span className="text-violet-400 text-xs ml-1">(You)</span>}
                           </p>
                           <div className="flex items-center gap-3 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
-                              <CheckCircle className="w-3 h-3 text-green-400" />
+                              <BadgeCheck className="w-3 h-3 text-green-400" />
                               {player.correctAnswers}/{player.totalAnswers}
                             </span>
                             <span className="flex items-center gap-1">
@@ -365,7 +365,7 @@ export function GameResults({
             transition={{ delay: 1.4 }}
             className="flex flex-wrap gap-3 justify-center pb-8"
           >
-            <Button size="lg" onClick={onPlayAgain} className="gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
+            <Button size="lg" onClick={onPlayAgain} className="gap-2 bg-gradient-to-r from-gold to-ember hover:brightness-110 shadow-lg shadow-gold/25">
               <RotateCcw className="w-4 h-4" /> Play Again
             </Button>
             <Button size="lg" variant="outline" onClick={onBackToLobby} className="gap-2">

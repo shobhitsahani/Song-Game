@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Home, RotateCcw, Target, Clock, CheckCircle, Sparkles } from 'lucide-react';
+import { Trophy, Home, RotateCcw, Target, Clock, BadgeCheck, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +15,7 @@ interface GameEndScreenProps {
 }
 
 function ConfettiParticle({ index }: { index: number }) {
-  const colors = ['bg-purple-500', 'bg-pink-500', 'bg-yellow-400', 'bg-green-400', 'bg-blue-400', 'bg-red-400', 'bg-indigo-400'];
+  const colors = ['bg-amber-500', 'bg-pink-500', 'bg-yellow-400', 'bg-green-400', 'bg-blue-400', 'bg-red-400', 'bg-indigo-400'];
   const color = colors[index % colors.length];
   const x = Math.random() * 100;
   const delay = Math.random() * 2;
@@ -126,7 +126,7 @@ export function GameEndScreen({ players, onPlayAgain }: GameEndScreenProps) {
               }`}
             >
               <span className="text-2xl w-10">{getEmoji(i + 1)}</span>
-              <Avatar className="w-10 h-10 ring-2 ring-purple-500/20">
+              <Avatar className="w-10 h-10 ring-2 ring-gold/25">
                 <AvatarImage src={player.avatar} />
                 <AvatarFallback>{player.username[0]}</AvatarFallback>
               </Avatar>
@@ -137,7 +137,7 @@ export function GameEndScreen({ players, onPlayAgain }: GameEndScreenProps) {
                 </div>
                 <div className="flex gap-4 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1"><Target className="w-3 h-3" />{player.avgResponseTime?.toFixed(1)}s avg</span>
-                  <span className="flex items-center gap-1"><CheckCircle className="w-3 h-3" />{player.correctAnswers}/{player.totalAnswers}</span>
+                  <span className="flex items-center gap-1"><BadgeCheck className="w-3 h-3" />{player.correctAnswers}/{player.totalAnswers}</span>
                 </div>
               </div>
               <div className="text-right">

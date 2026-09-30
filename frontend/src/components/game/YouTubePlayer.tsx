@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback, memo } from 'react';
-import { Loader2 } from 'lucide-react';
+import { LoaderCircle } from 'lucide-react';
 
 interface YouTubePlayerProps {
   videoId: string;
@@ -107,7 +107,7 @@ export const YouTubePlayer = memo(function YouTubePlayer({
       <div ref={containerRef} className="w-full h-full rounded-xl overflow-hidden" />
       {!loaded && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-xl">
-          <Loader2 className="w-8 h-8 animate-spin text-purple-400" />
+          <LoaderCircle className="w-8 h-8 animate-spin text-violet-400" />
         </div>
       )}
     </div>

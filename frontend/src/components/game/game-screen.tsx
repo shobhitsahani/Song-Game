@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, Heart, Skull, Volume2, VolumeX, Zap, AlertTriangle } from 'lucide-react';
+import { AudioLines, Heart, Skull, Volume2, VolumeX, Zap, TriangleAlert } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { GameModeBadge } from '@/components/shared/game-mode-badge';
 import { Scoreboard } from '@/components/game/scoreboard';
@@ -86,10 +86,10 @@ export const GameScreen = memo(function GameScreen({
     }
 
     if (option === selectedAnswer) {
-      return 'border-purple-500 bg-purple-500/10 text-purple-400 ring-2 ring-purple-500/30';
+      return 'border-violet-500 bg-violet-500/15 text-violet-100 ring-2 ring-violet-500/40 shadow-[0_0_24px_-6px_rgba(139,92,246,0.55)]';
     }
 
-    return 'border-white/10 bg-white/5 text-foreground hover:border-purple-500/50 hover:bg-purple-500/5 cursor-pointer';
+    return 'border-white/[0.09] bg-white/[0.04] text-foreground hover:border-violet-500/60 hover:bg-violet-500/10 hover:-translate-y-0.5 cursor-pointer transition-all';
   }, [isReveal, correctIndex, selectedAnswer]);
 
   return (
@@ -104,7 +104,7 @@ export const GameScreen = memo(function GameScreen({
             <div className="flex items-center gap-3">
               <GameModeBadge mode={mode} />
               <Badge variant="secondary" className="text-sm gap-1">
-                <Music className="w-3.5 h-3.5" />
+                <AudioLines className="w-3.5 h-3.5" />
                 Round {roundNumber}/{totalRounds}
               </Badge>
               {showAliveCount && (
@@ -137,7 +137,7 @@ export const GameScreen = memo(function GameScreen({
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="relative w-44 h-44 md:w-56 md:h-56 rounded-2xl overflow-hidden shadow-2xl shadow-purple-500/20"
+                    className="relative w-44 h-44 md:w-56 md:h-56 rounded-2xl overflow-hidden ring-1 ring-white/15 shadow-[0_24px_70px_-20px_rgba(139,92,246,0.5)]"
                   >
                     <img
                       src={currentRound.song.albumArt}
@@ -164,9 +164,9 @@ export const GameScreen = memo(function GameScreen({
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="w-44 h-44 md:w-56 md:h-56 rounded-2xl bg-gradient-to-br from-purple-800 to-pink-800 flex items-center justify-center shadow-2xl shadow-purple-500/20"
+                    className="w-44 h-44 md:w-56 md:h-56 rounded-2xl bg-gradient-to-br from-purple-950 to-fuchsia-950 flex items-center justify-center shadow-2xl shadow-gold/20"
                   >
-                    <Music className="w-16 h-16 text-white/30" />
+                    <AudioLines className="w-16 h-16 text-white/30" />
                   </motion.div>
                 )}
 
@@ -176,7 +176,7 @@ export const GameScreen = memo(function GameScreen({
                     animate={{ opacity: 1, y: 0 }}
                     className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-full text-center"
                   >
-                    <Badge variant="premium" size="lg" className="shadow-lg shadow-purple-500/30">
+                    <Badge variant="premium" size="lg" className="shadow-lg shadow-gold/25">
                       {currentRound.song.songTitle}
                       {currentRound.song.artist && ` - ${currentRound.song.artist}`}
                     </Badge>
@@ -260,7 +260,7 @@ export const GameScreen = memo(function GameScreen({
                     className="mt-4"
                   >
                     <Badge variant="destructive" className="animate-pulse gap-1 text-sm px-4 py-1.5">
-                      <AlertTriangle className="w-4 h-4" /> Hurry! {timeLeft}s left
+                      <TriangleAlert className="w-4 h-4" /> Hurry! {timeLeft}s left
                     </Badge>
                   </motion.div>
                 )}
@@ -284,10 +284,10 @@ export const GameScreen = memo(function GameScreen({
                   transition={{ delay: index * 0.1 }}
                   onClick={() => handleOptionClick(option)}
                   disabled={!isPlaying || selectedAnswer !== null || !isAlive}
-                  className={`relative rounded-xl border p-4 text-left transition-all duration-200 font-medium text-lg ${getOptionStyle(option, index)}`}
+                  className={`relative rounded-2xl border p-4 text-left transition-all duration-200 font-medium text-lg ${getOptionStyle(option, index)}`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-sm font-bold text-muted-foreground">
+                    <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/[0.08] ring-1 ring-inset ring-white/[0.06] flex items-center justify-center text-sm font-bold text-muted-foreground tabular-nums">
                       {String.fromCharCode(65 + index)}
                     </span>
                     <span className="flex-1 truncate">{option}</span>
@@ -306,7 +306,7 @@ export const GameScreen = memo(function GameScreen({
           className="glass rounded-2xl p-4"
         >
           <h3 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
-            <Music className="w-4 h-4" /> Leaderboard
+            <AudioLines className="w-4 h-4" /> Leaderboard
           </h3>
           <Scoreboard
             players={sortedPlayers}
