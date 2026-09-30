@@ -1,7 +1,7 @@
 'use client';
 
 import { Toaster as SonnerToaster, toast as sonnerToast } from 'sonner';
-import { CheckCircle, XCircle, Info, AlertTriangle } from 'lucide-react';
+import { BadgeCheck, CircleX, Info, TriangleAlert } from 'lucide-react';
 
 export function Toaster() {
   return (
@@ -24,12 +24,12 @@ export const toast = {
   success: (message: string, description?: string) =>
     sonnerToast.success(message, {
       description,
-      icon: <CheckCircle className="h-4 w-4 text-green-400" />,
+      icon: <BadgeCheck className="h-4 w-4 text-green-400" />,
     }),
   error: (message: string, description?: string) =>
     sonnerToast.error(message, {
       description,
-      icon: <XCircle className="h-4 w-4 text-red-400" />,
+      icon: <CircleX className="h-4 w-4 text-red-400" />,
     }),
   info: (message: string, description?: string) =>
     sonnerToast.info(message, {
@@ -39,6 +39,6 @@ export const toast = {
   warning: (message: string, description?: string) =>
     sonnerToast.warning(message, {
       description,
-      icon: <AlertTriangle className="h-4 w-4 text-yellow-400" />,
+      icon: <TriangleAlert className="h-4 w-4 text-yellow-400" />,
     }),
 };

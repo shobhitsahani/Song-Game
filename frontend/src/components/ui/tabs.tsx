@@ -14,7 +14,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      'relative flex gap-1 rounded-lg bg-secondary/50 p-1 text-muted-foreground',
+      'relative flex gap-1 rounded-xl bg-white/[0.04] backdrop-blur-xl p-1 text-muted-foreground ring-1 ring-inset ring-white/[0.06]',
       orientation === 'horizontal' ? 'flex-row' : 'flex-col',
       className,
     )}
@@ -45,7 +45,7 @@ const TabsTrigger = React.forwardRef<
     <TabsPrimitive.Trigger
       ref={mergedRef}
       className={cn(
-        'relative inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+        'relative inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-[color,background-color,border-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
         'z-10',
         className,
       )}
@@ -54,7 +54,7 @@ const TabsTrigger = React.forwardRef<
       <AnimatePresence>
         {isActive && (
           <motion.div
-            className="absolute inset-0 rounded-md bg-primary"
+            className="absolute inset-0 rounded-lg bg-gradient-to-r from-gold to-ember shadow-lg shadow-gold/25"
             layoutId="tabs-indicator"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

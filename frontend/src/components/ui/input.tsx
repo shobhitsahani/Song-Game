@@ -35,11 +35,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={type}
             className={cn(
-              'flex h-10 w-full rounded-lg border bg-secondary/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200',
-              'backdrop-blur-xl',
+              'flex h-11 w-full rounded-xl border border-white/[0.09] bg-white/[0.03] px-3.5 py-2 text-sm shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)] ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/60 focus-visible:border-violet-500/40 focus-visible:bg-white/[0.05] disabled:cursor-not-allowed disabled:opacity-50 transition-[border-color,box-shadow,background-color] duration-200',
               error
-                ? 'border-destructive/50 focus-visible:ring-destructive'
-                : 'border-border',
+                ? 'border-rose-500/50 focus-visible:ring-rose-500/60'
+                : 'border-white/[0.09]',
               icon && 'pl-10',
               className,
             )}

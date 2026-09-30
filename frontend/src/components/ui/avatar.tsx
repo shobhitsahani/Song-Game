@@ -66,7 +66,7 @@ const Avatar = React.forwardRef<
       ref={ref}
       className={cn(
         avatarVariants({ size }),
-        premium && 'ring-2 ring-purple-500 ring-offset-2 ring-offset-background',
+        premium && 'ring-2 ring-gold ring-offset-2 ring-offset-background',
         onClick && 'cursor-pointer',
         className,
       )}
@@ -78,7 +78,7 @@ const Avatar = React.forwardRef<
     >
       {premium && (
         <motion.div
-          className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 opacity-75"
+          className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-gold via-fuchsia-500 to-ember opacity-75"
           animate={{ rotate: 360 }}
           transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
           style={{ zIndex: -1 }}

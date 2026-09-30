@@ -8,10 +8,10 @@ const Card = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typ
   ({ className, ...props }, ref) => (
     <motion.div
       ref={ref}
-      whileHover={{ y: -2, boxShadow: '0 8px 30px rgba(139, 92, 246, 0.15)' }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      whileHover={{ y: -3, boxShadow: '0 12px 40px -12px rgba(139, 92, 246, 0.28)' }}
+      transition={{ type: 'spring', stiffness: 300, damping: 22 }}
       className={cn(
-        'rounded-xl border border-border bg-card text-card-foreground shadow-sm backdrop-blur-xl hover:border-purple-500/30 transition-colors duration-300',
+        'rounded-2xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/[0.09] text-card-foreground shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] backdrop-blur-xl hover:border-gold/30 transition-colors duration-300',
         className,
       )}
       {...props}
