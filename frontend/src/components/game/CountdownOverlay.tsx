@@ -16,28 +16,21 @@ export const CountdownOverlay = memo(function CountdownOverlay({ countdown, isAc
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center"
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center"
         >
-          {/* Pulsing aurora glow */}
-          <motion.div
-            className="absolute w-[480px] h-[480px] rounded-full bg-[radial-gradient(circle,hsl(262_84%_66%/0.22),transparent_65%)] blur-3xl pointer-events-none"
-            animate={{ scale: countdown > 0 ? [0.9, 1.05, 0.9] : [1, 1.15, 1] }}
-            transition={{ duration: 1, repeat: Infinity }}
-          />
-
           <motion.div
             key={countdown}
-            initial={{ scale: 1.8, opacity: 0, rotateX: -40 }}
-            animate={{ scale: 1, opacity: 1, rotateX: 0 }}
-            exit={{ scale: 0.6, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-            className="relative text-center"
+            initial={{ scale: 2, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.5, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center"
           >
-            <div className="text-8xl md:text-9xl font-bold tracking-tight text-gradient mb-4 drop-shadow-[0_0_30px_rgba(168,85,247,0.4)]">
+            <div className="text-8xl font-bold text-gradient mb-4">
               {countdown > 0 ? countdown : 'GO!'}
             </div>
-            <p className="text-muted-foreground text-lg font-medium">
-              {countdown > 0 ? 'Get ready…' : 'Guess the song!'}
+            <p className="text-muted-foreground text-lg">
+              {countdown > 0 ? 'Get Ready...' : 'Guess the song!'}
             </p>
           </motion.div>
         </motion.div>

@@ -27,12 +27,12 @@ export const AnswerInput = memo(function AnswerInput({ mode, onSubmit, disabled,
 
   const getPlaceholder = () => {
     switch (mode) {
-      case 'ARTIST': return 'Type the artist name…';
-      case 'ALBUM': return 'Type the album name…';
-      case 'GENRE': return 'Type the genre…';
-      case 'DECADE': return 'Type the decade…';
-      case 'LYRICS': return 'Type the missing lyric…';
-      default: return 'Type the song title…';
+      case 'ARTIST': return 'Type the artist name...';
+      case 'ALBUM': return 'Type the album name...';
+      case 'GENRE': return 'Type the genre...';
+      case 'DECADE': return 'Type the decade...';
+      case 'LYRICS': return 'Type the missing lyric...';
+      default: return 'Type the song title...';
     }
   };
 

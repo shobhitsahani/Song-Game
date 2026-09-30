@@ -24,7 +24,7 @@ export const CountdownTimer = memo(function CountdownTimer({ timeLeft, totalTime
           <motion.circle
             cx="32" cy="32" r="28" fill="none" strokeWidth="4"
             strokeLinecap="round"
-            className={cn(isLow ? 'text-red-400' : 'text-violet-400')}
+            className={cn(isLow ? 'text-red-400' : 'text-purple-400')}
             strokeDasharray={2 * Math.PI * 28}
             animate={{
               strokeDashoffset: 2 * Math.PI * 28 * (1 - (isActive ? progress : isFinished ? 0 : 1)),
