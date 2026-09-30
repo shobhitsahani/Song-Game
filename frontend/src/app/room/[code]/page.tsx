@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Copy, LogOut, Play, Users, Settings, Eye, WifiOff, LoaderCircle, KeyRound, UserPlus, Send } from 'lucide-react';
+import { Copy, LogOut, Play, Users, Settings, Eye, WifiOff, Loader2, KeyRound, UserPlus, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -203,7 +203,7 @@ export default function RoomPage() {
   return (
     <main className="min-h-screen bg-background">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl" />
       </div>
 
@@ -217,7 +217,7 @@ export default function RoomPage() {
       {reconnecting && (
         <div className="fixed top-0 left-0 right-0 z-40 bg-yellow-500/90 backdrop-blur-sm py-2 px-4 text-center">
           <p className="text-sm font-medium text-white flex items-center justify-center gap-2">
-            <LoaderCircle className="w-4 h-4 animate-spin" /> Reconnecting...
+            <Loader2 className="w-4 h-4 animate-spin" /> Reconnecting...
           </p>
         </div>
       )}
@@ -226,7 +226,7 @@ export default function RoomPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <KeyRound className="w-5 h-5 text-violet-400" />
+              <KeyRound className="w-5 h-5 text-purple-400" />
               Room Password Required
             </DialogTitle>
             <DialogDescription>This room is private. Enter the password to join.</DialogDescription>
@@ -252,7 +252,7 @@ export default function RoomPage() {
                 friends.map((friend) => (
                   <div key={friend.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gold to-ember flex items-center justify-center text-sm font-bold">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-sm font-bold">
                         {friend.avatar || friend.username?.[0]?.toUpperCase() || '?'}
                       </div>
                       <div>
