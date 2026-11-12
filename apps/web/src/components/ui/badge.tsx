@@ -3,21 +3,30 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-lg border px-2.5 py-0.5 text-xs font-semibold transition-colors',
+  'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold tracking-wide transition-colors',
   {
     variants: {
       variant: {
-        default: 'border-transparent bg-primary text-primary-foreground',
-        secondary: 'border-transparent bg-secondary text-secondary-foreground',
-        destructive: 'border-transparent bg-destructive text-destructive-foreground',
-        success: 'border-transparent bg-green-500/10 text-green-400 border-green-500/20',
-        warning: 'border-transparent bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-        premium: 'border-transparent bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-300 border-purple-500/20',
-        outline: 'text-foreground',
+        default:
+          'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--foreground)] backdrop-blur-sm',
+        secondary:
+          'border-[var(--border)] bg-[var(--secondary)] text-[var(--secondary-foreground)]',
+        primary:
+          'border-transparent bg-[var(--primary)] text-[var(--primary-foreground)]',
+        destructive:
+          'border-[var(--destructive)]/30 bg-[var(--destructive)]/15 text-[var(--destructive)]',
+        success:
+          'border-[var(--success)]/30 bg-[var(--success)]/15 text-[var(--success)]',
+        warning:
+          'border-amber-500/30 bg-amber-500/15 text-amber-300',
+        premium:
+          'border-[var(--glass-highlight)] bg-[var(--glass-bg)] text-[var(--primary)] shadow-sm backdrop-blur-md',
+        outline:
+          'border-[var(--border)] text-[var(--foreground)]',
       },
       size: {
-        default: 'px-2.5 py-0.5',
-        sm: 'px-2 py-0.5 text-[10px]',
+        default: 'px-3 py-1 text-xs',
+        sm: 'px-2 py-0.5 text-[11px]',
         lg: 'px-4 py-1.5 text-sm',
       },
     },
@@ -25,7 +34,7 @@ const badgeVariants = cva(
       variant: 'default',
       size: 'default',
     },
-  },
+  }
 );
 
 export interface BadgeProps

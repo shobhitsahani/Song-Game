@@ -17,3 +17,6 @@ coverage/
 .vercel
 .vercel.songgame-backup/
 .env*
+.cursor/
+.gemini/
+.codex/

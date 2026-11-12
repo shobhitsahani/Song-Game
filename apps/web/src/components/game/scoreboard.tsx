@@ -1,7 +1,8 @@
 'use client';
 
 import { memo, useMemo } from 'react';
-import { Trophy, Medal } from 'lucide-react';
+import { Trophy, Medal } from '@phosphor-icons/react';
+import { clsx } from 'clsx';
 import type { Player } from '@song-game/types';
 
 interface ScoreboardProps {
@@ -10,34 +11,82 @@ interface ScoreboardProps {
   isSurvival?: boolean;
 }
 
-function RankIcon({ rank }: { rank: number }) {
+function RankBadge({ rank }: { rank: number }) {
   switch (rank) {
-    case 1: return <Trophy className="w-5 h-5 text-yellow-400" />;
-    case 2: return <Medal className="w-5 h-5 text-gray-300" />;
-    case 3: return <Medal className="w-5 h-5 text-amber-600" />;
-    default: return <span className="w-5 h-5 flex items-center justify-center text-sm text-gray-500">#{rank}</span>;
+    case 1:
+      return (
+        <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/30">
+          <Trophy size={16} weight="fill" />
+        </div>
+      );
+    case 2:
+      return (
+        <div className="w-7 h-7 rounded-lg bg-zinc-400/20 text-zinc-300 flex items-center justify-center shrink-0 border border-zinc-400/30">
+          <Medal size={16} weight="fill" />
+        </div>
+      );
+    case 3:
+      return (
+        <div className="w-7 h-7 rounded-lg bg-amber-700/20 text-amber-600 flex items-center justify-center shrink-0 border border-amber-700/30">
+          <Medal size={16} weight="fill" />
+        </div>
+      );
+    default:
+      return (
+        <span className="w-7 h-7 rounded-lg bg-[var(--secondary)] text-[var(--muted-foreground)] flex items-center justify-center text-xs font-mono font-semibold shrink-0">
+          #{rank}
+        </span>
+      );
   }
 }
 
-const PlayerRow = memo(function PlayerRow({ player, isCurrentUser }: { player: Player; isCurrentUser: boolean }) {
+const PlayerRow = memo(function PlayerRow({
+  player,
+  isCurrentUser,
+}: {
+  player: Player;
+  isCurrentUser: boolean;
+}) {
   return (
-    <div className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${
-      isCurrentUser ? 'bg-purple-500/20 border border-purple-500/30' : 'bg-white/5'
-    }`}>
-      <RankIcon rank={player.rank} />
+    <div
+      className={clsx(
+        'flex items-center gap-3 p-2.5 rounded-xl transition-all duration-200 border',
+        isCurrentUser
+          ? 'liquid-glass-surface bg-[var(--primary)]/10 border-[var(--primary)]/40 shadow-sm'
+          : 'bg-[var(--glass-bg)] border-[var(--glass-border)]'
+      )}
+    >
+      <RankBadge rank={player.rank} />
       <div className="flex-1 min-w-0">
-        <p className="font-medium truncate">{player.username}</p>
-        <p className="text-sm text-gray-400">{player.score} pts</p>
+        <p className="font-semibold text-sm truncate text-[var(--foreground)]">
+          {player.username}
+          {isCurrentUser && (
+            <span className="text-[var(--primary)] text-xs ml-1 font-normal">(you)</span>
+          )}
+        </p>
+        <p className="text-xs font-mono text-[var(--muted-foreground)]">
+          {player.score.toLocaleString()} pts
+        </p>
       </div>
-      <div className="text-right">
-        <p className="text-sm font-medium">{player.correctAnswers}/{player.totalAnswers}</p>
-        <p className="text-xs text-gray-500">{player.avgResponseTime?.toFixed(1)}s</p>
+      <div className="text-right shrink-0">
+        <p className="text-xs font-semibold font-mono text-[var(--foreground)]">
+          {player.correctAnswers}/{player.totalAnswers}
+        </p>
+        {player.avgResponseTime !== undefined && (
+          <p className="text-[11px] font-mono text-[var(--muted-foreground)]">
+            {player.avgResponseTime.toFixed(1)}s
+          </p>
+        )}
       </div>
     </div>
   );
 });
 
-export const Scoreboard = memo(function Scoreboard({ players, currentPlayerId, isSurvival }: ScoreboardProps) {
+export const Scoreboard = memo(function Scoreboard({
+  players,
+  currentPlayerId,
+  isSurvival,
+}: ScoreboardProps) {
   const sortedPlayers = useMemo(() => {
     if (!players?.length) return [];
     return [...players].sort((a, b) => {
@@ -49,11 +98,15 @@ export const Scoreboard = memo(function Scoreboard({ players, currentPlayerId, i
   }, [players, isSurvival]);
 
   if (!sortedPlayers.length) {
-    return <p className="text-gray-500 text-center py-4">No players yet</p>;
+    return (
+      <p className="text-xs text-[var(--muted-foreground)] text-center py-4">
+        Waiting for players...
+      </p>
+    );
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1.5 max-h-[360px] overflow-y-auto pr-1">
       {sortedPlayers.map((player, index) => (
         <PlayerRow
           key={player.id}

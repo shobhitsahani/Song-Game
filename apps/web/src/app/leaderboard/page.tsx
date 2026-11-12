@@ -1,107 +1,157 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Trophy, TrendingUp, Crown } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Trophy, TrendUp, Crown } from '@phosphor-icons/react';
 import { useAuthStore } from '@/stores/auth';
 import { cn } from '@/lib/utils';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { EmptyState } from '@/components/shared/empty-state';
+import { GlassSurface } from '@/components/glass/glass-surface';
 import type { LeaderboardEntry } from '@song-game/types';
 
 type Period = 'weekly' | 'monthly' | 'alltime';
 
-const RANK_COLORS = ['text-yellow-400', 'text-gray-300', 'text-amber-600'];
+const RANK_COLORS = ['text-amber-400', 'text-zinc-300', 'text-amber-600'];
 
 export default function LeaderboardPage() {
-  const router = useRouter();
-  const { user, isAuthenticated, isLoading: authLoading } = useAuthStore();
+  const { user, isLoading: authLoading } = useAuthStore();
   const [period, setPeriod] = useState<Period>('weekly');
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/');
-      return;
-    }
-    if (isAuthenticated) {
-      setLoading(true);
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/leaderboard?period=${period}`, { credentials: 'include' })
-        .then((r) => r.json())
-        .then((res) => { if (res.success) setEntries(res.data); })
-        .catch(() => {})
-        .finally(() => setLoading(false));
-    }
-  }, [isAuthenticated, authLoading, router, period]);
+    // If not authenticated, we can still show public mock/demo or allow viewing
+    setLoading(true);
+    fetch(
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/leaderboard?period=${period}`,
+      { credentials: 'include' }
+    )
+      .then((r) => r.json())
+      .then((res) => {
+        if (res.success) setEntries(res.data);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [period]);
 
   if (authLoading || loading) {
     return (
-      <main className="min-h-screen pt-24 pb-16 px-4 max-w-4xl mx-auto">
-        <Skeleton className="h-10 w-56 mb-8" />
-        <div className="space-y-3">{Array.from({ length: 10 }).map((_, i) => <Skeleton key={i} className="h-16 rounded-xl" />)}</div>
+      <main className="min-h-screen pt-24 pb-28 px-4 max-w-4xl mx-auto">
+        <Skeleton className="h-10 w-56 mb-8 rounded-2xl" />
+        <div className="space-y-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 rounded-2xl" />
+          ))}
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen pb-16">
-      <div className="pt-24 px-4 max-w-4xl mx-auto">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold flex items-center gap-2"><TrendingUp className="w-6 h-6 text-purple-400" /> Leaderboard</h1>
-            <div className="flex gap-1">
-              {(['weekly', 'monthly', 'alltime'] as Period[]).map((p) => (
-                <Badge key={p} variant={period === p ? 'default' : 'outline'} className="cursor-pointer capitalize" onClick={() => setPeriod(p)}>
-                  {p === 'alltime' ? 'All Time' : p}
-                </Badge>
-              ))}
-            </div>
-          </div>
+    <main className="min-h-screen pb-28 pt-24 px-4 max-w-4xl mx-auto">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+        {/* Sticky Header with Filter Pills */}
+        <div className="sticky top-20 z-30 py-3 liquid-glass-surface bg-[var(--background)]/80 backdrop-blur-xl -mx-4 px-4 sm:mx-0 sm:px-0 sm:bg-transparent sm:backdrop-blur-none border-b border-[var(--glass-border)] sm:border-0 flex items-center justify-between gap-4">
+          <h1 className="text-2xl sm:text-3xl font-extrabold font-display tracking-tight flex items-center gap-2.5 text-[var(--foreground)]">
+            <TrendUp size={28} weight="bold" className="text-[var(--primary)]" />
+            Global Rankings
+          </h1>
 
-          <div className="space-y-2">
-            {entries.length > 0 ? entries.map((entry, i) => {
+          <div className="flex gap-1 p-1 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)]">
+            {(['weekly', 'monthly', 'alltime'] as Period[]).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPeriod(p)}
+                className={cn(
+                  'px-3 py-1 rounded-full text-xs font-semibold capitalize transition-all outline-none',
+                  period === p
+                    ? 'bg-[var(--card)] text-[var(--foreground)] shadow-sm border border-[var(--glass-border)]'
+                    : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+                )}
+              >
+                {p === 'alltime' ? 'All Time' : p}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Entries Table */}
+        <div className="space-y-2">
+          {entries.length > 0 ? (
+            entries.map((entry, i) => {
               const isMe = entry.userId === user?.id;
               return (
                 <motion.div
                   key={entry.userId || i}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.03 }}
-                  className={`glass rounded-xl p-4 flex items-center gap-4 transition-all ${isMe ? 'ring-1 ring-purple-500/50 bg-purple-500/5' : 'glass-hover'}`}
+                  transition={{ delay: i * 0.03, duration: 0.2 }}
                 >
-                  <div className="w-10 text-center shrink-0">
-                    {i < 3 ? (
-                      <Crown className={cn('w-6 h-6 mx-auto', RANK_COLORS[i])} />
-                    ) : (
-                      <span className="text-lg font-bold text-muted-foreground">#{i + 1}</span>
+                  <GlassSurface
+                    variant={isMe ? 'strong' : 'regular'}
+                    radius="lg"
+                    className={cn(
+                      'p-4 flex items-center gap-4 transition-all duration-200 border',
+                      isMe
+                        ? 'border-[var(--primary)]/60 bg-[var(--primary)]/10 ring-1 ring-[var(--primary)]/30'
+                        : 'border-[var(--glass-border)] hover:border-[var(--glass-highlight)]'
                     )}
-                  </div>
-                  <Avatar src={entry.avatar} alt={entry.username} fallback={entry.username[0] ?? '?'} />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate flex items-center gap-2">
-                      {entry.username}
-                      {isMe && <Badge variant="premium" size="sm">YOU</Badge>}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      <Trophy className="w-3 h-3 inline mr-1 text-yellow-400" />{entry.wins} wins
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold tabular-nums">{entry.xp?.toLocaleString()}</p>
-                    <p className="text-xs text-muted-foreground">XP</p>
-                  </div>
+                  >
+                    <div className="w-9 text-center shrink-0">
+                      {i < 3 ? (
+                        <Crown size={24} weight="fill" className={cn('mx-auto', RANK_COLORS[i])} />
+                      ) : (
+                        <span className="text-base font-mono font-bold text-[var(--muted-foreground)]">
+                          #{i + 1}
+                        </span>
+                      )}
+                    </div>
+                    <Avatar
+                      src={entry.avatar}
+                      alt={entry.username}
+                      fallback={entry.username[0] ?? '?'}
+                      size="default"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-base truncate flex items-center gap-2 text-[var(--foreground)]">
+                        {entry.username}
+                        {isMe && (
+                          <Badge variant="primary" size="sm" className="text-[10px]">
+                            YOU
+                          </Badge>
+                        )}
+                      </p>
+                      <p className="text-xs text-[var(--muted-foreground)] flex items-center gap-1 mt-0.5">
+                        <Trophy size={14} weight="fill" className="text-amber-400" />
+                        <span className="font-mono">{entry.wins}</span> wins
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="font-extrabold font-mono text-lg tabular-nums text-[var(--foreground)]">
+                        {entry.xp?.toLocaleString()}
+                      </p>
+                      <p className="text-[10px] text-[var(--muted-foreground)] uppercase">XP</p>
+                    </div>
+                  </GlassSurface>
                 </motion.div>
               );
-            }) : (
-              <EmptyState icon={TrendingUp} title="No rankings yet" description="Play games to appear on the leaderboard." />
-            )}
-          </div>
-        </motion.div>
-      </div>
+            })
+          ) : (
+            <GlassSurface variant="regular" radius="xl" className="p-12 text-center">
+              <TrendUp size={44} weight="duotone" className="text-[var(--primary)] mx-auto mb-3" />
+              <h3 className="font-display font-bold text-lg text-[var(--foreground)]">
+                No rankings yet
+              </h3>
+              <p className="text-sm text-[var(--muted-foreground)] mt-1 max-w-sm mx-auto">
+                Finish a round to claim your spot on the listening room board.
+              </p>
+            </GlassSurface>
+          )}
+        </div>
+      </motion.div>
     </main>
   );
 }

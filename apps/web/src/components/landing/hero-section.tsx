@@ -1,80 +1,111 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Music, Play, Users, Trophy, Sparkles, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+import { Play, Users, Disc, Trophy, ArrowClockwise } from '@phosphor-icons/react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { JoinRoomModal } from './join-room-modal';
+import { VinylHero } from '@/components/three/vinyl-hero';
 
 export function HeroSection() {
   const [showJoinModal, setShowJoinModal] = useState(false);
+  const [activeRoomCode, setActiveRoomCode] = useState<string | null>(null);
 
-  const stats = [
-    { icon: Music, label: 'Songs', value: '10,000+' },
-    { icon: Users, label: 'Players', value: '50,000+' },
-    { icon: Trophy, label: 'Games Played', value: '1M+' },
-  ];
+  useEffect(() => {
+    // Check if there is a game in progress to resume
+    try {
+      const savedCode = localStorage.getItem('last_room_code');
+      if (savedCode) {
+        setActiveRoomCode(savedCode);
+      }
+    } catch {}
+  }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[128px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-[128px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[128px]" />
-      </div>
+    <section className="relative min-h-[90dvh] flex flex-col items-center justify-center pt-24 pb-16 px-4">
+      <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center">
+        {/* Procedural 3D Vinyl Hero */}
+        <div className="relative mb-6">
+          <VinylHero size={260} />
+          {/* Subtle glow underneath vinyl */}
+          <div className="absolute inset-0 bg-[var(--glow)] rounded-full blur-3xl -z-10 opacity-30 pointer-events-none" />
+        </div>
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+        {/* Concrete Music-Specific Headline (No eyebrow chip!) */}
+        <motion.h1
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="text-4xl sm:text-6xl md:text-7xl font-black font-display tracking-tight text-[var(--foreground)] max-w-3xl leading-[1.08] mb-5"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 mb-8">
-            <Sparkles className="w-4 h-4 text-purple-400" />
-            <span className="text-sm text-purple-300">Multiplayer Music Trivia Game</span>
-          </div>
+          Name that track before the needle drops.
+        </motion.h1>
 
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
-            Guess the Song
-            <br />
-            <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">
-              Beat the Clock
-            </span>
-          </h1>
+        {/* Warm, plain copy */}
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="text-base sm:text-xl text-[var(--muted-foreground)] max-w-xl mx-auto mb-8 font-normal leading-relaxed"
+        >
+          Real-time multiplayer music trivia. 15-second song clips, instant tactile answers, and room leaderboards with friends.
+        </motion.p>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-            Challenge your friends in real-time music trivia. Listen to song clips,
-            guess the title, and climb the leaderboard.
-          </p>
-
-          <div className="flex items-center justify-center gap-4 flex-wrap">
-            <Link href="/room/create">
-              <Button variant="gradient" size="xl" className="gap-2 text-base">
-                <Play className="w-5 h-5 fill-current" /> Play Now
+        {/* Primary and Secondary Action Buttons in Thumb Zone */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-md"
+        >
+          {activeRoomCode ? (
+            <Link href={`/room/${activeRoomCode}`} className="w-full sm:w-auto">
+              <Button size="lg" variant="primary" className="w-full min-w-[200px] h-14 text-base font-bold shadow-xl">
+                <ArrowClockwise size={20} weight="bold" /> Resume Round ({activeRoomCode})
               </Button>
             </Link>
-            <Button variant="glass" size="xl" className="gap-2 text-base" onClick={() => setShowJoinModal(true)}>
-              <Users className="w-5 h-5" /> Join Room <ArrowRight className="w-4 h-4" />
-            </Button>
-          </div>
+          ) : (
+            <Link href="/room/create" className="w-full sm:w-auto">
+              <Button size="lg" variant="primary" className="w-full min-w-[200px] h-14 text-base font-bold shadow-xl">
+                <Play size={20} weight="fill" /> Start a round
+              </Button>
+            </Link>
+          )}
 
-          <JoinRoomModal open={showJoinModal} onClose={() => setShowJoinModal(false)} />
+          <Button
+            size="lg"
+            variant="glass"
+            className="w-full sm:w-auto min-w-[170px] h-14 text-base"
+            onClick={() => setShowJoinModal(true)}
+          >
+            <Users size={20} /> Join room
+          </Button>
         </motion.div>
 
+        <JoinRoomModal open={showJoinModal} onClose={() => setShowJoinModal(false)} />
+
+        {/* Focused Social Proof Pills */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-20 grid grid-cols-3 gap-8 max-w-lg mx-auto"
+          transition={{ duration: 0.4, delay: 0.3 }}
+          className="mt-14 flex items-center justify-center gap-4 sm:gap-8 flex-wrap"
         >
-          {stats.map((stat) => (
-            <div key={stat.label} className="text-center">
-              <stat.icon className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-sm text-muted-foreground">{stat.label}</p>
-            </div>
-          ))}
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-[var(--muted-foreground)]">
+            <Disc size={18} className="text-[var(--primary)]" weight="duotone" />
+            <span className="font-mono font-semibold text-[var(--foreground)]">10,000+</span> licensed clips
+          </div>
+          <div className="h-4 w-px bg-[var(--border)]" />
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-[var(--muted-foreground)]">
+            <Users size={18} className="text-[var(--accent)]" weight="duotone" />
+            <span className="font-mono font-semibold text-[var(--foreground)]">Real-time</span> rooms
+          </div>
+          <div className="h-4 w-px bg-[var(--border)]" />
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-[var(--muted-foreground)]">
+            <Trophy size={18} className="text-amber-400" weight="duotone" />
+            <span className="font-mono font-semibold text-[var(--foreground)]">Speed bonus</span> scoring
+          </div>
         </motion.div>
       </div>
     </section>

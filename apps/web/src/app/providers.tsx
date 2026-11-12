@@ -2,25 +2,27 @@
 
 import type { ReactNode } from 'react';
 import { Toaster } from 'sonner';
+import { MotionConfig } from 'motion/react';
 import { AuthProvider } from '@/providers/auth-provider';
 import { SocketProvider } from '@/providers/socket-provider';
+import { ThemeProvider } from '@/components/glass/theme-switcher';
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
-    <AuthProvider>
-      <SocketProvider>
-        {children}
-        <Toaster
-          position="bottom-center"
-          toastOptions={{
-            style: {
-              background: '#1e1e3a',
-              border: '1px solid #2a2a4a',
-              color: '#f8f8ff',
-            },
-          }}
-        />
-      </SocketProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <MotionConfig reducedMotion="user">
+        <AuthProvider>
+          <SocketProvider>
+            {children}
+            <Toaster
+              position="bottom-center"
+              toastOptions={{
+                className: 'liquid-glass-surface rounded-2xl text-[var(--foreground)] border-[var(--glass-border)] text-sm shadow-xl',
+              }}
+            />
+          </SocketProvider>
+        </AuthProvider>
+      </MotionConfig>
+    </ThemeProvider>
   );
 }

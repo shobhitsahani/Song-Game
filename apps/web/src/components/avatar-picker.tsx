@@ -1,6 +1,6 @@
 'use client';
 
-import { Check } from 'lucide-react';
+import { Check } from '@phosphor-icons/react';
 import { Avatar } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
@@ -21,7 +21,7 @@ interface AvatarPickerProps {
 
 export function AvatarPicker({ value, onChange }: AvatarPickerProps) {
   return (
-    <div className="grid grid-cols-5 gap-2">
+    <div className="grid grid-cols-5 gap-2.5">
       {AVATAR_OPTIONS.map((url, i) => {
         const selected = value === url;
         return (
@@ -30,16 +30,18 @@ export function AvatarPicker({ value, onChange }: AvatarPickerProps) {
             type="button"
             onClick={() => onChange(url)}
             className={cn(
-              'relative rounded-full p-1 transition-all duration-150 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500',
-              selected ? 'bg-purple-500/30 ring-2 ring-purple-400' : 'bg-white/5 hover:bg-white/10'
+              'relative rounded-full p-1 transition-transform duration-150 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]',
+              selected
+                ? 'bg-[var(--primary)]/20 ring-2 ring-[var(--primary)] shadow-md'
+                : 'bg-[var(--glass-bg)] border border-[var(--glass-border)] hover:bg-[var(--card)]'
             )}
             aria-pressed={selected}
             aria-label={`Avatar ${i + 1}`}
           >
             <Avatar src={url} alt={`Avatar ${i + 1}`} fallback={String(i + 1)} className="w-12 h-12 rounded-full" />
             {selected && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-purple-500 flex items-center justify-center">
-                <Check className="w-3 h-3 text-white" />
+              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] flex items-center justify-center shadow-sm">
+                <Check size={12} weight="bold" />
               </span>
             )}
           </button>

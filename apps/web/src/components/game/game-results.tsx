@@ -1,10 +1,25 @@
 'use client';
 
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Home, ArrowLeft, Target, Clock, CheckCircle, Medal, Share2, RotateCcw } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import {
+  Trophy,
+  Medal,
+  ArrowClockwise,
+  ArrowLeft,
+  House,
+  ShareNetwork,
+  Target,
+  Clock,
+  CheckCircle,
+} from '@phosphor-icons/react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
+import { GlassSurface } from '@/components/glass/glass-surface';
+import { AnimatedCounter } from '@/components/fx/animated-counter';
+import { fireCelebrationConfetti } from '@/components/fx/confetti';
+import { CelebrationTrophy } from '@/components/three/celebration-trophy';
 import type { Player } from '@song-game/types';
 
 interface GameResultsProps {
@@ -16,173 +31,159 @@ interface GameResultsProps {
 }
 
 const RANK_MEDALS = [
-  { color: 'text-yellow-400', bg: 'bg-yellow-500/20', border: 'ring-yellow-500/40', label: '1st', icon: Trophy },
-  { color: 'text-gray-300', bg: 'bg-gray-400/20', border: 'ring-gray-400/40', label: '2nd', icon: Medal },
-  { color: 'text-amber-600', bg: 'bg-amber-600/20', border: 'ring-amber-600/40', label: '3rd', icon: Medal },
+  { color: 'text-amber-400', bg: 'bg-amber-500/20', border: 'border-amber-500/50', label: '1st', icon: Trophy },
+  { color: 'text-zinc-300', bg: 'bg-zinc-400/20', border: 'border-zinc-400/50', label: '2nd', icon: Medal },
+  { color: 'text-amber-600', bg: 'bg-amber-700/20', border: 'border-amber-700/50', label: '3rd', icon: Medal },
 ];
 
-const PODIUM_HEIGHTS = [200, 160, 120];
-
-function CountUp({ value, duration = 1500 }: { value: number; duration?: number }) {
-  const [display, setDisplay] = useState(0);
-
-  useEffect(() => {
-    let start = 0;
-    const increment = Math.ceil(value / (duration / 16));
-    const timer = setInterval(() => {
-      start += increment;
-      if (start >= value) {
-        setDisplay(value);
-        clearInterval(timer);
-      } else {
-        setDisplay(start);
-      }
-    }, 16);
-    return () => clearInterval(timer);
-  }, [value, duration]);
-
-  return <span>{display.toLocaleString()}</span>;
-}
+const PODIUM_HEIGHTS = [180, 140, 100];
 
 export function GameResults({
-  players, currentPlayerId, onPlayAgain, onBackToLobby, onLeave,
+  players,
+  currentPlayerId,
+  onPlayAgain,
+  onBackToLobby,
+  onLeave,
 }: GameResultsProps) {
   const [selectedTab, setSelectedTab] = useState<'leaderboard' | 'stats'>('leaderboard');
 
-  const sortedPlayers = useMemo(() => [...players].sort((a, b) => b.score - a.score), [players]);
+  const sortedPlayers = useMemo(
+    () => [...players].sort((a, b) => b.score - a.score),
+    [players]
+  );
   const winner = sortedPlayers[0];
-  const currentPlayerStats = useMemo(() => sortedPlayers.find((p) => p.id === currentPlayerId), [sortedPlayers, currentPlayerId]);
-  const currentRank = useMemo(() => sortedPlayers.findIndex((p) => p.id === currentPlayerId) + 1, [sortedPlayers, currentPlayerId]);
+  const currentPlayerStats = useMemo(
+    () => sortedPlayers.find((p) => p.id === currentPlayerId),
+    [sortedPlayers, currentPlayerId]
+  );
+  const currentRank = useMemo(
+    () => sortedPlayers.findIndex((p) => p.id === currentPlayerId) + 1,
+    [sortedPlayers, currentPlayerId]
+  );
+
+  useEffect(() => {
+    fireCelebrationConfetti();
+  }, []);
 
   const handleShare = useCallback(() => {
     const text = `Song Game Results!\n\nI placed #${currentRank} with ${currentPlayerStats?.score || 0} points!\nCorrect: ${currentPlayerStats?.correctAnswers || 0}/${currentPlayerStats?.totalAnswers || 0}\n\nPlay at: ${window.location.origin}`;
-    navigator.clipboard.writeText(text);
+    if (navigator.share) {
+      navigator.share({ title: 'Song Game Results', text }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(text);
+      toast.success('Results copied to clipboard!');
+    }
   }, [currentRank, currentPlayerStats]);
 
-  const playersWithStats = useMemo(() => sortedPlayers.filter((p) => !p.isSpectator), [sortedPlayers]);
+  const playersWithStats = useMemo(
+    () => sortedPlayers.filter((p) => !p.isSpectator),
+    [sortedPlayers]
+  );
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-gradient-to-b from-black/95 via-purple-950/30 to-black/95 backdrop-blur-md flex flex-col overflow-hidden"
+      className="fixed inset-0 z-50 bg-[var(--background)]/90 backdrop-blur-xl flex flex-col overflow-hidden"
     >
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto px-4 py-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-8"
-          >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', delay: 0.2, stiffness: 200 }}
-              className="relative inline-block mb-4"
-            >
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-2xl shadow-yellow-500/30">
-                <Trophy className="w-12 h-12 text-white" />
-              </div>
-            </motion.div>
-
-            <motion.h2
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-4xl font-bold mb-2"
-            >
+      <div className="flex-1 overflow-y-auto px-4 py-8">
+        <div className="max-w-3xl mx-auto space-y-8">
+          {/* Hero Celebration Banner with 3D Trophy */}
+          <div className="text-center pt-4">
+            <CelebrationTrophy size={140} />
+            <h1 className="text-4xl sm:text-5xl font-black font-display tracking-tight text-[var(--foreground)] mt-2">
               Game Over!
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="text-lg text-muted-foreground"
-            >
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent font-bold">
-                {winner?.username}
+            </h1>
+            <p className="text-lg text-[var(--muted-foreground)] mt-1">
+              <span className="text-[var(--primary)] font-bold">
+                {winner?.username || 'Player'}
               </span>{' '}
-              wins the game!
-            </motion.p>
-          </motion.div>
+              takes the crown!
+            </p>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="mb-10"
-          >
-            <div className="flex items-end justify-center gap-4 mb-4 h-[240px]">
-              {[2, 1, 3].map((rankPos) => {
-                const player = sortedPlayers[rankPos - 1];
-                if (!player) return <div key={rankPos} className="w-24" />;
-                const medal = RANK_MEDALS[rankPos - 1];
-                const height = PODIUM_HEIGHTS[rankPos - 1];
-                const isFirst = rankPos === 1;
+          {/* Podium for Top 3 */}
+          <div className="flex items-end justify-center gap-3 sm:gap-4 h-[240px] px-2">
+            {[2, 1, 3].map((rankPos) => {
+              const player = sortedPlayers[rankPos - 1];
+              if (!player) return <div key={rankPos} className="w-20 sm:w-24" />;
+              const medal = RANK_MEDALS[rankPos - 1];
+              const height = PODIUM_HEIGHTS[rankPos - 1];
+              const isFirst = rankPos === 1;
 
-                return (
-                  <motion.div
-                    key={player.id}
-                    initial={{ y: 100, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.8 + rankPos * 0.15, type: 'spring', stiffness: 200 }}
-                    className="flex flex-col items-center"
-                  >
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 1 + rankPos * 0.15 }}
-                      className={`w-16 h-16 rounded-full ring-4 ${medal.border} mb-2 relative`}
-                    >
-                      <Avatar src={player.avatar} alt={player.username} fallback={player.username[0]?.toUpperCase() || '?'} size="xl" className="w-full h-full" />
-                      <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full ${medal.bg} flex items-center justify-center ring-2 ring-black`}>
-                        <medal.icon className={`w-3.5 h-3.5 ${medal.color}`} />
-                      </div>
-                    </motion.div>
-                    <p className="font-bold text-sm text-center truncate max-w-[80px]">{player.username}</p>
-                    <p className="text-xs text-muted-foreground">{medal.label}</p>
-                    <motion.div
-                      initial={{ height: 0 }}
-                      animate={{ height }}
-                      transition={{ delay: 1.2 + rankPos * 0.1, duration: 0.4 }}
-                      className={`w-20 rounded-t-xl mt-2 ${isFirst ? 'bg-gradient-to-t from-yellow-500/30 to-yellow-500/10' : 'bg-white/5'} flex items-start justify-center pt-3`}
-                      style={{ height }}
-                    >
-                      <span className={`font-bold text-lg ${medal.color}`}>
-                        <CountUp value={player.score} />
-                      </span>
-                    </motion.div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2 }}
-            className="glass rounded-2xl p-4 mb-6"
-          >
-            <div className="flex gap-2 mb-4">
-              <Button
-                variant={selectedTab === 'leaderboard' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setSelectedTab('leaderboard')}
-                className="flex-1"
-              >
-                <Trophy className="w-4 h-4 mr-1" /> Leaderboard
-              </Button>
-              {currentPlayerStats && (
-                <Button
-                  variant={selectedTab === 'stats' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setSelectedTab('stats')}
-                  className="flex-1"
+              return (
+                <motion.div
+                  key={player.id}
+                  initial={{ y: 80, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 + rankPos * 0.1, type: 'spring', stiffness: 220 }}
+                  className="flex flex-col items-center flex-1 max-w-[120px]"
                 >
-                  <Target className="w-4 h-4 mr-1" /> Your Stats
-                </Button>
+                  <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 ${medal.border} mb-2 relative p-0.5`}>
+                    <Avatar
+                      src={player.avatar}
+                      alt={player.username}
+                      fallback={player.username[0]?.toUpperCase() || '?'}
+                      size="xl"
+                      className="w-full h-full"
+                    />
+                    <div
+                      className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full ${medal.bg} border border-[var(--glass-border)] flex items-center justify-center`}
+                    >
+                      <medal.icon className={`w-3.5 h-3.5 ${medal.color}`} weight="fill" />
+                    </div>
+                  </div>
+
+                  <p className="font-bold text-xs sm:text-sm text-center truncate max-w-full text-[var(--foreground)]">
+                    {player.username}
+                  </p>
+                  <p className="text-[11px] text-[var(--muted-foreground)]">{medal.label}</p>
+
+                  <GlassSurface
+                    variant={isFirst ? 'strong' : 'regular'}
+                    radius="md"
+                    className="w-full rounded-t-2xl mt-2 flex flex-col items-center justify-start pt-3 border-b-0"
+                    style={{ height }}
+                  >
+                    <span className={`font-mono font-bold text-sm sm:text-base ${medal.color}`}>
+                      <AnimatedCounter value={player.score} />
+                    </span>
+                    <span className="text-[10px] text-[var(--muted-foreground)] uppercase">pts</span>
+                  </GlassSurface>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Leaderboard / Stats Segmented Box */}
+          <GlassSurface variant="regular" radius="xl" className="p-5 backdrop-blur-xl border border-[var(--glass-border)] shadow-xl">
+            <div className="flex gap-2 p-1 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] mb-4">
+              <button
+                type="button"
+                onClick={() => setSelectedTab('leaderboard')}
+                className={`flex-1 py-2 px-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors ${
+                  selectedTab === 'leaderboard'
+                    ? 'bg-[var(--card)] text-[var(--foreground)] shadow-sm border border-[var(--glass-border)]'
+                    : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+                }`}
+              >
+                <Trophy size={16} weight={selectedTab === 'leaderboard' ? 'fill' : 'regular'} />
+                Leaderboard
+              </button>
+              {currentPlayerStats && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedTab('stats')}
+                  className={`flex-1 py-2 px-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors ${
+                    selectedTab === 'stats'
+                      ? 'bg-[var(--card)] text-[var(--foreground)] shadow-sm border border-[var(--glass-border)]'
+                      : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+                  }`}
+                >
+                  <Target size={16} weight={selectedTab === 'stats' ? 'fill' : 'regular'} />
+                  Your Stats
+                </button>
               )}
             </div>
 
@@ -190,132 +191,145 @@ export function GameResults({
               {selectedTab === 'leaderboard' ? (
                 <motion.div
                   key="leaderboard"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
                   className="space-y-2"
                 >
                   {playersWithStats.map((player, i) => {
                     const isCurrent = player.id === currentPlayerId;
                     const medalInfo = i < 3 ? RANK_MEDALS[i] : null;
-                    const accuracy = player.totalAnswers > 0
-                      ? Math.round((player.correctAnswers / player.totalAnswers) * 100)
-                      : 0;
+                    const accuracy =
+                      player.totalAnswers > 0
+                        ? Math.round((player.correctAnswers / player.totalAnswers) * 100)
+                        : 0;
 
                     return (
-                      <motion.div
+                      <div
                         key={player.id}
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: i * 0.05 }}
-                        className={`glass rounded-xl p-3 flex items-center gap-3 ${
-                          isCurrent ? 'ring-2 ring-purple-500/30 bg-purple-500/5' : ''
-                        } ${i === 0 ? 'ring-1 ring-yellow-500/30' : ''}`}
+                        className={`rounded-2xl p-3 flex items-center gap-3 border transition-colors ${
+                          isCurrent
+                            ? 'liquid-glass-surface bg-[var(--primary)]/10 border-[var(--primary)]/40 shadow-sm'
+                            : 'bg-[var(--glass-bg)] border-[var(--glass-border)]'
+                        }`}
                       >
                         <div className="w-8 text-center shrink-0">
                           {medalInfo ? (
-                            <medalInfo.icon className={`w-5 h-5 mx-auto ${medalInfo.color}`} />
+                            <medalInfo.icon className={`w-5 h-5 mx-auto ${medalInfo.color}`} weight="fill" />
                           ) : (
-                            <span className="text-sm text-muted-foreground font-medium">#{i + 1}</span>
+                            <span className="text-xs font-mono font-bold text-[var(--muted-foreground)]">
+                              #{i + 1}
+                            </span>
                           )}
                         </div>
-                        <Avatar src={player.avatar} alt={player.username} fallback={player.username[0]?.toUpperCase() || '?'} size="sm" className="shrink-0" />
+                        <Avatar
+                          src={player.avatar}
+                          alt={player.username}
+                          fallback={player.username[0]?.toUpperCase() || '?'}
+                          size="sm"
+                          className="shrink-0"
+                        />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">
+                          <p className="text-sm font-bold truncate text-[var(--foreground)]">
                             {player.username}
-                            {isCurrent && <span className="text-purple-400 text-xs ml-1">(You)</span>}
+                            {isCurrent && (
+                              <span className="text-[var(--primary)] text-xs ml-1.5 font-normal">
+                                (You)
+                              </span>
+                            )}
                           </p>
-                          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                          <div className="flex items-center gap-3 text-xs text-[var(--muted-foreground)] mt-0.5">
                             <span className="flex items-center gap-1">
-                              <CheckCircle className="w-3 h-3 text-green-400" />
+                              <CheckCircle size={14} className="text-[var(--success)]" weight="bold" />
                               {player.correctAnswers}/{player.totalAnswers}
                             </span>
-                            <span className="flex items-center gap-1">
-                              <Target className="w-3 h-3" />
+                            <span className="flex items-center gap-1 font-mono">
+                              <Target size={14} />
                               {accuracy}%
                             </span>
                             {player.avgResponseTime > 0 && (
-                              <span className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
+                              <span className="flex items-center gap-1 font-mono">
+                                <Clock size={14} />
                                 {player.avgResponseTime.toFixed(1)}s
                               </span>
                             )}
                           </div>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="font-bold text-lg">
-                            <CountUp value={player.score} />
+                          <p className="font-mono font-bold text-base text-[var(--foreground)]">
+                            <AnimatedCounter value={player.score} />
                           </p>
-                          <p className="text-[10px] text-muted-foreground">pts</p>
+                          <p className="text-[10px] text-[var(--muted-foreground)] uppercase">pts</p>
                         </div>
-                      </motion.div>
+                      </div>
                     );
                   })}
                 </motion.div>
               ) : (
                 <motion.div
                   key="stats"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  className="space-y-4"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="grid grid-cols-2 gap-3"
                 >
                   {currentPlayerStats && (
                     <>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="glass rounded-xl p-4 text-center">
-                          <p className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">#{currentRank}</p>
-                          <p className="text-xs text-muted-foreground mt-1">Rank</p>
-                        </div>
-                        <div className="glass rounded-xl p-4 text-center">
-                          <p className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                            <CountUp value={currentPlayerStats.score} />
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-1">Score</p>
-                        </div>
-                        <div className="glass rounded-xl p-4 text-center">
-                          <p className="text-3xl font-bold text-green-400">
-                            {currentPlayerStats.totalAnswers > 0
-                              ? Math.round((currentPlayerStats.correctAnswers / currentPlayerStats.totalAnswers) * 100)
-                              : 0}%
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-1">Accuracy</p>
-                        </div>
-                        <div className="glass rounded-xl p-4 text-center">
-                          <p className="text-3xl font-bold text-blue-400">
-                            {currentPlayerStats.avgResponseTime > 0
-                              ? currentPlayerStats.avgResponseTime.toFixed(1)
-                              : '-'}s
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-1">Avg Response</p>
-                        </div>
+                      <div className="rounded-2xl p-4 text-center bg-[var(--glass-bg)] border border-[var(--glass-border)]">
+                        <p className="text-3xl font-extrabold font-mono text-[var(--primary)]">
+                          #{currentRank}
+                        </p>
+                        <p className="text-xs text-[var(--muted-foreground)] mt-1 font-medium">Rank</p>
+                      </div>
+                      <div className="rounded-2xl p-4 text-center bg-[var(--glass-bg)] border border-[var(--glass-border)]">
+                        <p className="text-3xl font-extrabold font-mono text-[var(--foreground)]">
+                          <AnimatedCounter value={currentPlayerStats.score} />
+                        </p>
+                        <p className="text-xs text-[var(--muted-foreground)] mt-1 font-medium">Total Score</p>
+                      </div>
+                      <div className="rounded-2xl p-4 text-center bg-[var(--glass-bg)] border border-[var(--glass-border)]">
+                        <p className="text-3xl font-extrabold font-mono text-[var(--success)]">
+                          {currentPlayerStats.totalAnswers > 0
+                            ? Math.round((currentPlayerStats.correctAnswers / currentPlayerStats.totalAnswers) * 100)
+                            : 0}
+                          %
+                        </p>
+                        <p className="text-xs text-[var(--muted-foreground)] mt-1 font-medium">Accuracy</p>
+                      </div>
+                      <div className="rounded-2xl p-4 text-center bg-[var(--glass-bg)] border border-[var(--glass-border)]">
+                        <p className="text-3xl font-extrabold font-mono text-[var(--accent)]">
+                          {currentPlayerStats.avgResponseTime > 0
+                            ? `${currentPlayerStats.avgResponseTime.toFixed(1)}s`
+                            : '-'}
+                        </p>
+                        <p className="text-xs text-[var(--muted-foreground)] mt-1 font-medium">Avg Response</p>
                       </div>
                     </>
                   )}
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.div>
+          </GlassSurface>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.4 }}
-            className="flex flex-wrap gap-3 justify-center pb-8"
-          >
-            <Button size="lg" onClick={onPlayAgain} className="gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
-              <RotateCcw className="w-4 h-4" /> Play Again
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2 pb-8">
+            <Button size="lg" variant="primary" onClick={onPlayAgain} className="min-w-[160px]">
+              <ArrowClockwise size={20} weight="bold" />
+              Play Again
             </Button>
-            <Button size="lg" variant="outline" onClick={onBackToLobby} className="gap-2">
-              <ArrowLeft className="w-4 h-4" /> Back to Lobby
+            <Button size="lg" variant="glass" onClick={onBackToLobby}>
+              <ArrowLeft size={20} />
+              Lobby
             </Button>
-            <Button size="lg" variant="glass" onClick={onLeave} className="gap-2">
-              <Home className="w-4 h-4" /> Home
+            <Button size="lg" variant="ghost" onClick={handleShare}>
+              <ShareNetwork size={20} />
+              Share
             </Button>
-            <Button size="lg" variant="ghost" onClick={handleShare} className="gap-2">
-              <Share2 className="w-4 h-4" /> Share Results
+            <Button size="lg" variant="ghost" onClick={onLeave}>
+              <House size={20} />
+              Home
             </Button>
-          </motion.div>
+          </div>
         </div>
       </div>
     </motion.div>

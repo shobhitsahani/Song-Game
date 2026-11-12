@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Users, UserPlus, UserMinus, Check, X, Clock } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Users, UserPlus, UserMinus, Check, X, Clock } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/stores/auth';
@@ -116,7 +116,7 @@ export default function FriendsPage() {
       <div className="pt-24 px-4 max-w-4xl mx-auto">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold flex items-center gap-2"><Users className="w-6 h-6 text-purple-400" /> Friends</h1>
+            <h1 className="text-2xl font-bold flex items-center gap-2"><Users className="w-6 h-6 text-primary" /> Friends</h1>
           </div>
 
           <div className="flex gap-2">

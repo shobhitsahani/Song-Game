@@ -27,7 +27,7 @@ const Avatar = React.forwardRef<
         alt={alt || ''}
         className="aspect-square h-full w-full object-cover"
       />
-      <AvatarPrimitive.Fallback className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-sm font-bold text-white">
+      <AvatarPrimitive.Fallback className="flex h-full w-full items-center justify-center rounded-full bg-secondary text-secondary-foreground border border-[var(--glass-border)] text-sm font-semibold">
         {fallback || '?'}
       </AvatarPrimitive.Fallback>
     </AvatarPrimitive.Root>
@@ -35,9 +35,9 @@ const Avatar = React.forwardRef<
       <span
         className={cn(
           'absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background',
-          status === 'online' && 'bg-green-500',
-          status === 'offline' && 'bg-gray-500',
-          status === 'playing' && 'bg-purple-500',
+          status === 'online' && 'bg-success',
+          status === 'offline' && 'bg-muted-foreground/60',
+          status === 'playing' && 'bg-primary',
         )}
       />
     )}

@@ -2,8 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Trophy, Lock, Star, Music, Zap, Flame, Crown, Gamepad2 } from 'lucide-react';
+import { motion } from 'motion/react';
+import {
+  Trophy,
+  Lock,
+  Star,
+  MusicNotes,
+  Lightning,
+  Fire,
+  Crown,
+  GameController,
+} from '@phosphor-icons/react';
 import { useAuthStore } from '@/stores/auth';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -13,10 +22,10 @@ import type { UserStats } from '@song-game/types';
 const ACHIEVEMENTS = [
   { id: 'first_win', title: 'First Win', description: 'Win your first game', icon: Trophy, xp: 50, condition: (s: UserStats | null) => (s?.wins ?? 0) >= 1 },
   { id: 'ten_wins', title: 'Double Digits', description: 'Win 10 games', icon: Crown, xp: 200, condition: (s: UserStats | null) => (s?.wins ?? 0) >= 10 },
-  { id: 'fifty_games', title: 'Dedicated Player', description: 'Play 50 games', icon: Gamepad2, xp: 150, condition: (s: UserStats | null) => (s?.totalGames ?? 0) >= 50 },
-  { id: 'hundred_games', title: 'Veteran', description: 'Play 100 games', icon: Music, xp: 300, condition: (s: UserStats | null) => (s?.totalGames ?? 0) >= 100 },
-  { id: 'five_streak', title: 'On Fire', description: 'Win 5 games in a row', icon: Flame, xp: 250, condition: (s: UserStats | null) => (s?.longestStreak ?? 0) >= 5 },
-  { id: 'ten_streak', title: 'Unstoppable', description: 'Win 10 games in a row', icon: Zap, xp: 500, condition: (s: UserStats | null) => (s?.longestStreak ?? 0) >= 10 },
+  { id: 'fifty_games', title: 'Dedicated Player', description: 'Play 50 games', icon: GameController, xp: 150, condition: (s: UserStats | null) => (s?.totalGames ?? 0) >= 50 },
+  { id: 'hundred_games', title: 'Veteran', description: 'Play 100 games', icon: MusicNotes, xp: 300, condition: (s: UserStats | null) => (s?.totalGames ?? 0) >= 100 },
+  { id: 'five_streak', title: 'On Fire', description: 'Win 5 games in a row', icon: Fire, xp: 250, condition: (s: UserStats | null) => (s?.longestStreak ?? 0) >= 5 },
+  { id: 'ten_streak', title: 'Unstoppable', description: 'Win 10 games in a row', icon: Lightning, xp: 500, condition: (s: UserStats | null) => (s?.longestStreak ?? 0) >= 10 },
   { id: 'level_5', title: 'Getting Started', description: 'Reach level 5', icon: Star, xp: 75, condition: (s: UserStats | null) => (s?.level ?? 0) >= 5 },
   { id: 'level_10', title: 'Rising Star', description: 'Reach level 10', icon: Star, xp: 200, condition: (s: UserStats | null) => (s?.level ?? 0) >= 10 },
   { id: 'level_25', title: 'Music Master', description: 'Reach level 25', icon: Crown, xp: 500, condition: (s: UserStats | null) => (s?.level ?? 0) >= 25 },

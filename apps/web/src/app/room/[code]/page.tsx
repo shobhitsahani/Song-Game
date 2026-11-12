@@ -2,8 +2,18 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Copy, LogOut, Play, Users, Settings, WifiOff, Loader2, Send, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import {
+  Copy,
+  SignOut,
+  Play,
+  Users,
+  Gear,
+  WifiSlash,
+  CircleNotch,
+  PaperPlaneRight,
+  Check,
+} from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -356,16 +366,16 @@ export default function RoomPage() {
       </div>
 
       {!connected && !reconnecting && (
-        <div className="fixed top-0 left-0 right-0 z-40 bg-red-500/90 backdrop-blur-sm py-2 px-4 text-center">
+        <div className="fixed top-0 left-0 right-0 z-40 bg-[var(--destructive)] py-2 px-4 text-center">
           <p className="text-sm font-medium text-white flex items-center justify-center gap-2">
-            <WifiOff className="w-4 h-4" /> Connection lost. Attempting to reconnect...
+            <WifiSlash size={18} /> Connection lost. Attempting to reconnect...
           </p>
         </div>
       )}
       {reconnecting && (
-        <div className="fixed top-0 left-0 right-0 z-40 bg-yellow-500/90 backdrop-blur-sm py-2 px-4 text-center">
+        <div className="fixed top-0 left-0 right-0 z-40 bg-amber-500 py-2 px-4 text-center">
           <p className="text-sm font-medium text-white flex items-center justify-center gap-2">
-            <Loader2 className="w-4 h-4 animate-spin" /> Reconnecting...
+            <CircleNotch size={18} className="animate-spin" /> Reconnecting...
           </p>
         </div>
       )}
@@ -387,46 +397,48 @@ export default function RoomPage() {
       <div className="pt-4 pb-8 px-4 max-w-7xl mx-auto relative z-10">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass rounded-lg px-4 py-2 flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Room</span>
-              <span className="text-lg font-bold ml-1 tracking-wider">{room?.code || codeParam}</span>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="liquid-glass-surface rounded-2xl px-4 py-2 flex items-center gap-2 border border-[var(--glass-border)]">
+              <span className="text-xs text-[var(--muted-foreground)] uppercase font-bold tracking-wider">Room</span>
+              <span className="text-lg font-mono font-bold ml-1 tracking-wider text-[var(--foreground)]">{room?.code || codeParam}</span>
             </motion.div>
-            <Button variant="ghost" size="icon" onClick={handleCopyLink}>
-              <Copy className="w-4 h-4" />
+            <Button variant="ghost" size="icon" onClick={handleCopyLink} aria-label="Copy room code">
+              <Copy size={18} />
             </Button>
           </div>
 
           {gameStatus === 'IDLE' && (
             <div className="flex items-center gap-3">
-              <Badge variant="secondary" className="gap-1">
-                <Users className="w-3 h-3" /> {activePlayers.length}
+              <Badge variant="secondary" className="gap-1.5">
+                <Users size={16} /> {activePlayers.length}
               </Badge>
               {isHost && (
                 <>
-                  <Button variant="ghost" size="sm" onClick={() => setShowSettings(!showSettings)}>
-                    <Settings className="w-4 h-4 mr-1" /> Settings
+                  <Button variant="glass" size="sm" onClick={() => setShowSettings(!showSettings)}>
+                    <Gear size={16} className="mr-1" /> Settings
                   </Button>
                   <Button
                     onClick={handleStart}
-                    className="gap-2"
+                    variant="primary"
+                    className="gap-2 font-bold"
                     disabled={activePlayers.length < 1 || isStarting}
                   >
-                    {isStarting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
-                    {isStarting ? 'Starting...' : 'Start'}
+                    {isStarting ? <CircleNotch size={18} className="animate-spin" /> : <Play size={18} weight="fill" />}
+                    {isStarting ? 'Starting...' : 'Start Round'}
                   </Button>
                 </>
               )}
               {!isHost && (
-                <Button onClick={handleReady} variant={localPlayer?.isReady ? 'default' : 'outline'}>
+                <Button onClick={handleReady} variant={localPlayer?.isReady ? 'primary' : 'outline'}>
                   {localPlayer?.isReady ? 'Ready!' : 'Ready'}
                 </Button>
               )}
-              <Button variant="destructive" size="sm" onClick={handleLeave}>
-                <LogOut className="w-4 h-4" />
+              <Button variant="destructive" size="icon" onClick={handleLeave} aria-label="Leave room">
+                <SignOut size={18} />
               </Button>
             </div>
           )}
         </div>
+
 
         {inGame ? (
           <GameScreen
@@ -569,8 +581,8 @@ export default function RoomPage() {
                     onKeyDown={(e) => e.key === 'Enter' && handleSendChat()}
                     className="flex-1 h-9 text-sm"
                   />
-                  <Button size="sm" onClick={handleSendChat} disabled={!chatInput.trim()}>
-                    <Send className="w-4 h-4" />
+                  <Button size="sm" onClick={handleSendChat} disabled={!chatInput.trim()} aria-label="Send message">
+                    <PaperPlaneRight size={16} weight="fill" />
                   </Button>
                 </div>
               </motion.div>

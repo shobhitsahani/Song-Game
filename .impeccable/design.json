@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-12T17:55:00.000Z",
+  "title": "Design System: Music Trivia - Liquid Glass",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Amber Gold",
+        "canonical": "oklch(0.82 0.17 75)",
+        "tonalRamp": [
+          "oklch(0.25 0.05 75)",
+          "oklch(0.38 0.09 75)",
+          "oklch(0.52 0.13 75)",
+          "oklch(0.65 0.15 75)",
+          "oklch(0.75 0.17 75)",
+          "oklch(0.82 0.17 75)",
+          "oklch(0.90 0.12 75)",
+          "oklch(0.96 0.05 75)"
+        ]
+      },
+      "accent-cyan": {
+        "role": "secondary",
+        "displayName": "Electric Cyan",
+        "canonical": "oklch(0.78 0.13 210)",
+        "tonalRamp": [
+          "oklch(0.25 0.04 210)",
+          "oklch(0.38 0.08 210)",
+          "oklch(0.52 0.11 210)",
+          "oklch(0.65 0.13 210)",
+          "oklch(0.78 0.13 210)",
+          "oklch(0.85 0.10 210)",
+          "oklch(0.92 0.06 210)",
+          "oklch(0.97 0.02 210)"
+        ]
+      },
+      "neutral-bg": {
+        "role": "neutral",
+        "displayName": "Vinyl Lacquer Ground",
+        "canonical": "oklch(0.10 0.005 270)",
+        "tonalRamp": [
+          "oklch(0.10 0.005 270)",
+          "oklch(0.15 0.008 270)",
+          "oklch(0.22 0.010 270)",
+          "oklch(0.35 0.012 270)",
+          "oklch(0.50 0.015 270)",
+          "oklch(0.72 0.015 270)",
+          "oklch(0.88 0.008 270)",
+          "oklch(0.97 0.004 270)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Unbounded Display",
+        "purpose": "Hero headlines, victory banners, round announcements."
+      },
+      "body": {
+        "displayName": "Inter Body",
+        "purpose": "General UI, instructions, artist metadata."
+      },
+      "label": {
+        "displayName": "JetBrains Mono Tabular",
+        "purpose": "Countdown timers, leaderboards, scores, hotkey keycaps."
+      }
+    },
+    "shadows": [
+      {
+        "name": "glass-outer",
+        "value": "0 16px 40px rgba(0, 0, 0, 0.4)",
+        "purpose": "Elevation for floating glass surfaces over dark ambient background."
+      },
+      {
+        "name": "glow-primary",
+        "value": "0 0 24px oklch(0.82 0.17 75 / 0.35)",
+        "purpose": "Active focus, streak multipliers, and correct answer feedback glow."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-fluid",
+        "value": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "purpose": "Snappy smooth curve for liquid glass layout transitions."
+      },
+      {
+        "name": "spring-snappy",
+        "value": "stiffness 380, damping 26",
+        "purpose": "Haptic button scale and answer selection bounce."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary high-contrast CTA with amber glow and active tactile scale.",
+      "html": "<button class=\"ds-btn-primary\">Start a round</button>",
+      "css": ".ds-btn-primary { background: oklch(0.82 0.17 75); color: oklch(0.18 0.03 75); font-weight: 700; font-size: 1rem; padding: 14px 28px; border-radius: 20px; border: none; cursor: pointer; transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s; box-shadow: 0 4px 20px oklch(0.82 0.17 75 / 0.35); } .ds-btn-primary:hover { transform: translateY(-1px) scale(1.02); box-shadow: 0 6px 28px oklch(0.82 0.17 75 / 0.5); } .ds-btn-primary:focus-visible { outline: 2px solid oklch(0.82 0.17 75); outline-offset: 2px; }"
+    },
+    {
+      "name": "Liquid Glass Surface",
+      "kind": "card",
+      "refersTo": "glass-surface",
+      "description": "Floating liquid glass container with specular top sheen, noise grain, and outer shadow.",
+      "html": "<div class=\"ds-glass-card\"><span class=\"ds-badge\">ROUND 01</span><h3>Guess the track title</h3></div>",
+      "css": ".ds-glass-card { background: oklch(1 0 0 / 0.06); backdrop-filter: blur(24px) saturate(160%); -webkit-backdrop-filter: blur(24px) saturate(160%); border: 1px solid oklch(1 0 0 / 0.14); border-radius: 20px; padding: 24px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2); color: oklch(0.97 0.004 270); } .ds-badge { display: inline-block; font-size: 0.75rem; font-family: monospace; padding: 4px 10px; border-radius: 9999px; background: oklch(0.82 0.17 75 / 0.15); color: oklch(0.82 0.17 75); margin-bottom: 12px; }"
+    },
+    {
+      "name": "Trivia Answer Option",
+      "kind": "button",
+      "refersTo": "answer-option",
+      "description": "Tactile answer option with keycap indicator and hover highlight.",
+      "html": "<button class=\"ds-answer-option\"><span class=\"ds-keycap\">1</span><span class=\"ds-text\">Bohemian Rhapsody</span></button>",
+      "css": ".ds-answer-option { width: 100%; display: flex; align-items: center; gap: 14px; background: oklch(1 0 0 / 0.06); border: 1px solid oklch(1 0 0 / 0.14); border-radius: 20px; padding: 16px 20px; min-height: 60px; color: oklch(0.97 0.004 270); cursor: pointer; transition: all 0.15s ease; text-align: left; } .ds-answer-option:hover { background: oklch(1 0 0 / 0.12); border-color: oklch(0.82 0.17 75 / 0.5); transform: translateY(-1px); } .ds-keycap { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 10px; background: oklch(1 0 0 / 0.1); font-family: monospace; font-size: 0.875rem; font-weight: 700; color: oklch(0.82 0.17 75); flex-shrink: 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Late-Night Listening Lounge",
+    "overview": "Music Trivia treats music as the hero in a warm, tactile, dimly lit listening lounge. The interface lives on an ambient field of soft drifting color orbs and fine microscopic grain. The chrome—floating navigation dock, countdown timer ring, answer cards, and dialogs—is rendered in floating liquid glass with specular sheens, subtle edge highlights, and Chromium SVG refraction.",
+    "keyCharacteristics": [
+      "Atmospheric Living Backdrop with pre-blurred drifting orbs and subtle audio-reactive burst",
+      "Three-Tier Liquid Glass with specular pointer sheen, SVG noise, and accessibility fallbacks",
+      "Typographic Gravity: Unbounded display headlines paired with Inter body and JetBrains Mono tabular figures",
+      "One Primary Action per viewport with <100ms response time and skippable animations"
+    ],
+    "rules": [
+      {
+        "name": "The Rarity Rule",
+        "body": "Primary amber or accent color is reserved for the single actionable target per viewport. It never coats passive cards or static banners.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Flash Rule",
+        "body": "Theme switches use the circular View Transitions API from the trigger element or instant inline script execution to eliminate white flashes on page reload.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Numerals Rule",
+        "body": "Every countdown timer, scoreboard score, and percentage must use monospace tabular figures (font-variant-numeric: tabular-nums) to prevent horizontal layout jank during ticking.",
+        "section": "typography"
+      },
+      {
+        "name": "The Max-Three Glass Rule",
+        "body": "No more than 3 glass surfaces may ever be stacked vertically in a single viewport. Deep nested cards are prohibited.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do maintain instant feedback (<100ms) on all trivia clicks before triggering socket transitions.",
+      "Do support keyboard shortcuts 1–4 and A–D for all question screens.",
+      "Do test every color against worst-case transparent backdrops for WCAG AA compliance.",
+      "Do pause all 3D canvas requestAnimationFrame loops and ambient orb animations when document.hidden is true."
+    ],
+    "donts": [
+      "Don't use colored side-tab borders (border-l-4), nested cards, or eyebrow chips.",
+      "Don't use purple-to-pink generic gradients or neon cyan ink on dark grounds.",
+      "Don't animate backdrop-filter: blur() values dynamically (causes heavy GPU frame drops).",
+      "Don't use generic CTAs like 'Get Started' or 'Click Here'; use music-specific verbs like 'Start a round', 'Join room', 'Submit guess'."
+    ]
+  }
+}
