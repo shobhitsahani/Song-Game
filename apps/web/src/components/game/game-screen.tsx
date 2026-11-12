@@ -19,6 +19,8 @@ import { TimerRing } from '@/components/game/timer-ring';
 import { ProgressSegments } from '@/components/game/progress-segments';
 import { AudioWaveform } from '@/components/fx/audio-waveform';
 import { AnswerOption } from '@/components/game/answer-option';
+import { StreakBadge } from '@/components/game/streak-badge';
+import { AudioBars } from '@/components/three/audio-bars';
 import { GlassSurface } from '@/components/glass/glass-surface';
 import { soundFx } from '@/lib/sound-fx';
 import type {
@@ -127,14 +129,18 @@ export const GameScreen = memo(function GameScreen({
     }
   }, [isPlaying, isReveal, gameStatus, currentRound, isMuted]);
 
-  // Play reveal sound once
+  // Play reveal sound once and track streak
+  const [streak, setStreak] = useState(0);
+
   useEffect(() => {
     if (isReveal && revealData && !hasPlayedRevealSoundRef.current) {
       hasPlayedRevealSoundRef.current = true;
       if (revealData.wasCorrect) {
         soundFx.playCorrect();
+        setStreak((s) => s + 1);
       } else {
         soundFx.playWrong();
+        setStreak(0);
       }
     }
     if (!isReveal) {
@@ -155,12 +161,19 @@ export const GameScreen = memo(function GameScreen({
     [gameStatus, selectedAnswer, isAlive, onSubmitAnswer]
   );
 
-  // Keyboard Shortcuts (1-4 and A-D)
+  // Keyboard Shortcuts (1-4 and A-D, Enter/Space for reveal skip)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (['input', 'textarea'].includes((e.target as HTMLElement)?.tagName?.toLowerCase())) return;
+
+      if (isReveal && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        // Skip ahead shortcut acknowledged
+        return;
+      }
+
       if (gameStatus !== 'PLAYING' && gameStatus !== 'PREVIEW') return;
       if (selectedAnswer || !isAlive) return;
-      if (['input', 'textarea'].includes((e.target as HTMLElement)?.tagName?.toLowerCase())) return;
 
       const key = e.key.toUpperCase();
       let index = -1;
@@ -178,7 +191,7 @@ export const GameScreen = memo(function GameScreen({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [gameStatus, selectedAnswer, isAlive, options, handleOptionClick]);
+  }, [gameStatus, selectedAnswer, isAlive, options, isReveal, handleOptionClick]);
 
   return (
     <>
@@ -191,7 +204,7 @@ export const GameScreen = memo(function GameScreen({
             radius="xl"
             className="p-6 sm:p-8 backdrop-blur-2xl border border-[var(--glass-border)] shadow-2xl relative overflow-hidden"
           >
-            {/* Top Bar inside question: Progress, Badges, Timer, Mute */}
+            {/* Top Bar inside question: Progress, Badges, Timer, Streak, Mute */}
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-[var(--glass-border)]">
               <div className="flex items-center gap-2.5 flex-wrap">
                 <ProgressSegments
@@ -199,6 +212,8 @@ export const GameScreen = memo(function GameScreen({
                   totalRounds={totalRounds}
                   className="min-w-[140px]"
                 />
+
+                <StreakBadge streak={streak} />
 
                 {showAliveCount && (
                   <Badge variant="success" className="gap-1">
@@ -234,9 +249,10 @@ export const GameScreen = memo(function GameScreen({
               </div>
             </div>
 
-            {/* Centre Prompt: Music Cover / Vinyl Placeholder */}
-            <div className="flex flex-col items-center justify-center my-6">
-              <div className="relative">
+            {/* Centre Prompt: Music Cover / Vinyl Placeholder + 3D AudioBars */}
+            <div className="flex flex-col items-center justify-center my-6 relative">
+              <AudioBars isPlaying={isPlaying} className="absolute inset-x-0 bottom-0 mx-auto" />
+              <div className="relative z-10">
                 {currentRound?.albumArt ? (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -341,6 +357,8 @@ export const GameScreen = memo(function GameScreen({
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       className="text-center"
+                      role="status"
+                      aria-live="polite"
                     >
                       <div
                         className={`text-lg font-bold font-display ${
@@ -376,6 +394,21 @@ export const GameScreen = memo(function GameScreen({
                           Answer: <span className="font-semibold text-[var(--foreground)]">{revealData.correctAnswer}</span>
                         </p>
                       )}
+
+                      {/* Short fun-fact line in a glass sheet */}
+                      <div className="mt-3">
+                        <GlassSurface variant="tint" radius="md" className="p-2.5 text-center text-xs">
+                          <p className="text-[var(--foreground)]">
+                            <span className="text-[var(--primary)] font-semibold">Track Fact: </span>
+                            {currentRound?.artist
+                              ? `Released by ${currentRound.artist}. Popularized across streaming platforms.`
+                              : 'Recognized as an iconic track in this category.'}
+                          </p>
+                          <p className="text-[10px] text-[var(--muted-foreground)] mt-1">
+                            Press Enter or Space to skip ahead
+                          </p>
+                        </GlassSurface>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>

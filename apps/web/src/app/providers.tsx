@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { Toaster } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
 import { MotionConfig } from 'motion/react';
 import { AuthProvider } from '@/providers/auth-provider';
 import { SocketProvider } from '@/providers/socket-provider';
@@ -14,12 +14,7 @@ export function Providers({ children }: { children: ReactNode }) {
         <AuthProvider>
           <SocketProvider>
             {children}
-            <Toaster
-              position="bottom-center"
-              toastOptions={{
-                className: 'liquid-glass-surface rounded-2xl text-[var(--foreground)] border-[var(--glass-border)] text-sm shadow-xl',
-              }}
-            />
+            <Toaster position="bottom-center" />
           </SocketProvider>
         </AuthProvider>
       </MotionConfig>

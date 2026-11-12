@@ -1,78 +1,70 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
-import {
-  GithubLogo,
-  TwitterLogo,
-  Heart,
-} from '@phosphor-icons/react';
+import { GithubLogo } from '@phosphor-icons/react';
 import { Logo } from '@/components/shared/logo';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const footerLinks = {
-    Product: [
-      { label: 'Start a round', href: '/room/create' },
-      { label: 'Join with code', href: '/room/join' },
-      { label: 'Leaderboard', href: '/leaderboard' },
-      { label: 'Achievements', href: '/achievements' },
-    ],
-    Community: [
-      { label: 'GitHub', href: 'https://github.com/shobhitsahani/music-trivia', external: true },
-      { label: 'Twitter', href: 'https://twitter.com', external: true },
-    ],
-  };
-
   return (
-    <footer className="border-t border-[var(--glass-border)] bg-[var(--background)]/70 backdrop-blur-xl relative overflow-hidden py-14 px-4 sm:px-8 mb-20 md:mb-0">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-        <div className="flex flex-col items-center md:items-start text-center md:text-left">
-          <Logo size="md" />
-          <p className="text-sm text-[var(--muted-foreground)] mt-2 max-w-sm">
-            A late-night listening room for music fans. Challenge friends, test your ear, and climb the boards.
-          </p>
-        </div>
+    <footer className="border-t border-[var(--border)] bg-[var(--surface-1)]/60 backdrop-blur-xl py-12 px-4 sm:px-6 lg:px-8 mt-12">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-[var(--border)]">
+          {/* Wordmark + one line description */}
+          <div className="md:col-span-6 flex flex-col items-start text-left">
+            <Logo size="sm" />
+            <p className="text-sm text-[var(--muted-foreground)] mt-3 max-w-sm leading-relaxed">
+              Real-time music trivia rooms for competitive listeners. Hear the clip, name it first, and climb the boards.
+            </p>
+          </div>
 
-        <div className="flex items-center gap-8 text-sm">
-          {footerLinks.Product.map((l) => (
+          {/* Two short link columns matching nav vocabulary */}
+          <div className="md:col-span-3 flex flex-col gap-2.5 text-left">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--foreground)]">
+              Product
+            </span>
             <Link
-              key={l.href}
-              href={l.href}
-              className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+              href="/room/create"
+              className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
             >
-              {l.label}
+              Play
             </Link>
-          ))}
+            <Link
+              href="/leaderboard"
+              className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            >
+              Leaderboard
+            </Link>
+            <Link
+              href="/achievements"
+              className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            >
+              Achievements
+            </Link>
+          </div>
+
+          <div className="md:col-span-3 flex flex-col gap-2.5 text-left">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--foreground)]">
+              Community
+            </span>
+            <a
+              href="https://github.com/shobhitsahani/music-trivia"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            >
+              <GithubLogo size={16} weight="duotone" /> GitHub Repository
+            </a>
+          </div>
         </div>
 
-        <div className="flex items-center gap-4 text-[var(--muted-foreground)]">
-          <a
-            href="https://github.com/shobhitsahani/music-trivia"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub repository"
-            className="p-2 rounded-xl hover:bg-[var(--glass-bg)] hover:text-[var(--foreground)] transition-colors"
-          >
-            <GithubLogo size={22} weight="duotone" />
-          </a>
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Twitter profile"
-            className="p-2 rounded-xl hover:bg-[var(--glass-bg)] hover:text-[var(--foreground)] transition-colors"
-          >
-            <TwitterLogo size={22} weight="duotone" />
-          </a>
+        {/* Bottom Bar: data-source line + copyright */}
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[var(--muted-foreground)] gap-3 text-center sm:text-left">
+          <p>Audio previews provided by Apple Music and iTunes official previews.</p>
+          <p>© {currentYear} SongGame. All rights reserved.</p>
         </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto mt-8 pt-6 border-t border-[var(--glass-border)] flex flex-col sm:flex-row items-center justify-between text-xs text-[var(--muted-foreground)] gap-2">
-        <p>© {currentYear} Song Game. All audio previews powered by official previews.</p>
-        <p className="flex items-center gap-1">
-          Crafted with <Heart size={14} weight="fill" className="text-[var(--primary)]" /> in Liquid Glass.
-        </p>
       </div>
     </footer>
   );

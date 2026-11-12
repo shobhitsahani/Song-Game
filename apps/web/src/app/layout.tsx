@@ -3,6 +3,7 @@ import { Inter, Unbounded, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import { AmbientBackground } from '@/components/glass/ambient-background';
+import { OfflineNotice } from '@/components/shared/offline-notice';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -23,22 +24,26 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://songgame.app'),
   title: {
-    default: 'Song Game - Multiplayer Music Trivia',
-    template: '%s | Song Game',
+    default: 'SongGame - Multiplayer Music Trivia',
+    template: '%s | SongGame',
   },
-  description: 'A late-night listening room for music fans. Real-time multiplayer trivia with tactile liquid glass and instant feedback.',
-  keywords: ['music trivia', 'multiplayer game', 'song guessing', 'party game', 'music quiz', 'liquid glass'],
+  description: 'Real-time music trivia. Hear a 15-second clip, name it first, and race your friends in a live room.',
+  keywords: ['music trivia', 'multiplayer game', 'song guessing', 'music quiz', 'party game'],
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     type: 'website',
-    siteName: 'Song Game',
-    title: 'Song Game - Multiplayer Music Trivia',
-    description: 'A late-night listening room for music fans. Real-time multiplayer trivia.',
+    siteName: 'SongGame',
+    title: 'SongGame - Multiplayer Music Trivia',
+    description: 'Real-time music trivia. Hear a 15-second clip, name it first, and race your friends in a live room.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Song Game - Multiplayer Music Trivia',
-    description: 'A late-night listening room for music fans.',
+    title: 'SongGame - Multiplayer Music Trivia',
+    description: 'Real-time music trivia. Hear a 15-second clip, name it first, and race your friends in a live room.',
   },
 };
 
@@ -57,8 +62,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: `
               (function() {
                 try {
-                  var t = localStorage.getItem('app-theme');
-                  if (!t) {
+                  var params = new URLSearchParams(window.location.search);
+                  var t = params.get('theme') || localStorage.getItem('app-theme');
+                  if (!t || (t !== 'black' && t !== 'rose' && t !== 'light')) {
                     t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'black' : 'light';
                   }
                   document.documentElement.setAttribute('data-theme', t);
@@ -75,7 +81,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to main content
         </a>
         <AmbientBackground />
-        <Providers>{children}</Providers>
+        <OfflineNotice />
+        <Providers>
+          <div id="main-content" tabIndex={-1} className="outline-none">
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );

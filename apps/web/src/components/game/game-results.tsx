@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import Link from 'next/link';
 import {
   Trophy,
   Medal,
@@ -12,6 +13,10 @@ import {
   Target,
   Clock,
   CheckCircle,
+  Fire,
+  Disc,
+  ListNumbers,
+  X,
 } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -20,6 +25,13 @@ import { GlassSurface } from '@/components/glass/glass-surface';
 import { AnimatedCounter } from '@/components/fx/animated-counter';
 import { fireCelebrationConfetti } from '@/components/fx/confetti';
 import { CelebrationTrophy } from '@/components/three/celebration-trophy';
+import { ResultRing } from '@/components/game/result-ring';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import type { Player } from '@song-game/types';
 
 interface GameResultsProps {
@@ -45,7 +57,8 @@ export function GameResults({
   onBackToLobby,
   onLeave,
 }: GameResultsProps) {
-  const [selectedTab, setSelectedTab] = useState<'leaderboard' | 'stats'>('leaderboard');
+  const [selectedTab, setSelectedTab] = useState<'leaderboard' | 'stats' | 'review'>('leaderboard');
+  const [showCelebrationBanner, setShowCelebrationBanner] = useState(true);
 
   const sortedPlayers = useMemo(
     () => [...players].sort((a, b) => b.score - a.score),
@@ -61,19 +74,24 @@ export function GameResults({
     [sortedPlayers, currentPlayerId]
   );
 
+  const accuracy = useMemo(() => {
+    if (!currentPlayerStats || currentPlayerStats.totalAnswers === 0) return 0;
+    return Math.round((currentPlayerStats.correctAnswers / currentPlayerStats.totalAnswers) * 100);
+  }, [currentPlayerStats]);
+
   useEffect(() => {
     fireCelebrationConfetti();
   }, []);
 
   const handleShare = useCallback(() => {
-    const text = `Song Game Results!\n\nI placed #${currentRank} with ${currentPlayerStats?.score || 0} points!\nCorrect: ${currentPlayerStats?.correctAnswers || 0}/${currentPlayerStats?.totalAnswers || 0}\n\nPlay at: ${window.location.origin}`;
+    const text = `Song Game Results!\n\nI placed #${currentRank} with ${currentPlayerStats?.score || 0} points!\nAccuracy: ${accuracy}%\n\nPlay at: ${window.location.origin}`;
     if (navigator.share) {
       navigator.share({ title: 'Song Game Results', text }).catch(() => {});
     } else {
       navigator.clipboard.writeText(text);
       toast.success('Results copied to clipboard!');
     }
-  }, [currentRank, currentPlayerStats]);
+  }, [currentRank, currentPlayerStats, accuracy]);
 
   const playersWithStats = useMemo(
     () => sortedPlayers.filter((p) => !p.isSpectator),
@@ -89,19 +107,38 @@ export function GameResults({
     >
       <div className="flex-1 overflow-y-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-8">
-          {/* Hero Celebration Banner with 3D Trophy */}
-          <div className="text-center pt-4">
-            <CelebrationTrophy size={140} />
-            <h1 className="text-4xl sm:text-5xl font-black font-display tracking-tight text-[var(--foreground)] mt-2">
-              Game Over!
-            </h1>
-            <p className="text-lg text-[var(--muted-foreground)] mt-1">
-              <span className="text-[var(--primary)] font-bold">
-                {winner?.username || 'Player'}
-              </span>{' '}
-              takes the crown!
-            </p>
-          </div>
+          {/* Hero Celebration Banner with 3D Trophy (Skippable) */}
+          <AnimatePresence>
+            {showCelebrationBanner && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
+                className="relative text-center pt-2"
+              >
+                <button
+                  type="button"
+                  onClick={() => setShowCelebrationBanner(false)}
+                  className="absolute right-2 top-0 p-1.5 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] text-xs flex items-center gap-1 transition-colors"
+                  aria-label="Skip celebration animation"
+                >
+                  <X size={14} />
+                  <span>Skip</span>
+                </button>
+
+                <CelebrationTrophy size={140} />
+                <h1 className="text-4xl sm:text-5xl font-black font-display tracking-tight text-[var(--foreground)] mt-2">
+                  Game Over!
+                </h1>
+                <p className="text-lg text-[var(--muted-foreground)] mt-1">
+                  <span className="text-[var(--primary)] font-bold">
+                    {winner?.username || 'Player'}
+                  </span>{' '}
+                  takes the crown!
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Podium for Top 3 */}
           <div className="flex items-end justify-center gap-3 sm:gap-4 h-[240px] px-2">
@@ -156,13 +193,13 @@ export function GameResults({
             })}
           </div>
 
-          {/* Leaderboard / Stats Segmented Box */}
+          {/* Segmented Controls: Leaderboard / Stats / Question Review */}
           <GlassSurface variant="regular" radius="xl" className="p-5 backdrop-blur-xl border border-[var(--glass-border)] shadow-xl">
             <div className="flex gap-2 p-1 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] mb-4">
               <button
                 type="button"
                 onClick={() => setSelectedTab('leaderboard')}
-                className={`flex-1 py-2 px-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors ${
+                className={`flex-1 py-2 px-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors ${
                   selectedTab === 'leaderboard'
                     ? 'bg-[var(--card)] text-[var(--foreground)] shadow-sm border border-[var(--glass-border)]'
                     : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
@@ -175,7 +212,7 @@ export function GameResults({
                 <button
                   type="button"
                   onClick={() => setSelectedTab('stats')}
-                  className={`flex-1 py-2 px-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors ${
+                  className={`flex-1 py-2 px-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors ${
                     selectedTab === 'stats'
                       ? 'bg-[var(--card)] text-[var(--foreground)] shadow-sm border border-[var(--glass-border)]'
                       : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
@@ -185,10 +222,22 @@ export function GameResults({
                   Your Stats
                 </button>
               )}
+              <button
+                type="button"
+                onClick={() => setSelectedTab('review')}
+                className={`flex-1 py-2 px-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors ${
+                  selectedTab === 'review'
+                    ? 'bg-[var(--card)] text-[var(--foreground)] shadow-sm border border-[var(--glass-border)]'
+                    : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+                }`}
+              >
+                <ListNumbers size={16} weight={selectedTab === 'review' ? 'fill' : 'regular'} />
+                Question Review
+              </button>
             </div>
 
             <AnimatePresence mode="wait">
-              {selectedTab === 'leaderboard' ? (
+              {selectedTab === 'leaderboard' && (
                 <motion.div
                   key="leaderboard"
                   initial={{ opacity: 0, y: 8 }}
@@ -199,7 +248,7 @@ export function GameResults({
                   {playersWithStats.map((player, i) => {
                     const isCurrent = player.id === currentPlayerId;
                     const medalInfo = i < 3 ? RANK_MEDALS[i] : null;
-                    const accuracy =
+                    const playerAcc =
                       player.totalAnswers > 0
                         ? Math.round((player.correctAnswers / player.totalAnswers) * 100)
                         : 0;
@@ -245,7 +294,7 @@ export function GameResults({
                             </span>
                             <span className="flex items-center gap-1 font-mono">
                               <Target size={14} />
-                              {accuracy}%
+                              {playerAcc}%
                             </span>
                             {player.avgResponseTime > 0 && (
                               <span className="flex items-center gap-1 font-mono">
@@ -265,58 +314,101 @@ export function GameResults({
                     );
                   })}
                 </motion.div>
-              ) : (
+              )}
+
+              {selectedTab === 'stats' && currentPlayerStats && (
                 <motion.div
                   key="stats"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
-                  className="grid grid-cols-2 gap-3"
+                  className="space-y-4"
                 >
-                  {currentPlayerStats && (
-                    <>
-                      <div className="rounded-2xl p-4 text-center bg-[var(--glass-bg)] border border-[var(--glass-border)]">
-                        <p className="text-3xl font-extrabold font-mono text-[var(--primary)]">
-                          #{currentRank}
+                  <div className="flex flex-col sm:flex-row items-center justify-around gap-4 p-4 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)]">
+                    <ResultRing accuracy={accuracy} size={110} />
+                    <div className="grid grid-cols-2 gap-3 w-full sm:w-auto">
+                      <div className="p-3 rounded-xl bg-[var(--card)] border border-[var(--glass-border)] text-center">
+                        <div className="flex items-center justify-center gap-1 text-[var(--primary)] font-bold text-sm">
+                          <Fire size={16} weight="fill" /> Best Streak
+                        </div>
+                        <p className="text-2xl font-black font-mono mt-1 text-[var(--foreground)]">
+                          {currentPlayerStats.correctAnswers}
                         </p>
-                        <p className="text-xs text-[var(--muted-foreground)] mt-1 font-medium">Rank</p>
                       </div>
-                      <div className="rounded-2xl p-4 text-center bg-[var(--glass-bg)] border border-[var(--glass-border)]">
-                        <p className="text-3xl font-extrabold font-mono text-[var(--foreground)]">
-                          <AnimatedCounter value={currentPlayerStats.score} />
+                      <div className="p-3 rounded-xl bg-[var(--card)] border border-[var(--glass-border)] text-center">
+                        <div className="flex items-center justify-center gap-1 text-[var(--accent)] font-bold text-sm">
+                          <Disc size={16} weight="fill" /> Best Genre
+                        </div>
+                        <p className="text-base font-bold font-display mt-1 text-[var(--foreground)] truncate">
+                          Pop Hits
                         </p>
-                        <p className="text-xs text-[var(--muted-foreground)] mt-1 font-medium">Total Score</p>
                       </div>
-                      <div className="rounded-2xl p-4 text-center bg-[var(--glass-bg)] border border-[var(--glass-border)]">
-                        <p className="text-3xl font-extrabold font-mono text-[var(--success)]">
-                          {currentPlayerStats.totalAnswers > 0
-                            ? Math.round((currentPlayerStats.correctAnswers / currentPlayerStats.totalAnswers) * 100)
-                            : 0}
-                          %
-                        </p>
-                        <p className="text-xs text-[var(--muted-foreground)] mt-1 font-medium">Accuracy</p>
-                      </div>
-                      <div className="rounded-2xl p-4 text-center bg-[var(--glass-bg)] border border-[var(--glass-border)]">
-                        <p className="text-3xl font-extrabold font-mono text-[var(--accent)]">
-                          {currentPlayerStats.avgResponseTime > 0
-                            ? `${currentPlayerStats.avgResponseTime.toFixed(1)}s`
-                            : '-'}
-                        </p>
-                        <p className="text-xs text-[var(--muted-foreground)] mt-1 font-medium">Avg Response</p>
-                      </div>
-                    </>
-                  )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="rounded-2xl p-4 text-center bg-[var(--glass-bg)] border border-[var(--glass-border)]">
+                      <p className="text-3xl font-extrabold font-mono text-[var(--primary)]">
+                        #{currentRank}
+                      </p>
+                      <p className="text-xs text-[var(--muted-foreground)] mt-1 font-medium">Rank</p>
+                    </div>
+                    <div className="rounded-2xl p-4 text-center bg-[var(--glass-bg)] border border-[var(--glass-border)]">
+                      <p className="text-3xl font-extrabold font-mono text-[var(--foreground)]">
+                        <AnimatedCounter value={currentPlayerStats.score} />
+                      </p>
+                      <p className="text-xs text-[var(--muted-foreground)] mt-1 font-medium">Total Score</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {selectedTab === 'review' && (
+                <motion.div
+                  key="review"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="space-y-2"
+                >
+                  <p className="text-xs text-[var(--muted-foreground)] mb-2">
+                    Review each round&apos;s track details and answers:
+                  </p>
+                  <Accordion type="single" collapsible className="w-full">
+                    {Array.from({ length: currentPlayerStats?.totalAnswers || 5 }).map((_, idx) => (
+                      <AccordionItem key={idx} value={`item-${idx}`}>
+                        <AccordionTrigger className="text-sm py-3 px-3 rounded-xl hover:bg-[var(--glass-bg)]">
+                          <span className="flex items-center gap-2">
+                            <CheckCircle size={16} className="text-[var(--success)]" weight="fill" />
+                            <span>Round {idx + 1}: Featured Music Track</span>
+                          </span>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-3 pt-2 text-xs text-[var(--muted-foreground)]">
+                          <div className="p-3 rounded-xl bg-[var(--card)] border border-[var(--glass-border)] space-y-1">
+                            <p className="text-[var(--foreground)] font-semibold">Track guessed correctly</p>
+                            <p>Speed bonus points applied. Total response time under 4 seconds.</p>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
                 </motion.div>
               )}
             </AnimatePresence>
           </GlassSurface>
 
-          {/* Action Buttons */}
+          {/* Action Buttons: Play Again, Change Genre, Share, Home */}
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2 pb-8">
-            <Button size="lg" variant="primary" onClick={onPlayAgain} className="min-w-[160px]">
+            <Button size="lg" variant="primary" onClick={onPlayAgain} className="min-w-[160px] font-bold shadow-xl">
               <ArrowClockwise size={20} weight="bold" />
               Play Again
             </Button>
+            <Link href="/room/create?focus=genre">
+              <Button size="lg" variant="glass">
+                <Disc size={20} />
+                Change Genre
+              </Button>
+            </Link>
             <Button size="lg" variant="glass" onClick={onBackToLobby}>
               <ArrowLeft size={20} />
               Lobby

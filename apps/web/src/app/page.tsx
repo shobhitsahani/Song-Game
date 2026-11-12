@@ -1,8 +1,11 @@
 import { Navbar } from '@/components/landing/navbar';
 import { HeroSection } from '@/components/landing/hero-section';
-import { FeaturesSection } from '@/components/landing/features-section';
+import { HowRoundWorks } from '@/components/landing/how-round-works';
+import { EightWaysToPlay } from '@/components/landing/eight-ways-to-play';
+import { ScoringDemo } from '@/components/landing/scoring-demo';
+import { LeaderboardAchievementsSection } from '@/components/landing/leaderboard-achievements';
+import { FinalCTA } from '@/components/landing/final-cta';
 import { Footer } from '@/components/landing/footer';
-import { MobileDockNav } from '@/components/fx/dock-nav';
 
 export default function HomePage() {
   return (
@@ -10,10 +13,13 @@ export default function HomePage() {
       <Navbar />
       <main id="main-content" className="min-h-screen">
         <HeroSection />
-        <FeaturesSection />
+        <HowRoundWorks />
+        <EightWaysToPlay />
+        <ScoringDemo />
+        <LeaderboardAchievementsSection />
+        <FinalCTA />
       </main>
       <Footer />
-      <MobileDockNav />
     </>
   );
 }

@@ -30,8 +30,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    // Read persisted theme or prefers-color-scheme
-    const saved = localStorage.getItem('app-theme') as Theme | null;
+    // Read persisted theme or URL param or prefers-color-scheme
+    const params = new URLSearchParams(window.location.search);
+    const urlTheme = params.get('theme') as Theme | null;
+    const saved = (urlTheme && (urlTheme === 'black' || urlTheme === 'rose' || urlTheme === 'light'))
+      ? urlTheme
+      : (localStorage.getItem('app-theme') as Theme | null);
+
     if (saved && (saved === 'black' || saved === 'rose' || saved === 'light')) {
       setThemeState(saved);
       document.documentElement.setAttribute('data-theme', saved);

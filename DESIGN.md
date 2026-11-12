@@ -3,11 +3,19 @@ name: Music Trivia - Liquid Glass
 description: A tactile late-night listening room for competitive and solo music trivia
 colors:
   primary: "oklch(0.82 0.17 75)"
+  primary-amber: "#f59e0b"
+  primary-amber-dark: "#d97706"
+  brand-dark: "#0d0c11"
+  brand-brown: "#2a1f10"
+  brand-gray: "#27272a"
   primary-rose: "oklch(0.72 0.21 355)"
   primary-light: "oklch(0.55 0.22 262)"
   neutral-bg: "oklch(0.10 0.005 270)"
   neutral-bg-rose: "oklch(0.16 0.045 350)"
   neutral-bg-light: "oklch(0.975 0.006 265)"
+  surface-1: "oklch(0.14 0.008 270)"
+  surface-2: "oklch(0.19 0.010 270)"
+  surface-3: "oklch(0.25 0.012 270)"
   surface-raised: "oklch(0.15 0.008 270)"
   surface-glass: "oklch(1 0 0 / 0.06)"
   border-glass: "oklch(1 0 0 / 0.14)"
@@ -19,16 +27,25 @@ colors:
 typography:
   display:
     fontFamily: "var(--font-display), 'Unbounded', sans-serif"
-    fontSize: "clamp(2rem, 5vw, 3.5rem)"
+    fontSize: "clamp(2.5rem, 5.2vw, 4.75rem)"
     fontWeight: 700
-    lineHeight: 1.1
-    letterSpacing: "-0.02em"
-  headline:
-    fontFamily: "var(--font-display), 'Unbounded', sans-serif"
-    fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)"
-    fontWeight: 600
-    lineHeight: 1.2
+    lineHeight: 1.06
     letterSpacing: "-0.01em"
+  hero-title:
+    fontSize: "56px"
+    lineHeight: 1.1
+  headline:
+    fontFamily: "var(--font-sans), 'Inter', sans-serif"
+    fontSize: "clamp(1.75rem, 3vw, 2.5rem)"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "-0.02em"
+  xl-heading:
+    fontSize: "36px"
+    lineHeight: 1.2
+  subhead:
+    fontSize: "24px"
+    lineHeight: 1.3
   title:
     fontFamily: "var(--font-sans), 'Inter', sans-serif"
     fontSize: "1.25rem"
@@ -45,10 +62,16 @@ typography:
     fontWeight: 500
     lineHeight: 1.4
     letterSpacing: "0.05em"
+  xs:
+    fontFamily: "var(--font-mono), monospace"
+    fontSize: "0.75rem"
+    fontWeight: 500
+    lineHeight: 1.4
 rounded:
   sm: "12px"
   md: "20px"
   lg: "28px"
+  xl: "40px"
   full: "9999px"
 spacing:
   xs: "4px"
