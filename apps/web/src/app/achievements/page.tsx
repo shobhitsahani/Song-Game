@@ -17,6 +17,7 @@ import { useAuthStore } from '@/stores/auth';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Navbar } from '@/components/landing/navbar';
 import type { UserStats } from '@song-game/types';
 
 const ACHIEVEMENTS = [
@@ -53,12 +54,15 @@ export default function AchievementsPage() {
 
   if (authLoading || loading) {
     return (
-      <main className="min-h-screen pt-24 pb-16 px-4 max-w-4xl mx-auto">
-        <Skeleton className="h-10 w-64 mb-8" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
-        </div>
-      </main>
+      <>
+        <Navbar />
+        <main className="min-h-screen pt-28 pb-16 px-4 max-w-4xl mx-auto">
+          <Skeleton className="h-10 w-64 mb-8" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
+          </div>
+        </main>
+      </>
     );
   }
 
@@ -66,8 +70,10 @@ export default function AchievementsPage() {
   const total = ACHIEVEMENTS.length;
 
   return (
-    <main className="min-h-screen pb-16">
-      <div className="pt-24 px-4 max-w-4xl mx-auto">
+    <>
+      <Navbar />
+      <main className="min-h-screen pb-16">
+        <div className="pt-28 px-4 max-w-4xl mx-auto">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold flex items-center gap-2"><Trophy className="w-6 h-6 text-yellow-400" /> Achievements</h1>
@@ -101,5 +107,6 @@ export default function AchievementsPage() {
         </motion.div>
       </div>
     </main>
+    </>
   );
 }

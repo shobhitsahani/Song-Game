@@ -1,7 +1,9 @@
 'use client';
 
+import { motion } from 'motion/react';
 import { Check } from '@phosphor-icons/react';
 import { Avatar } from '@/components/ui/avatar';
+import { liquidSpring } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
 const ANIMALS = ['🦁', '🐯', '🐻', '🐼', '🐨', '🦊', '🐸', '🐵', '🦄', '🐙'];
@@ -21,7 +23,7 @@ interface AvatarPickerProps {
 
 export function AvatarPicker({ value, onChange }: AvatarPickerProps) {
   return (
-    <div className="grid grid-cols-5 gap-2.5">
+    <div className="grid grid-cols-5 gap-3 p-1">
       {AVATAR_OPTIONS.map((url, i) => {
         const selected = value === url;
         return (
@@ -29,16 +31,18 @@ export function AvatarPicker({ value, onChange }: AvatarPickerProps) {
             key={url}
             type="button"
             onClick={() => onChange(url)}
-            className={cn(
-              'relative rounded-full p-1 transition-transform duration-150 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]',
-              selected
-                ? 'bg-[var(--primary)]/20 ring-2 ring-[var(--primary)] shadow-md'
-                : 'bg-[var(--glass-bg)] border border-[var(--glass-border)] hover:bg-[var(--card)]'
-            )}
+            className="relative rounded-full p-1 transition-transform duration-150 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] cursor-pointer"
             aria-pressed={selected}
             aria-label={`Avatar ${i + 1}`}
           >
-            <Avatar src={url} alt={`Avatar ${i + 1}`} fallback={String(i + 1)} className="w-12 h-12 rounded-full" />
+            {selected && (
+              <motion.div
+                layoutId="avatarGlassHalo"
+                className="absolute -inset-1 rounded-full border-2 border-[var(--primary)] bg-white/[0.08] shadow-[0_0_16px_var(--glow),inset_0_1px_0_var(--glass-highlight)] -z-10 pointer-events-none"
+                transition={liquidSpring}
+              />
+            )}
+            <Avatar src={url} alt={`Avatar ${i + 1}`} fallback={String(i + 1)} className="w-12 h-12 rounded-full border border-[var(--glass-border)] shadow-xs" />
             {selected && (
               <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] flex items-center justify-center shadow-sm">
                 <Check size={12} weight="bold" />

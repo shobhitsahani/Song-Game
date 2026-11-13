@@ -5,6 +5,8 @@ import { motion } from 'motion/react';
 import { Check, Clock, Disc, Trophy, X } from '@phosphor-icons/react';
 import { BorderBeam } from '@/components/magicui/border-beam';
 import { NumberTicker } from '@/components/magicui/number-ticker';
+import { GlassSurface } from '@/components/glass/glass-surface';
+import { liquidSpring } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
 interface SampleQuestion {
@@ -139,12 +141,49 @@ export function LiveRoundPreview() {
     : 24;
 
   return (
-    <div
-      ref={containerRef}
-      className="relative w-full max-w-lg lg:max-w-none mx-auto lg:mx-0 rounded-[24px] sm:rounded-[28px] overflow-hidden liquid-glass-surface bg-[var(--surface-1,var(--card))]/85 border border-[var(--glass-border)] shadow-2xl p-5 sm:p-7 backdrop-blur-2xl"
-    >
-      {/* Magic UI BorderBeam - at most one use on page */}
-      <BorderBeam size={240} duration={14} colorFrom="var(--primary)" colorTo="var(--accent)" borderWidth={1.5} />
+    <div className="relative w-full max-w-lg lg:max-w-none mx-auto lg:mx-0">
+      {/* Background Vinyl Disc peeking out behind card edge so refraction rim bends it */}
+      <div
+        aria-hidden="true"
+        className="absolute -right-8 -top-8 sm:-right-6 sm:-top-6 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] pointer-events-none select-none z-0 opacity-70"
+      >
+        <motion.svg
+          viewBox="0 0 400 400"
+          className="w-full h-full drop-shadow-xl"
+          animate={
+            prefersReducedMotion || phase === 'reveal'
+              ? { rotate: 0 }
+              : { rotate: 360 }
+          }
+          transition={{
+            repeat: Infinity,
+            duration: 3.4,
+            ease: 'linear',
+          }}
+        >
+          <circle cx="200" cy="200" r="195" fill="#0c0b10" stroke="#252430" strokeWidth="4" />
+          <circle cx="200" cy="200" r="180" fill="none" stroke="#1c1a24" strokeWidth="1" strokeDasharray="6 3" />
+          <circle cx="200" cy="200" r="165" fill="none" stroke="#16151e" strokeWidth="2" />
+          <circle cx="200" cy="200" r="150" fill="none" stroke="#201e2a" strokeWidth="1" />
+          <circle cx="200" cy="200" r="135" fill="none" stroke="#16151e" strokeWidth="2" />
+          <circle cx="200" cy="200" r="120" fill="none" stroke="#1f1d29" strokeWidth="1" />
+          <circle cx="200" cy="200" r="105" fill="none" stroke="#16151e" strokeWidth="2" />
+          <circle cx="200" cy="200" r="90" fill="none" stroke="#201e2a" strokeWidth="1" />
+          <circle cx="200" cy="200" r="70" fill="var(--primary)" />
+          <circle cx="200" cy="200" r="18" fill="#0a0a0d" stroke="var(--primary-foreground)" strokeWidth="2" />
+        </motion.svg>
+      </div>
+
+      <GlassSurface
+        ref={containerRef}
+        variant="strong"
+        radius="2xl"
+        refraction={true}
+        specularRim={true}
+        className="relative z-10 w-full p-5 sm:p-7 shadow-2xl backdrop-blur-2xl"
+      >
+        {/* Magic UI BorderBeam - at most one use on page */}
+        <BorderBeam size={240} duration={14} colorFrom="var(--primary)" colorTo="var(--accent)" borderWidth={1.5} />
 
       {/* Top Header Row */}
       <div className="relative z-10 flex items-center justify-between pb-4 border-b border-[var(--glass-border)]/60 gap-2">
@@ -335,33 +374,37 @@ export function LiveRoundPreview() {
         </div>
       </div>
 
-      {/* Answer Options Grid (4 buttons) */}
+      {/* Answer Options Grid (4 glass buttons) */}
       <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-3">
         {currentQ.options.map((opt, i) => {
           const isSelected = selectedIdx === i;
           const isCorrect = opt.isCorrect;
           const showReveal = phase === 'reveal';
 
-          let buttonStyle = 'bg-[var(--surface-1)] border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)]/50';
-
-          if (isSelected && phase === 'selected') {
-            buttonStyle = 'bg-[var(--primary)]/15 border-[var(--primary)] ring-2 ring-[var(--primary)]/40 text-[var(--foreground)]';
-          } else if (showReveal && isCorrect) {
-            buttonStyle = 'bg-emerald-500/20 border-emerald-500 ring-2 ring-emerald-500/40 text-emerald-300 font-bold';
-          } else if (showReveal && isSelected && !isCorrect) {
-            buttonStyle = 'bg-rose-500/20 border-rose-500 text-rose-300';
-          }
-
           return (
-            <button
+            <motion.button
               key={opt.key}
               type="button"
+              whileTap={!prefersReducedMotion ? { scale: 0.96 } : undefined}
               onClick={() => handleSelectOption(i)}
               className={cn(
-                'group relative flex items-center justify-between p-3.5 rounded-xl border text-left transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]',
-                buttonStyle
+                'group relative flex items-center justify-between p-3.5 rounded-xl border text-left transition-colors duration-150 outline-none select-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] cursor-pointer backdrop-blur-md',
+                showReveal && isCorrect
+                  ? 'border-emerald-500/80 bg-emerald-500/20 text-emerald-300 font-bold shadow-md shadow-emerald-500/20'
+                  : showReveal && isSelected && !isCorrect
+                  ? 'border-rose-500/80 bg-rose-500/20 text-rose-300 shadow-md shadow-rose-500/20'
+                  : isSelected && phase === 'selected'
+                  ? 'border-[var(--primary)] text-[var(--foreground)]'
+                  : 'bg-[var(--surface-1)]/70 border-[var(--glass-border)] text-[var(--foreground)] hover:bg-[var(--surface-2)]/80 hover:border-[var(--glass-highlight)]'
               )}
             >
+              {isSelected && (
+                <motion.div
+                  layoutId="previewAnswerLens"
+                  transition={prefersReducedMotion ? { duration: 0.12 } : liquidSpring}
+                  className="absolute inset-0 rounded-xl bg-white/[0.12] dark:bg-white/[0.08] border border-white/30 dark:border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_4px_16px_rgba(0,0,0,0.25)] backdrop-blur-lg -z-10"
+                />
+              )}
               <div className="flex items-center gap-2.5 min-w-0">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[var(--surface-2)] text-xs font-mono font-bold text-[var(--muted-foreground)] group-hover:text-[var(--foreground)]">
                   {opt.key}
@@ -375,7 +418,7 @@ export function LiveRoundPreview() {
               {showReveal && isSelected && !isCorrect && (
                 <X size={18} weight="bold" className="text-rose-400 shrink-0 ml-2" />
               )}
-            </button>
+            </motion.button>
           );
         })}
       </div>
@@ -394,6 +437,7 @@ export function LiveRoundPreview() {
         </div>
         <span className="text-xs text-[var(--muted-foreground)]">Click any answer to test</span>
       </div>
+    </GlassSurface>
     </div>
   );
 }

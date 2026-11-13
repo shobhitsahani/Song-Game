@@ -19,6 +19,7 @@ import { Slider } from '@/components/ui/slider';
 import { AvatarPicker } from '@/components/avatar-picker';
 import { GlassSurface } from '@/components/glass/glass-surface';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import { Navbar } from '@/components/landing/navbar';
 import {
   CommandDialog,
@@ -227,24 +228,14 @@ export default function CreateRoomPage() {
               <label className="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <CalendarBlank size={14} className="text-[var(--primary)]" /> Era / Decade
               </label>
-              <ToggleGroup
-                type="single"
+              <SegmentedControl
+                name="createDecade"
+                options={DECADES}
                 value={selectedDecade}
-                onValueChange={(val) => val && setSelectedDecade(val)}
-                className="justify-start gap-1.5"
-                spacing="compact"
-              >
-                {DECADES.map((decade) => (
-                  <ToggleGroupItem
-                    key={decade}
-                    value={decade}
-                    size="sm"
-                    className="text-xs rounded-xl h-8 px-3"
-                  >
-                    {decade}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
+                onChange={setSelectedDecade}
+                size="sm"
+                className="flex-wrap"
+              />
             </div>
 
             {/* Difficulty Mode */}
@@ -252,24 +243,13 @@ export default function CreateRoomPage() {
               <label className="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <Gauge size={14} className="text-[var(--destructive)]" /> Difficulty
               </label>
-              <ToggleGroup
-                type="single"
+              <SegmentedControl
+                name="createDifficulty"
+                options={DIFFICULTIES}
                 value={selectedDifficulty}
-                onValueChange={(val) => val && setSelectedDifficulty(val)}
-                className="justify-start gap-1.5"
-                spacing="compact"
-              >
-                {DIFFICULTIES.map((diff) => (
-                  <ToggleGroupItem
-                    key={diff}
-                    value={diff}
-                    size="sm"
-                    className="text-xs rounded-xl h-8 px-3"
-                  >
-                    {diff}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
+                onChange={setSelectedDifficulty}
+                size="sm"
+              />
             </div>
 
             {/* Round Length Slider */}
@@ -298,17 +278,19 @@ export default function CreateRoomPage() {
               radius="xl"
               className="p-3 sm:p-4 shadow-2xl backdrop-blur-2xl border border-[var(--glass-border)] flex flex-col sm:flex-row items-center justify-between gap-3"
             >
-              <div className="text-center sm:text-left text-xs">
-                <div className="font-bold text-[var(--foreground)] flex items-center gap-1.5 justify-center sm:justify-start">
-                  <span>{selectedGenre}</span>
-                  <span className="text-[var(--muted-foreground)]">•</span>
-                  <span>{selectedDecade}</span>
-                  <span className="text-[var(--muted-foreground)]">•</span>
-                  <span>{selectedDifficulty}</span>
-                </div>
-                <div className="text-[var(--muted-foreground)] text-[11px]">
-                  {rounds} tracks • Ready to play
-                </div>
+              <div className="flex flex-wrap items-center gap-1.5 justify-center sm:justify-start">
+                <span className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)]/80 border border-[var(--glass-border)] text-[var(--foreground)] font-semibold text-xs shadow-xs">
+                  {selectedGenre}
+                </span>
+                <span className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)]/80 border border-[var(--glass-border)] text-[var(--foreground)] font-semibold text-xs shadow-xs">
+                  {selectedDecade}
+                </span>
+                <span className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)]/80 border border-[var(--glass-border)] text-[var(--foreground)] font-semibold text-xs shadow-xs">
+                  {selectedDifficulty}
+                </span>
+                <span className="px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-500 dark:text-amber-400 font-mono font-bold text-xs shadow-xs">
+                  {rounds} tracks
+                </span>
               </div>
 
               <Button

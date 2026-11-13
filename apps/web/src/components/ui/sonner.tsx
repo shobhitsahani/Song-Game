@@ -11,7 +11,7 @@ export const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            'group toast group-[.toaster]:bg-[var(--card)]/90 group-[.toaster]:backdrop-blur-xl group-[.toaster]:text-[var(--foreground)] group-[.toaster]:border-[var(--glass-border)] group-[.toaster]:shadow-2xl group-[.toaster]:rounded-2xl',
+            'group toast liquid-glass-surface group-[.toaster]:bg-[var(--surface-1)]/90 group-[.toaster]:backdrop-blur-2xl group-[.toaster]:text-[var(--foreground)] group-[.toaster]:border-[var(--glass-border)] group-[.toaster]:shadow-2xl group-[.toaster]:rounded-2xl',
           description: 'group-[.toast]:text-[var(--muted-foreground)]',
           actionButton:
             'group-[.toast]:bg-[var(--primary)] group-[.toast]:text-[var(--primary-foreground)]',

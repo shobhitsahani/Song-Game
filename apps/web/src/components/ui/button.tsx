@@ -4,14 +4,14 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 select-none whitespace-nowrap rounded-2xl text-base font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]',
+  'inline-flex items-center justify-center gap-2 select-none whitespace-nowrap rounded-2xl text-base font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96]',
   {
     variants: {
       variant: {
         primary:
-          'bg-[var(--primary)] text-[var(--primary-foreground)] hover:brightness-110 shadow-lg shadow-[var(--glow)]',
+          'glass-btn-amber hover:brightness-105 font-bold shadow-lg shadow-amber-500/25 active:scale-[0.96] transition-transform duration-150',
         default:
-          'bg-[var(--primary)] text-[var(--primary-foreground)] hover:brightness-110 shadow-lg shadow-[var(--glow)]',
+          'glass-btn-amber hover:brightness-105 font-bold shadow-lg shadow-amber-500/25 active:scale-[0.96] transition-transform duration-150',
         glass:
           'liquid-glass-surface bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--foreground)] hover:bg-[var(--card)] hover:border-[var(--glass-highlight)] shadow-sm backdrop-blur-md',
         secondary:

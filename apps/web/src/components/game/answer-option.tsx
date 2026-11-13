@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { CheckCircle, XCircle } from '@phosphor-icons/react';
 import { clsx } from 'clsx';
 import { Avatar } from '@/components/ui/avatar';
+import { liquidSpring } from '@/lib/motion';
 import type { Player, PlayerGuessPayload } from '@song-game/types';
 
 interface AnswerOptionProps {
@@ -59,7 +60,7 @@ export function AnswerOption({
             }
           : undefined
       }
-      whileTap={!disabled ? { scale: 0.98 } : undefined}
+      whileTap={!disabled ? { scale: 0.96 } : undefined}
       className={clsx(
         'relative min-h-[60px] w-full p-4 rounded-2xl border text-left transition-all duration-200 flex items-center justify-between gap-3 backdrop-blur-md outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] cursor-pointer disabled:cursor-default',
         statusClass
@@ -69,7 +70,7 @@ export function AnswerOption({
         <motion.div
           layoutId="selectedAnswerHighlight"
           className="absolute inset-0 rounded-2xl ring-2 ring-[var(--primary)] pointer-events-none"
-          transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+          transition={liquidSpring}
         />
       )}
 

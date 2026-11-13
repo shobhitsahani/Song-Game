@@ -9,6 +9,8 @@ import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { GlassSurface } from '@/components/glass/glass-surface';
+import { Navbar } from '@/components/landing/navbar';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import type { LeaderboardEntry } from '@song-game/types';
 
 type Period = 'weekly' | 'monthly' | 'alltime';
@@ -20,7 +22,6 @@ export default function LeaderboardPage() {
   const [period, setPeriod] = useState<Period>('weekly');
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     // If not authenticated, we can still show public mock/demo or allow viewing
@@ -39,44 +40,44 @@ export default function LeaderboardPage() {
 
   if (authLoading || loading) {
     return (
-      <main className="min-h-screen pt-24 pb-28 px-4 max-w-4xl mx-auto">
-        <Skeleton className="h-10 w-56 mb-8 rounded-2xl" />
-        <div className="space-y-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-16 rounded-2xl" />
-          ))}
-        </div>
-      </main>
+      <>
+        <Navbar />
+        <main className="min-h-screen pt-28 pb-28 px-4 max-w-4xl mx-auto">
+          <Skeleton className="h-10 w-56 mb-8 rounded-2xl" />
+          <div className="space-y-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 rounded-2xl" />
+            ))}
+          </div>
+        </main>
+      </>
     );
   }
 
   return (
-    <main className="min-h-screen pb-28 pt-24 px-4 max-w-4xl mx-auto">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-        {/* Sticky Header with Filter Pills */}
-        <div className="sticky top-20 z-30 py-3 liquid-glass-surface bg-[var(--background)]/80 backdrop-blur-xl -mx-4 px-4 sm:mx-0 sm:px-0 sm:bg-transparent sm:backdrop-blur-none border-b border-[var(--glass-border)] sm:border-0 flex items-center justify-between gap-4">
-          <h1 className="text-2xl sm:text-3xl font-extrabold font-display tracking-tight flex items-center gap-2.5 text-[var(--foreground)]">
-            <TrendUp size={28} weight="bold" className="text-[var(--primary)]" />
-            Global Rankings
-          </h1>
+    <>
+      <Navbar />
+      <main className="min-h-screen pb-28 pt-28 px-4 max-w-4xl mx-auto">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+          {/* Sticky Header with Filter Pills */}
+          <div className="sticky top-20 z-30 py-3 liquid-glass-surface bg-[var(--background)]/80 backdrop-blur-xl -mx-4 px-4 sm:mx-0 sm:px-0 sm:bg-transparent sm:backdrop-blur-none border-b border-[var(--glass-border)] sm:border-0 flex flex-wrap items-center justify-between gap-4">
+            <h1 className="text-2xl sm:text-3xl font-extrabold font-display tracking-tight flex items-center gap-2.5 text-[var(--foreground)]">
+              <TrendUp size={28} weight="bold" className="text-[var(--primary)]" />
+              Global Rankings
+            </h1>
 
-          <div className="flex gap-1 p-1 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)]">
-            {(['weekly', 'monthly', 'alltime'] as Period[]).map((p) => (
-              <button
-                key={p}
-                onClick={() => setPeriod(p)}
-                className={cn(
-                  'px-3 py-1 rounded-full text-xs font-semibold capitalize transition-all outline-none',
-                  period === p
-                    ? 'bg-[var(--card)] text-[var(--foreground)] shadow-sm border border-[var(--glass-border)]'
-                    : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
-                )}
-              >
-                {p === 'alltime' ? 'All Time' : p}
-              </button>
-            ))}
+            <SegmentedControl<Period>
+              name="leaderboardPeriod"
+              value={period}
+              onChange={setPeriod}
+              size="sm"
+              options={[
+                { value: 'weekly', label: 'Weekly' },
+                { value: 'monthly', label: 'Monthly' },
+                { value: 'alltime', label: 'All Time' },
+              ]}
+            />
           </div>
-        </div>
 
         {/* Entries Table */}
         <div className="space-y-2">
@@ -153,5 +154,6 @@ export default function LeaderboardPage() {
         </div>
       </motion.div>
     </main>
+    </>
   );
 }
