@@ -8,7 +8,6 @@ import { cn } from '@/lib/utils';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { GlassSurface } from '@/components/glass/glass-surface';
 import { Navbar } from '@/components/landing/navbar';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import type { LeaderboardEntry } from '@song-game/types';
@@ -60,7 +59,7 @@ export default function LeaderboardPage() {
       <main className="min-h-screen pb-28 pt-28 px-4 max-w-4xl mx-auto">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
           {/* Sticky Header with Filter Pills */}
-          <div className="sticky top-20 z-30 py-3 liquid-glass-surface bg-[var(--background)]/80 backdrop-blur-xl -mx-4 px-4 sm:mx-0 sm:px-0 sm:bg-transparent sm:backdrop-blur-none border-b border-[var(--glass-border)] sm:border-0 flex flex-wrap items-center justify-between gap-4">
+          <div className="sticky top-20 z-30 py-3 bg-[var(--background)]/85 backdrop-blur-xl -mx-4 px-4 sm:mx-0 sm:px-0 sm:bg-transparent sm:backdrop-blur-none border-b border-[var(--border)] sm:border-0 flex flex-wrap items-center justify-between gap-4">
             <h1 className="text-2xl sm:text-3xl font-extrabold font-display tracking-tight flex items-center gap-2.5 text-[var(--foreground)]">
               <TrendUp size={28} weight="bold" className="text-[var(--primary)]" />
               Global Rankings
@@ -91,14 +90,12 @@ export default function LeaderboardPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.03, duration: 0.2 }}
                 >
-                  <GlassSurface
-                    variant={isMe ? 'strong' : 'regular'}
-                    radius="lg"
+                  <div
                     className={cn(
-                      'p-4 flex items-center gap-4 transition-all duration-200 border',
+                      'p-4 rounded-2xl flex items-center gap-4 transition-all duration-200 border bg-[var(--surface-1)] shadow-xs',
                       isMe
                         ? 'border-[var(--primary)]/60 bg-[var(--primary)]/10 ring-1 ring-[var(--primary)]/30'
-                        : 'border-[var(--glass-border)] hover:border-[var(--glass-highlight)]'
+                        : 'border-[var(--border)] hover:border-[var(--glass-highlight)]'
                     )}
                   >
                     <div className="w-9 text-center shrink-0">
@@ -136,12 +133,12 @@ export default function LeaderboardPage() {
                       </p>
                       <p className="text-[10px] text-[var(--muted-foreground)] uppercase">XP</p>
                     </div>
-                  </GlassSurface>
+                  </div>
                 </motion.div>
               );
             })
           ) : (
-            <GlassSurface variant="regular" radius="xl" className="p-12 text-center">
+            <div className="card-surface p-12 text-center rounded-2xl">
               <TrendUp size={44} weight="duotone" className="text-[var(--primary)] mx-auto mb-3" />
               <h3 className="font-display font-bold text-lg text-[var(--foreground)]">
                 No rankings yet
@@ -149,7 +146,7 @@ export default function LeaderboardPage() {
               <p className="text-sm text-[var(--muted-foreground)] mt-1 max-w-sm mx-auto">
                 Finish a round to claim your spot on the listening room board.
               </p>
-            </GlassSurface>
+            </div>
           )}
         </div>
       </motion.div>

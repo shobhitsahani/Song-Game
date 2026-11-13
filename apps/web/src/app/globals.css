@@ -84,7 +84,7 @@ body {
 }
 
 /* WCAG AA High-visibility Focus rings: 2px accent, 2px offset */
-input:focus-visible,
+input:not([cmdk-input]):focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 button:focus-visible,
@@ -94,6 +94,16 @@ a:focus-visible,
   outline: none;
   outline-offset: 2px;
   box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
+}
+
+/* Search Dialog cmdk input - single focus indicator handled by container inner glow */
+[cmdk-input],
+[cmdk-input]:focus,
+[cmdk-input]:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 
 ::selection {

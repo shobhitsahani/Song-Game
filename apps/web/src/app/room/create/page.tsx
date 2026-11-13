@@ -63,7 +63,7 @@ export default function CreateRoomPage() {
   const [createError, setCreateError] = useState<string | null>(null);
   const [openCommand, setOpenCommand] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [shortcutLabel, setShortcutLabel] = useState('Ctrl K');
+  const [shortcutLabel, setShortcutLabel] = useState('Ctrl/⌘K');
   const triggerRef = useRef<HTMLButtonElement>(null);
   const createTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 

@@ -89,17 +89,17 @@ export default function AchievementsPage() {
                   key={achievement.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`glass rounded-xl p-4 flex items-center gap-4 transition-all ${isUnlocked ? 'glass-hover' : 'opacity-50 grayscale'}`}
+                  className={`rounded-2xl border border-[var(--border)] bg-[var(--surface-1)] p-4 flex items-center gap-4 transition-all shadow-xs ${isUnlocked ? 'hover:border-[var(--glass-highlight)]' : 'opacity-50 grayscale'}`}
                 >
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${isUnlocked ? 'bg-yellow-500/10 text-yellow-400' : 'bg-muted text-muted-foreground'}`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${isUnlocked ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-muted text-muted-foreground'}`}>
                     {isUnlocked ? <achievement.icon className="w-6 h-6" /> : <Lock className="w-5 h-5" />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className={`font-semibold ${isUnlocked ? '' : 'text-muted-foreground'}`}>{achievement.title}</p>
-                    <p className="text-xs text-muted-foreground">{achievement.description}</p>
-                    <p className="text-xs text-yellow-400 mt-1">+{achievement.xp} XP</p>
+                    <p className={`font-semibold text-base text-[var(--foreground)] ${isUnlocked ? '' : 'text-muted-foreground'}`}>{achievement.title}</p>
+                    <p className="text-xs text-[var(--muted-foreground)]">{achievement.description}</p>
+                    <p className="text-xs font-mono font-bold text-amber-400 mt-1">+{achievement.xp} XP</p>
                   </div>
-                  {isUnlocked && <Trophy className="w-5 h-5 text-yellow-400 shrink-0" />}
+                  {isUnlocked && <Trophy className="w-5 h-5 text-amber-400 shrink-0" />}
                 </motion.div>
               );
             })}

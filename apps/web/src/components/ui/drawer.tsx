@@ -25,10 +25,15 @@ export const DrawerOverlay = React.forwardRef<
 ));
 DrawerOverlay.displayName = 'DrawerOverlay';
 
+export interface DrawerContentProps
+  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
+  hideClose?: boolean;
+}
+
 export const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  DrawerContentProps
+>(({ className, children, hideClose = false, ...props }, ref) => (
   <DrawerPortal>
     <DrawerOverlay />
     <DialogPrimitive.Content
@@ -39,12 +44,14 @@ export const DrawerContent = React.forwardRef<
       )}
       {...props}
     >
-      <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-[var(--glass-border)]" />
+      <div className="mx-auto my-3 h-1.5 w-12 rounded-full bg-[var(--glass-border)] shrink-0" />
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-xl p-2 opacity-70 hover:opacity-100 transition-opacity">
-        <X size={18} />
-        <span className="sr-only">Close</span>
-      </DialogPrimitive.Close>
+      {!hideClose && (
+        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-xl p-2 opacity-70 hover:opacity-100 transition-opacity">
+          <X size={18} />
+          <span className="sr-only">Close</span>
+        </DialogPrimitive.Close>
+      )}
     </DialogPrimitive.Content>
   </DrawerPortal>
 ));

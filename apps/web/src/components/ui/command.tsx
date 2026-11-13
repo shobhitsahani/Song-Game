@@ -88,6 +88,7 @@ export const CommandDialog = ({
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
         <DrawerContent
+          hideClose
           style={{ bottom: `${viewportBottomOffset}px` }}
           className="max-h-[80dvh] rounded-t-[24px] border-t border-[var(--glass-border)] bg-[var(--card)]/95 backdrop-blur-2xl p-0 shadow-2xl overflow-hidden focus-within:shadow-[inset_0_1px_0_var(--glass-highlight),0_0_24px_var(--glow)]"
         >
@@ -103,7 +104,7 @@ export const CommandDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[min(560px,92vw)] max-h-[60dvh] flex flex-col overflow-hidden p-0 rounded-[24px] border border-[var(--glass-border)] bg-[var(--card)]/90 backdrop-blur-2xl shadow-2xl focus-within:border-[var(--glass-highlight)] focus-within:shadow-[inset_0_1px_0_var(--glass-highlight),0_0_24px_var(--glow)] transition-shadow">
+      <DialogContent hideClose className="max-w-[min(560px,92vw)] max-h-[60dvh] flex flex-col overflow-hidden p-0 rounded-[24px] border border-[var(--glass-border)] bg-[var(--card)]/90 backdrop-blur-2xl shadow-2xl focus-within:border-[var(--glass-highlight)] focus-within:shadow-[inset_0_1px_0_var(--glass-highlight),0_0_24px_var(--glow)] transition-shadow">
         <DialogTitle className="sr-only">{title}</DialogTitle>
         <DialogDescription className="sr-only">{description}</DialogDescription>
         <Command className="flex flex-col h-full max-h-[60dvh]">
@@ -119,7 +120,7 @@ export const CommandInput = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
     onClear?: () => void;
   }
->(({ className, value, onClear, ...props }, ref) => (
+>(({ className, value, onClear, style, ...props }, ref) => (
   <div
     className="flex items-center border-b border-[var(--glass-border)] px-4 py-1"
     cmdk-input-wrapper=""
@@ -128,6 +129,7 @@ export const CommandInput = React.forwardRef<
     <CommandPrimitive.Input
       ref={ref}
       value={value}
+      style={{ outline: 'none', boxShadow: 'none', border: 'none', ...style }}
       className={cn(
         'flex h-12 w-full rounded-none bg-transparent py-3 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] outline-none border-none focus:outline-none focus:ring-0 focus-visible:ring-0 shadow-none focus:shadow-none disabled:cursor-not-allowed disabled:opacity-50',
         className
@@ -138,7 +140,7 @@ export const CommandInput = React.forwardRef<
       <button
         type="button"
         onClick={onClear}
-        className="p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full hover:bg-[var(--glass-bg)] transition-colors"
+        className="p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full hover:bg-[var(--glass-bg)] transition-colors cursor-pointer"
         aria-label="Clear search input"
       >
         <X size={14} />
@@ -241,7 +243,7 @@ export const CommandItem = React.forwardRef<
       {isSelected && (
         <motion.div
           layoutId="commandItemLens"
-          className="absolute inset-0 rounded-xl bg-white/[0.08] dark:bg-white/[0.08] border border-white/[0.14] shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] pointer-events-none -z-10"
+          className="absolute inset-0 rounded-xl bg-[var(--nav-lens-bg)] border border-[var(--nav-lens-border)] shadow-[inset_0_1px_0_var(--glass-highlight),0_2px_8px_-1px_rgba(0,0,0,0.1)] pointer-events-none -z-10"
           transition={{ type: 'spring', stiffness: 320, damping: 24, mass: 0.9 }}
         />
       )}
