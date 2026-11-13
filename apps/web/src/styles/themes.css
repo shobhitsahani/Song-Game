@@ -46,9 +46,14 @@ html[data-theme="black"] {
   --glass-border: oklch(1 0 0 / 0.14);
   --glass-highlight: oklch(1 0 0 / 0.35);
   --glass-shadow: 0 12px 40px -10px oklch(0 0 0 / 0.6);
-  --glass-blur: 24px;
-  --glass-sat: 160%;
+  --glass-blur: 20px;
+  --glass-sat: 170%;
   --glow: oklch(0.82 0.17 75 / 0.35);
+  --nav-glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.04) 100%);
+  --nav-glass-border: rgba(255, 255, 255, 0.14);
+  --nav-glass-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  --nav-lens-bg: rgba(255, 255, 255, 0.09);
+  --nav-lens-border: rgba(255, 255, 255, 0.16);
 
   /* Ambient Orbs */
   --orb-1: oklch(0.82 0.17 75 / 0.22); /* Amber */
@@ -103,9 +108,14 @@ html[data-theme="rose"] {
   --glass-border: oklch(1 0.03 350 / 0.18);
   --glass-highlight: oklch(1 0.02 350 / 0.40);
   --glass-shadow: 0 12px 40px -10px oklch(0.1 0.04 350 / 0.6);
-  --glass-blur: 24px;
-  --glass-sat: 160%;
+  --glass-blur: 20px;
+  --glass-sat: 170%;
   --glow: oklch(0.72 0.21 355 / 0.35);
+  --nav-glass-bg: linear-gradient(180deg, oklch(1 0.03 350 / 0.12) 0%, oklch(1 0.02 350 / 0.05) 100%);
+  --nav-glass-border: oklch(1 0.03 350 / 0.18);
+  --nav-glass-shadow: 0 12px 36px -8px oklch(0.1 0.04 350 / 0.6), inset 0 1px 0 oklch(1 0.02 350 / 0.40), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  --nav-lens-bg: oklch(1 0.03 350 / 0.12);
+  --nav-lens-border: oklch(1 0.03 350 / 0.20);
 
   /* Ambient Orbs */
   --orb-1: oklch(0.72 0.21 355 / 0.25); /* Pink */
@@ -156,13 +166,18 @@ html[data-theme="light"] {
   --ring: oklch(0.55 0.22 262);
 
   /* Glass tokens */
-  --glass-bg: oklch(1 0 0 / 0.65);
-  --glass-border: oklch(1 0 0 / 0.85);
+  --glass-bg: oklch(1 0 0 / 0.55);
+  --glass-border: oklch(0.2 0.02 265 / 0.16);
   --glass-highlight: oklch(1 0 0 / 0.95);
-  --glass-shadow: 0 8px 32px oklch(0.3 0.05 265 / 0.12);
+  --glass-shadow: 0 8px 32px oklch(0.3 0.05 265 / 0.14);
   --glass-blur: 20px;
   --glass-sat: 180%;
   --glow: oklch(0.55 0.22 262 / 0.25);
+  --nav-glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.70) 0%, rgba(255, 255, 255, 0.48) 100%);
+  --nav-glass-border: oklch(0.2 0.02 265 / 0.16);
+  --nav-glass-shadow: 0 12px 32px -8px oklch(0.3 0.05 265 / 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+  --nav-lens-bg: rgba(255, 255, 255, 0.85);
+  --nav-lens-border: oklch(0.2 0.02 265 / 0.14);
 
   /* Ambient Orbs */
   --orb-1: oklch(0.85 0.10 240 / 0.25); /* Pastel Blue */
@@ -329,6 +344,73 @@ html[data-theme="light"] {
   .animate-border-beam {
     animation: none !important;
   }
+}
+
+/* Specular Rim (masked conic-gradient 1px border highlight) */
+.specular-rim {
+  position: relative;
+}
+
+.specular-rim::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 135deg at 50% 50%,
+    var(--glass-highlight) 0deg,
+    transparent 70deg,
+    transparent 180deg,
+    var(--glass-highlight) 250deg,
+    transparent 320deg,
+    var(--glass-highlight) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Amber / Primary Glass Button */
+.glass-btn-amber {
+  background: linear-gradient(180deg, oklch(0.85 0.18 75 / 0.85) 0%, oklch(0.75 0.18 75 / 0.70) 100%);
+  border: 1px solid oklch(1 0 0 / 0.35);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.5), 0 4px 20px -2px oklch(0.82 0.17 75 / 0.4);
+  color: oklch(0.16 0.03 75);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.glass-btn-amber:hover {
+  background: linear-gradient(180deg, oklch(0.88 0.18 75 / 0.95) 0%, oklch(0.78 0.18 75 / 0.80) 100%);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.7), 0 6px 24px 0 oklch(0.82 0.17 75 / 0.55);
+}
+
+html[data-theme="rose"] .glass-btn-amber {
+  background: linear-gradient(180deg, oklch(0.75 0.22 355 / 0.88) 0%, oklch(0.65 0.22 355 / 0.72) 100%);
+  border: 1px solid oklch(1 0 0 / 0.35);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.5), 0 4px 20px -2px oklch(0.72 0.21 355 / 0.45);
+  color: oklch(0.98 0.01 350);
+}
+
+html[data-theme="rose"] .glass-btn-amber:hover {
+  background: linear-gradient(180deg, oklch(0.78 0.22 355 / 0.95) 0%, oklch(0.68 0.22 355 / 0.82) 100%);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.7), 0 6px 24px 0 oklch(0.72 0.21 355 / 0.6);
+}
+
+html[data-theme="light"] .glass-btn-amber {
+  background: linear-gradient(180deg, oklch(0.58 0.22 262 / 0.92) 0%, oklch(0.50 0.22 262 / 0.80) 100%);
+  border: 1px solid oklch(1 0 0 / 0.4);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.6), 0 4px 20px -2px oklch(0.55 0.22 262 / 0.35);
+  color: #ffffff;
+}
+
+html[data-theme="light"] .glass-btn-amber:hover {
+  background: linear-gradient(180deg, oklch(0.62 0.22 262 / 0.98) 0%, oklch(0.54 0.22 262 / 0.88) 100%);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.8), 0 6px 24px 0 oklch(0.55 0.22 262 / 0.5);
 }
 
 

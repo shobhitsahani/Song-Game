@@ -23,6 +23,18 @@ export const SPRING = {
   snappy: { type: 'spring', stiffness: 500, damping: 32, mass: 0.8 } as const,
   soft: { type: 'spring', stiffness: 220, damping: 26 } as const,
   bouncy: { type: 'spring', stiffness: 380, damping: 18 } as const, // Celebrations only
+  liquid: { type: 'spring', stiffness: 320, damping: 24, mass: 0.9 } as const,
+};
+
+export const liquidSpring = {
+  type: 'spring',
+  stiffness: 320,
+  damping: 24,
+  mass: 0.9,
+} as const;
+
+export const elasticPress = {
+  whileTap: { scale: 0.96, transition: { type: 'spring', stiffness: 450, damping: 18 } },
 };
 
 export const fadeUp = {

@@ -3,12 +3,16 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { useLiquidSurface } from '@khoivudev/liquid-glass-react';
+
+export type GlassTier = 'refract' | 'frosted' | 'reduced';
 
 export interface GlassSurfaceProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'regular' | 'strong' | 'tint';
+  variant?: 'regular' | 'strong' | 'tint' | 'nav';
   radius?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   interactive?: boolean;
   refraction?: boolean;
+  specularRim?: boolean;
   children?: React.ReactNode;
 }
 
@@ -17,23 +21,55 @@ export function GlassSurface({
   radius = 'lg',
   interactive = false,
   refraction = false,
+  specularRim = false,
   className,
   children,
   onPointerMove,
+  style,
   ...props
 }: GlassSurfaceProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [supportsRefraction, setSupportsRefraction] = useState(false);
+  const [tier, setTier] = useState<GlassTier>('frosted');
 
   useEffect(() => {
-    if (!refraction) return;
-    // Check if Chromium/supports feDisplacementMap backdrop filter
+    // Check accessibility overrides first
+    const prefersReduced =
+      window.matchMedia?.('(prefers-reduced-transparency: reduce)').matches ||
+      window.matchMedia?.('(prefers-contrast: more)').matches;
+
+    if (prefersReduced) {
+      setTier('reduced');
+      return;
+    }
+
+    if (!refraction) {
+      setTier('frosted');
+      return;
+    }
+
+    // Check Chromium support for SVG displacement map refraction
+    const ua = navigator.userAgent;
     const isChromium =
-      typeof window !== 'undefined' &&
-      !!(window as unknown as { chrome?: unknown }).chrome &&
-      navigator.userAgent.indexOf('Chrome') > -1;
-    setSupportsRefraction(isChromium);
+      (!!(window as unknown as { chrome?: unknown }).chrome ||
+        ua.includes('Chrome') ||
+        ua.includes('Chromium') ||
+        ua.includes('Edg')) &&
+      !ua.includes('Firefox') &&
+      (!ua.includes('Safari') || ua.includes('Chrome'));
+
+    setTier(isChromium ? 'refract' : 'frosted');
   }, [refraction]);
+
+  // Hook for Chromium SVG displacement-map refraction
+  const { Filter, filterStyles } = useLiquidSurface<HTMLDivElement>({
+    targetRef: ref,
+    glassThickness: 35,
+    bezelWidth: 12,
+    blur: 0.8,
+    refractiveIndex: 1.5,
+    specularOpacity: 0.6,
+    specularSaturation: 2.5,
+  });
 
   const handlePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
@@ -61,25 +97,37 @@ export function GlassSurface({
     regular: 'bg-[var(--glass-bg)] border-[var(--glass-border)] shadow-[var(--glass-shadow)]',
     strong: 'bg-[var(--glass-bg)] border-[var(--glass-border)] shadow-[var(--glass-shadow)] backdrop-blur-2xl contrast-105',
     tint: 'bg-[var(--glass-bg)] border-[var(--glass-border)] shadow-[var(--glass-shadow)] ring-1 ring-[var(--glow)]',
+    nav: 'bg-[var(--nav-glass-bg)] border-[var(--nav-glass-border)] shadow-[var(--nav-glass-shadow)] backdrop-blur-[20px] backdrop-saturate-[170%]',
   }[variant];
 
+  const combinedStyles: React.CSSProperties = {
+    ...style,
+    ...(tier === 'refract' ? filterStyles : {}),
+  };
+
   return (
-    <div
-      ref={ref}
-      onPointerMove={handlePointerMove}
-      className={twMerge(
-        clsx(
-          'liquid-glass-surface liquid-glass-grain',
-          radiusClass,
-          variantClass,
-          interactive && 'transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.99] cursor-pointer',
-          supportsRefraction && 'refraction-tier2',
-          className
-        )
-      )}
-      {...props}
-    >
-      {children}
-    </div>
+    <>
+      {tier === 'refract' && <Filter />}
+      <div
+        ref={ref}
+        data-glass={tier}
+        onPointerMove={handlePointerMove}
+        style={combinedStyles}
+        className={twMerge(
+          clsx(
+            'liquid-glass-surface liquid-glass-grain',
+            radiusClass,
+            variantClass,
+            specularRim && 'specular-rim',
+            interactive && 'transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.99] cursor-pointer',
+            tier === 'reduced' && 'bg-[var(--surface-1)] backdrop-blur-none border-[var(--border)]',
+            className
+          )
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    </>
   );
 }

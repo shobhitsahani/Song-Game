@@ -27,11 +27,11 @@ export function Logo({ className, size = 'md', animated = true }: LogoProps) {
         className
       )}
     >
-      {/* Vinyl + Waveform Glowing Logo Mark */}
+      {/* Crisp Vinyl + Waveform Logo Mark */}
       <div
         className={clsx(
           sizeMap.box,
-          'relative rounded-full flex items-center justify-center p-1.5 liquid-glass-surface bg-[var(--glass-bg)] border-[var(--glass-border)] shadow-md group-hover:scale-105 transition-transform duration-300'
+          'relative shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300'
         )}
       >
         <svg
