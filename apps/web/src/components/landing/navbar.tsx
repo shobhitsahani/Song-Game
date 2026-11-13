@@ -46,9 +46,9 @@ const NAV_LINKS = [
 ];
 
 const THEME_OPTIONS: { id: Theme; label: string; icon: typeof Moon; dot: string }[] = [
+  { id: 'light', label: 'Daylight', icon: Sun, dot: 'bg-blue-600' },
   { id: 'black', label: 'Vinyl', icon: Moon, dot: 'bg-amber-400' },
   { id: 'rose', label: 'Rose', icon: Sparkle, dot: 'bg-rose-500' },
-  { id: 'light', label: 'Daylight', icon: Sun, dot: 'bg-blue-600' },
 ];
 
 export const Navbar = React.memo(function Navbar() {
@@ -241,30 +241,28 @@ export const Navbar = React.memo(function Navbar() {
               </PopoverContent>
             </Popover>
 
-            {/* Play: Amber glass button with elastic press */}
+            {/* Play: Amber glass button with 80ms snap press */}
             <Link href="/room/create">
-              <motion.button
-                whileTap={{ scale: 0.96 }}
-                transition={liquidSpring}
-                className="glass-btn-amber h-9 px-4 text-xs font-bold rounded-full flex items-center gap-1.5 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+              <button
+                type="button"
+                className="glass-btn-amber h-9 px-4 text-xs font-bold rounded-full flex items-center gap-1.5 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] transition-[opacity,filter] duration-[80ms] active:opacity-85 active:brightness-95"
               >
                 <Play size={13} weight="fill" />
                 <span>Play</span>
-              </motion.button>
+              </button>
             </Link>
           </div>
 
           {/* Mobile Nav: Play + Hamburger Sheet */}
           <div className="md:hidden flex items-center gap-2">
             <Link href="/room/create">
-              <motion.button
-                whileTap={{ scale: 0.96 }}
-                transition={liquidSpring}
-                className="glass-btn-amber h-8 px-3 text-xs font-bold rounded-full flex items-center gap-1.5 cursor-pointer outline-none"
+              <button
+                type="button"
+                className="glass-btn-amber h-8 px-3 text-xs font-bold rounded-full flex items-center gap-1.5 cursor-pointer outline-none transition-[opacity,filter] duration-[80ms] active:opacity-85 active:brightness-95"
               >
                 <Play size={12} weight="fill" />
                 <span>Play</span>
-              </motion.button>
+              </button>
             </Link>
 
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -357,3 +355,4 @@ export const Navbar = React.memo(function Navbar() {
     </header>
   );
 });
+

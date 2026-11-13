@@ -60,9 +60,8 @@ export function AnswerOption({
             }
           : undefined
       }
-      whileTap={!disabled ? { scale: 0.96 } : undefined}
       className={clsx(
-        'relative min-h-[60px] w-full p-4 rounded-2xl border text-left transition-all duration-200 flex items-center justify-between gap-3 backdrop-blur-md outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] cursor-pointer disabled:cursor-default',
+        'relative min-h-[60px] w-full p-4 rounded-2xl border text-left transition-[background-color,border-color,box-shadow,opacity] duration-[80ms] ease-out flex items-center justify-between gap-3 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] cursor-pointer disabled:cursor-default active:opacity-90',
         statusClass
       )}
     >

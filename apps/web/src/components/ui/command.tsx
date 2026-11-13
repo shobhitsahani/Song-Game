@@ -126,10 +126,25 @@ export const CommandInput = React.forwardRef<
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const search = useCommandState((state) => state.search);
 
-  React.useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
+  const setInputRef = React.useCallback(
+    (node: HTMLInputElement | null) => {
+      inputRef.current = node;
+      if (typeof ref === 'function') {
+        ref(node);
+      } else if (ref) {
+        (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
+      }
+      if (node && document.activeElement !== node) {
+        node.focus({ preventScroll: true });
+      }
+    },
+    [ref]
+  );
 
-  React.useEffect(() => {
-    inputRef.current?.focus();
+  React.useLayoutEffect(() => {
+    if (inputRef.current && document.activeElement !== inputRef.current) {
+      inputRef.current.focus({ preventScroll: true });
+    }
   }, []);
 
   const handleClear = () => {
@@ -150,7 +165,7 @@ export const CommandInput = React.forwardRef<
     >
       <MagnifyingGlass size={18} className="mr-3 shrink-0 text-[var(--muted-foreground)]" />
       <CommandPrimitive.Input
-        ref={inputRef}
+        ref={setInputRef}
         value={value}
         autoFocus
         style={{ outline: 'none', boxShadow: 'none', border: 'none', ...style }}

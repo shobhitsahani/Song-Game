@@ -13,20 +13,20 @@ interface ThemeContextType {
 }
 
 export const ThemeContext = createContext<ThemeContextType>({
-  theme: 'black',
+  theme: 'light',
   setTheme: () => {},
 });
 
 export const useTheme = () => useContext(ThemeContext);
 
 const THEMES: { id: Theme; label: string; icon: typeof Sun; swatch: string }[] = [
+  { id: 'light', label: 'Daylight', icon: Sun, swatch: 'bg-blue-500' },
   { id: 'black', label: 'Vinyl', icon: Moon, swatch: 'bg-amber-400' },
   { id: 'rose', label: 'Rose', icon: Sparkle, swatch: 'bg-pink-500' },
-  { id: 'light', label: 'Daylight', icon: Sun, swatch: 'bg-blue-500' },
 ];
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('black');
+  const [theme, setThemeState] = useState<Theme>('light');
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -35,14 +35,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const urlTheme = params.get('theme') as Theme | null;
     const saved = (urlTheme && (urlTheme === 'black' || urlTheme === 'rose' || urlTheme === 'light'))
       ? urlTheme
-      : (localStorage.getItem('app-theme') as Theme | null);
+      : ((localStorage.getItem('app-theme') || localStorage.getItem('song-game-theme')) as Theme | null);
 
     if (saved && (saved === 'black' || saved === 'rose' || saved === 'light')) {
       setThemeState(saved);
       document.documentElement.setAttribute('data-theme', saved);
     } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const initial = prefersDark ? 'black' : 'light';
+      // Fallback default for new visitors is always Daylight ('light')
+      const initial: Theme = 'light';
       setThemeState(initial);
       document.documentElement.setAttribute('data-theme', initial);
     }
@@ -53,13 +53,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setThemeState(newTheme);
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('app-theme', newTheme);
+      localStorage.setItem('song-game-theme', newTheme);
 
       // Update meta theme-color
       const metaThemeColor = document.querySelector('meta[name="theme-color"]');
       const themeColors: Record<Theme, string> = {
         black: '#121016',
         rose: '#241219',
-        light: '#f8f8fc',
+        light: '#f8fafc',
       };
       if (metaThemeColor) {
         metaThemeColor.setAttribute('content', themeColors[newTheme]);
@@ -161,3 +162,4 @@ export function ThemeSwitcher({ className }: { className?: string }) {
     </div>
   );
 }
+

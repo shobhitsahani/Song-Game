@@ -51,12 +51,12 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#121016',
+  themeColor: '#f8fafc',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-theme="black" suppressHydrationWarning>
+    <html lang="en" data-theme="light" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -64,9 +64,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               (function() {
                 try {
                   var params = new URLSearchParams(window.location.search);
-                  var t = params.get('theme') || localStorage.getItem('app-theme');
+                  var t = params.get('theme') || localStorage.getItem('app-theme') || localStorage.getItem('song-game-theme');
                   if (!t || (t !== 'black' && t !== 'rose' && t !== 'light')) {
-                    t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'black' : 'light';
+                    t = 'light';
                   }
                   document.documentElement.setAttribute('data-theme', t);
                 } catch(e) {}

@@ -75,12 +75,7 @@ export default function CreateRoomPage() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setOpenCommand((prev) => {
-          if (prev) {
-            setTimeout(() => triggerRef.current?.focus(), 50);
-          }
-          return !prev;
-        });
+        setOpenCommand((prev) => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);

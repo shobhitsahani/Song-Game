@@ -62,15 +62,15 @@ export function HeroSection() {
       <HeroShaderBackground />
 
       <div className="relative z-10 max-w-[1200px] w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center min-h-[646px]">
           {/* Left Column (6 of 12) */}
-          <div className="lg:col-span-6 flex flex-col items-start text-left">
+          <div className="lg:col-span-6 flex flex-col items-start text-left min-h-[560px] lg:min-h-[646px] justify-center">
             {/* Headline: clamp(40px, 5.2vw, 76px), weight 600-700, letter-spacing 0 to -0.01em */}
             <motion.h1
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[clamp(40px,5.2vw,76px)] font-bold font-display tracking-[-0.01em] text-[var(--foreground)] leading-[1.06] mb-5"
+              className="text-[clamp(40px,5.2vw,76px)] font-bold font-display tracking-[-0.01em] text-[var(--foreground)] leading-[1.06] mb-5 min-h-[170px] sm:min-h-[250px] lg:min-h-[398px]"
             >
               Name that track before the needle drops.
             </motion.h1>
