@@ -4,7 +4,6 @@ import { motion } from 'motion/react';
 import { Check } from '@phosphor-icons/react';
 import { Avatar } from '@/components/ui/avatar';
 import { liquidSpring } from '@/lib/motion';
-import { cn } from '@/lib/utils';
 
 const ANIMALS = ['🦁', '🐯', '🐻', '🐼', '🐨', '🦊', '🐸', '🐵', '🦄', '🐙'];
 const BACKGROUNDS = ['b6e3f4', 'ffd5dc', 'ffdfbf', 'd1f4d9', 'dbeafe', 'fde68a', 'ddd6fe', 'fecdd3', 'a7f3d0', 'fbcfe8'];

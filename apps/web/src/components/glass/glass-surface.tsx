@@ -9,7 +9,7 @@ export type GlassTier = 'refract' | 'frosted' | 'reduced';
 
 export interface GlassSurfaceProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'regular' | 'strong' | 'tint' | 'nav';
-  radius?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  radius?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
   interactive?: boolean;
   refraction?: boolean;
   specularRim?: boolean;
@@ -62,7 +62,7 @@ export function GlassSurface({
 
   // Hook for Chromium SVG displacement-map refraction
   const { Filter, filterStyles } = useLiquidSurface<HTMLDivElement>({
-    targetRef: ref,
+    targetRef: ref as unknown as React.RefObject<HTMLDivElement>,
     glassThickness: 35,
     bezelWidth: 12,
     blur: 0.8,
@@ -90,6 +90,7 @@ export function GlassSurface({
     md: 'rounded-2xl',
     lg: 'rounded-2xl',
     xl: 'rounded-3xl',
+    '2xl': 'rounded-[28px]',
     full: 'rounded-full',
   }[radius];
 

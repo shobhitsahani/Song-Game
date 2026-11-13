@@ -209,6 +209,7 @@ export function Navbar() {
                     value={joinCode}
                     onChange={(val) => setJoinCode(val.toUpperCase())}
                     pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                    aria-label="Enter 6-character room code"
                   >
                     <InputOTPGroup>
                       <InputOTPSlot index={0} />

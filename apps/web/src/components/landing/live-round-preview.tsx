@@ -141,7 +141,7 @@ export function LiveRoundPreview() {
     : 24;
 
   return (
-    <div className="relative w-full max-w-lg lg:max-w-none mx-auto lg:mx-0">
+    <div ref={containerRef} className="relative w-full max-w-lg lg:max-w-none mx-auto lg:mx-0">
       {/* Background Vinyl Disc peeking out behind card edge so refraction rim bends it */}
       <div
         aria-hidden="true"
@@ -175,7 +175,6 @@ export function LiveRoundPreview() {
       </div>
 
       <GlassSurface
-        ref={containerRef}
         variant="strong"
         radius="2xl"
         refraction={true}

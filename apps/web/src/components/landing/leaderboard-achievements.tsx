@@ -12,7 +12,7 @@ import {
   Lightning,
   GameController,
 } from '@phosphor-icons/react';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar } from '@/components/ui/avatar';
 import type { LeaderboardEntry } from '@song-game/types';
@@ -83,20 +83,17 @@ export function LeaderboardAchievementsSection() {
                 </p>
               </div>
 
-              {/* shadcn Tabs for periods */}
-              <Tabs value={period} onValueChange={(v) => setPeriod(v as 'alltime' | 'weekly' | 'monthly')} className="w-auto">
-                <TabsList className="bg-[var(--surface-1)] border border-[var(--border)] p-1 rounded-xl">
-                  <TabsTrigger value="weekly" className="rounded-lg text-xs font-semibold px-3 py-1">
-                    Weekly
-                  </TabsTrigger>
-                  <TabsTrigger value="monthly" className="rounded-lg text-xs font-semibold px-3 py-1">
-                    Monthly
-                  </TabsTrigger>
-                  <TabsTrigger value="alltime" className="rounded-lg text-xs font-semibold px-3 py-1">
-                    All Time
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
+              <SegmentedControl<'alltime' | 'weekly' | 'monthly'>
+                name="homeLeaderboardPeriod"
+                value={period}
+                onChange={setPeriod}
+                size="sm"
+                options={[
+                  { value: 'alltime', label: 'All Time' },
+                  { value: 'weekly', label: 'Weekly' },
+                  { value: 'monthly', label: 'Monthly' },
+                ]}
+              />
             </div>
 
             {/* Leaderboard Rows / Skeletons */}

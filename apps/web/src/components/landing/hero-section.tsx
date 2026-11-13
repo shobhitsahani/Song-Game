@@ -113,6 +113,7 @@ export function HeroSection() {
                       maxLength={6}
                       pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
                       inputMode="text"
+                      aria-label="Enter 6-character room code"
                       value={roomCode}
                       onChange={(val) => {
                         setRoomCode(val.toUpperCase());

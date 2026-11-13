@@ -18,7 +18,12 @@ export function HowRoundWorks() {
       </div>
 
       {/* Horizontal strip of three real UI fragments */}
-      <div className="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto pb-4 md:pb-0 snap-x snap-mandatory scrollbar-hide">
+      <div
+        tabIndex={0}
+        role="region"
+        aria-label="How a round works steps"
+        className="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto pb-4 md:pb-0 snap-x snap-mandatory scrollbar-hide focus:outline-none"
+      >
         {/* Step 1: Hear the clip */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
