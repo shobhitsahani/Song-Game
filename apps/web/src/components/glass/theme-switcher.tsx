@@ -13,20 +13,20 @@ interface ThemeContextType {
 }
 
 export const ThemeContext = createContext<ThemeContextType>({
-  theme: 'black',
+  theme: 'light',
   setTheme: () => {},
 });
 
 export const useTheme = () => useContext(ThemeContext);
 
 const THEMES: { id: Theme; label: string; icon: typeof Sun; swatch: string }[] = [
+  { id: 'light', label: 'Daylight', icon: Sun, swatch: 'bg-blue-500' },
   { id: 'black', label: 'Vinyl', icon: Moon, swatch: 'bg-amber-400' },
   { id: 'rose', label: 'Rose', icon: Sparkle, swatch: 'bg-pink-500' },
-  { id: 'light', label: 'Daylight', icon: Sun, swatch: 'bg-blue-500' },
 ];
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('black');
+  const [theme, setThemeState] = useState<Theme>('light');
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -41,7 +41,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setThemeState(saved);
       document.documentElement.setAttribute('data-theme', saved);
     } else {
-      const initial: Theme = 'black';
+      // Fallback default for new visitors is always Daylight ('light')
+      const initial: Theme = 'light';
       setThemeState(initial);
       document.documentElement.setAttribute('data-theme', initial);
     }
@@ -161,4 +162,5 @@ export function ThemeSwitcher({ className }: { className?: string }) {
     </div>
   );
 }
+
 
