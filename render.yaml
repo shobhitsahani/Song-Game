@@ -8,7 +8,14 @@ services:
     healthCheckPath: /api/health
     envVars:
       - key: FRONTEND_URL
-        value: https://song-game-web.vercel.app
+        value: https://song-game-alpha.vercel.app
       - key: NODE_ENV
         value: production
-
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
