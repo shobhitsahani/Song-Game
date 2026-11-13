@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { Command as CommandPrimitive, useCommandState } from 'cmdk';
-import { motion } from 'motion/react';
 import { MagnifyingGlass, Check, X } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import {
@@ -90,11 +89,11 @@ export const CommandDialog = ({
         <DrawerContent
           hideClose
           style={{ bottom: `${viewportBottomOffset}px` }}
-          className="max-h-[80dvh] rounded-t-[24px] border-t border-[var(--glass-border)] bg-[var(--card)]/95 backdrop-blur-2xl p-0 shadow-2xl overflow-hidden focus-within:shadow-[inset_0_1px_0_var(--glass-highlight),0_0_24px_var(--glow)]"
+          className="h-[min(560px,85dvh)] rounded-t-[24px] border-t border-[var(--glass-border)] bg-[var(--card)]/95 backdrop-blur-2xl p-0 shadow-2xl overflow-hidden focus-within:shadow-[inset_0_1px_0_var(--glass-highlight),0_0_24px_var(--glow)]"
         >
           <DrawerTitle className="sr-only">{title}</DrawerTitle>
           <DrawerDescription className="sr-only">{description}</DrawerDescription>
-          <Command className="flex flex-col h-full max-h-[80dvh]">
+          <Command className="flex flex-col h-full">
             {children}
           </Command>
         </DrawerContent>
@@ -104,10 +103,13 @@ export const CommandDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent hideClose className="max-w-[min(560px,92vw)] max-h-[60dvh] flex flex-col overflow-hidden p-0 rounded-[24px] border border-[var(--glass-border)] bg-[var(--card)]/90 backdrop-blur-2xl shadow-2xl focus-within:border-[var(--glass-highlight)] focus-within:shadow-[inset_0_1px_0_var(--glass-highlight),0_0_24px_var(--glow)] transition-shadow">
+      <DialogContent
+        hideClose
+        className="max-w-[min(560px,92vw)] h-[521px] flex flex-col overflow-hidden p-0 rounded-[24px] border border-[var(--glass-border)] bg-[var(--card)]/90 backdrop-blur-2xl shadow-2xl focus-within:border-[var(--glass-highlight)] focus-within:shadow-[inset_0_1px_0_var(--glass-highlight),0_0_24px_var(--glow)]"
+      >
         <DialogTitle className="sr-only">{title}</DialogTitle>
         <DialogDescription className="sr-only">{description}</DialogDescription>
-        <Command className="flex flex-col h-full max-h-[60dvh]">
+        <Command className="flex flex-col h-full">
           {children}
         </Command>
       </DialogContent>
@@ -122,13 +124,14 @@ export const CommandInput = React.forwardRef<
   }
 >(({ className, value, onClear, style, ...props }, ref) => (
   <div
-    className="flex items-center border-b border-[var(--glass-border)] px-4 py-1"
+    className="flex items-center border-b border-[var(--glass-border)] px-4 py-1 shrink-0"
     cmdk-input-wrapper=""
   >
     <MagnifyingGlass size={18} className="mr-3 shrink-0 text-[var(--muted-foreground)]" />
     <CommandPrimitive.Input
       ref={ref}
       value={value}
+      autoFocus
       style={{ outline: 'none', boxShadow: 'none', border: 'none', ...style }}
       className={cn(
         'flex h-12 w-full rounded-none bg-transparent py-3 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] outline-none border-none focus:outline-none focus:ring-0 focus-visible:ring-0 shadow-none focus:shadow-none disabled:cursor-not-allowed disabled:opacity-50',
@@ -140,7 +143,7 @@ export const CommandInput = React.forwardRef<
       <button
         type="button"
         onClick={onClear}
-        className="p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full hover:bg-[var(--glass-bg)] transition-colors cursor-pointer"
+        className="p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full hover:bg-[var(--glass-bg)] transition-colors duration-[80ms] cursor-pointer shrink-0"
         aria-label="Clear search input"
       >
         <X size={14} />
@@ -157,7 +160,7 @@ export const CommandList = React.forwardRef<
   <CommandPrimitive.List
     ref={ref}
     className={cn(
-      'max-h-[min(420px,60dvh)] overflow-y-auto overflow-x-hidden p-2 [scrollbar-width:thin] [scrollbar-color:var(--glass-border)_transparent] [scrollbar-gutter:stable]',
+      'h-[min(420px,60dvh)] min-h-[min(420px,60dvh)] max-h-[min(420px,60dvh)] overflow-y-auto overflow-x-hidden p-2 [scrollbar-width:thin] [scrollbar-color:var(--glass-border)_transparent] [scrollbar-gutter:stable] [overscroll-behavior:contain] [scroll-behavior:auto]',
       className
     )}
     {...props}
@@ -176,7 +179,7 @@ export const CommandEmpty = React.forwardRef<
     <CommandPrimitive.Empty
       ref={ref}
       className={cn(
-        'py-10 text-center text-sm text-[var(--muted-foreground)] flex flex-col items-center justify-center gap-2',
+        'h-[min(380px,50dvh)] text-center text-sm text-[var(--muted-foreground)] flex flex-col items-center justify-center gap-2 select-none',
         className
       )}
       {...props}
@@ -192,7 +195,7 @@ export const CommandEmpty = React.forwardRef<
             <button
               type="button"
               onClick={onClear}
-              className="mt-1 text-xs font-semibold text-[var(--primary)] hover:underline px-3 py-1.5 rounded-lg bg-[var(--surface-1)] border border-[var(--glass-border)] cursor-pointer"
+              className="mt-1 text-xs font-semibold text-[var(--primary)] hover:underline px-3 py-1.5 rounded-lg bg-[var(--surface-1)] border border-[var(--glass-border)] cursor-pointer transition-colors duration-[80ms]"
             >
               Clear search
             </button>
@@ -225,28 +228,16 @@ export const CommandItem = React.forwardRef<
     isCurrent?: boolean;
   }
 >(({ className, children, value, isCurrent, ...props }, ref) => {
-  const selectedValue = useCommandState((state) => state.value);
-  const isSelected =
-    Boolean(selectedValue && value) &&
-    selectedValue.trim().toLowerCase() === value?.trim().toLowerCase();
-
   return (
     <CommandPrimitive.Item
       ref={ref}
       value={value}
       className={cn(
-        'relative flex cursor-pointer select-none items-center justify-between rounded-xl px-3 py-2 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 text-[var(--foreground)] hover:text-[var(--foreground)]',
+        'relative flex cursor-pointer select-none items-center justify-between rounded-xl px-3 py-2 text-sm outline-none border border-transparent transition-[background-color,border-color] duration-[80ms] ease-out data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 text-[var(--foreground)] hover:bg-[var(--surface-2)]/60 data-[selected=true]:bg-[var(--nav-lens-bg)] data-[selected=true]:border-[var(--nav-lens-border)] data-[selected=true]:shadow-[inset_0_1px_0_var(--glass-highlight)]',
         className
       )}
       {...props}
     >
-      {isSelected && (
-        <motion.div
-          layoutId="commandItemLens"
-          className="absolute inset-0 rounded-xl bg-[var(--nav-lens-bg)] border border-[var(--nav-lens-border)] shadow-[inset_0_1px_0_var(--glass-highlight),0_2px_8px_-1px_rgba(0,0,0,0.1)] pointer-events-none -z-10"
-          transition={{ type: 'spring', stiffness: 320, damping: 24, mass: 0.9 }}
-        />
-      )}
       <div className="flex items-center gap-2 flex-1 min-w-0">
         {children}
       </div>
@@ -254,11 +245,9 @@ export const CommandItem = React.forwardRef<
         {isCurrent && (
           <Check size={14} weight="bold" className="text-[var(--primary)] shrink-0" />
         )}
-        {isSelected && (
-          <kbd className="font-mono text-[10px] text-[var(--muted-foreground)] px-1.5 py-0.5 rounded border border-[var(--glass-border)] bg-[var(--surface-1)]/70">
-            ↵
-          </kbd>
-        )}
+        <kbd className="hidden [.group[data-selected=true]_&]:inline-flex [[data-selected=true]_&]:inline-flex font-mono text-[10px] text-[var(--muted-foreground)] px-1.5 py-0.5 rounded border border-[var(--glass-border)] bg-[var(--surface-1)]/70">
+          ↵
+        </kbd>
       </div>
     </CommandPrimitive.Item>
   );
@@ -266,7 +255,7 @@ export const CommandItem = React.forwardRef<
 CommandItem.displayName = CommandPrimitive.Item.displayName;
 
 export const CommandFooter = () => (
-  <div className="flex items-center justify-between border-t border-[var(--glass-border)] px-4 py-2.5 text-[11px] text-[var(--muted-foreground)] bg-[var(--surface-1)]/40 rounded-b-[24px]">
+  <div className="flex items-center justify-between border-t border-[var(--glass-border)] px-4 py-2.5 text-[11px] text-[var(--muted-foreground)] bg-[var(--surface-1)]/40 rounded-b-[24px] shrink-0">
     <div className="flex items-center gap-3">
       <span className="flex items-center gap-1">
         <kbd className="font-mono rounded border border-[var(--glass-border)] bg-[var(--surface-1)] px-1 py-0.5 text-[10px]">↑</kbd>

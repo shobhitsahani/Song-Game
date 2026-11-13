@@ -151,7 +151,7 @@ export function LiveRoundPreview() {
           viewBox="0 0 400 400"
           className="w-full h-full drop-shadow-xl"
           animate={
-            prefersReducedMotion || phase === 'reveal'
+            prefersReducedMotion || phase === 'reveal' || !isInView || isTabHidden
               ? { rotate: 0 }
               : { rotate: 360 }
           }
@@ -177,7 +177,7 @@ export function LiveRoundPreview() {
       <GlassSurface
         variant="strong"
         radius="2xl"
-        refraction={true}
+        refraction={false}
         specularRim={true}
         className="relative z-10 w-full p-5 sm:p-7 shadow-2xl backdrop-blur-2xl"
       >
@@ -237,7 +237,7 @@ export function LiveRoundPreview() {
             viewBox="0 0 400 400"
             className="w-full h-full drop-shadow-2xl"
             animate={
-              prefersReducedMotion || phase === 'reveal'
+              prefersReducedMotion || phase === 'reveal' || !isInView || isTabHidden
                 ? { rotate: 0 }
                 : { rotate: 360 }
             }
@@ -352,11 +352,11 @@ export function LiveRoundPreview() {
             {[40, 75, 100, 60, 90, 45, 80, 55, 95, 30].map((h, i) => (
               <motion.span
                 key={i}
-                className="w-1 bg-[var(--primary)] rounded-full"
+                className="w-1 h-4 bg-[var(--primary)] rounded-full origin-bottom"
                 animate={
-                  prefersReducedMotion || phase === 'reveal'
-                    ? { height: 6 }
-                    : { height: [6, (h / 100) * 18, 6] }
+                  prefersReducedMotion || phase === 'reveal' || !isInView || isTabHidden
+                    ? { scaleY: 0.25 }
+                    : { scaleY: [0.25, Math.max(0.25, h / 100), 0.25] }
                 }
                 transition={{
                   repeat: Infinity,
@@ -384,10 +384,9 @@ export function LiveRoundPreview() {
             <motion.button
               key={opt.key}
               type="button"
-              whileTap={!prefersReducedMotion ? { scale: 0.96 } : undefined}
               onClick={() => handleSelectOption(i)}
               className={cn(
-                'group relative flex items-center justify-between p-3.5 rounded-xl border text-left transition-colors duration-150 outline-none select-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] cursor-pointer backdrop-blur-md',
+                'group relative flex items-center justify-between p-3.5 rounded-xl border text-left transition-colors duration-[80ms] outline-none select-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] cursor-pointer',
                 showReveal && isCorrect
                   ? 'border-emerald-500/80 bg-emerald-500/20 text-emerald-300 font-bold shadow-md shadow-emerald-500/20'
                   : showReveal && isSelected && !isCorrect
@@ -400,8 +399,8 @@ export function LiveRoundPreview() {
               {isSelected && (
                 <motion.div
                   layoutId="previewAnswerLens"
-                  transition={prefersReducedMotion ? { duration: 0.12 } : liquidSpring}
-                  className="absolute inset-0 rounded-xl bg-white/[0.12] dark:bg-white/[0.08] border border-white/30 dark:border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_4px_16px_rgba(0,0,0,0.25)] backdrop-blur-lg -z-10"
+                  transition={prefersReducedMotion ? { duration: 0.08 } : liquidSpring}
+                  className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/[0.12] to-white/[0.04] dark:from-white/[0.08] dark:to-white/[0.02] border border-white/25 dark:border-white/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_2px_8px_rgba(0,0,0,0.2)] -z-10"
                 />
               )}
               <div className="flex items-center gap-2.5 min-w-0">

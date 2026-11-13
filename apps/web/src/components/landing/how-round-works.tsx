@@ -26,10 +26,10 @@ export function HowRoundWorks() {
       >
         {/* Step 1: Hear the clip */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.24 }}
           className="min-w-[280px] sm:min-w-[320px] md:min-w-0 flex-1 snap-start flex flex-col justify-between card-surface p-6"
         >
           {/* Real UI fragment: Clip playing with waveform + tonearm */}
@@ -70,10 +70,10 @@ export function HowRoundWorks() {
 
         {/* Step 2: Lock in your answer */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.08 }}
+          transition={{ duration: 0.24, delay: 0.05 }}
           className="min-w-[280px] sm:min-w-[320px] md:min-w-0 flex-1 snap-start flex flex-col justify-between card-surface p-6"
         >
           {/* Real UI fragment: Answer buttons */}
@@ -110,10 +110,10 @@ export function HowRoundWorks() {
 
         {/* Step 3: Beat the room */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.16 }}
+          transition={{ duration: 0.24, delay: 0.1 }}
           className="min-w-[280px] sm:min-w-[320px] md:min-w-0 flex-1 snap-start flex flex-col justify-between card-surface p-6"
         >
           {/* Real UI fragment: Moving Leaderboard rows */}

@@ -62,10 +62,10 @@ export function FeaturesSection() {
           return (
             <motion.div
               key={feature.title}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.06, duration: 0.35 }}
+              transition={{ delay: i * 0.04, duration: 0.24 }}
             >
               <SpotlightCard className="h-full flex flex-col justify-between">
                 <div>

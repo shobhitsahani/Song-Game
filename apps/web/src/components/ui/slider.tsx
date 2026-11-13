@@ -59,14 +59,14 @@ export function Slider({
       {/* Glass Lens Thumb (28px) */}
       <motion.div
         animate={{
-          scaleX: isDragging ? 1.15 : 1,
-          scaleY: isDragging ? 0.92 : 1,
-          scale: isDragging ? 1.12 : 1,
+          scaleX: isDragging ? 1.03 : 1,
+          scaleY: isDragging ? 0.97 : 1,
         }}
         transition={liquidSpring}
-        className="pointer-events-none absolute h-7 w-7 rounded-full border-2 border-white/70 bg-white/20 dark:bg-white/25 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_4px_16px_rgba(0,0,0,0.35)] flex items-center justify-center group-hover:border-white transition-colors"
+        className="pointer-events-none absolute h-7 w-7 rounded-full border-2 border-white/70 bg-gradient-to-b from-white/35 to-white/10 dark:from-white/30 dark:to-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_2px_8px_rgba(0,0,0,0.3)] flex items-center justify-center group-hover:border-white transition-colors"
         style={{
           left: `calc(${percentage}% - 14px)`,
+          borderRadius: 9999,
         }}
       >
         {/* Subtle center lens refraction ring */}

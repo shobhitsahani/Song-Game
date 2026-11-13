@@ -50,7 +50,7 @@ export const ToggleGroupItem = React.forwardRef<
           variant: context.variant || variant,
           size: context.size || size,
         }),
-        'data-[state=on]:bg-[var(--primary)] data-[state=on]:text-[var(--primary-foreground)] data-[state=on]:border-transparent data-[state=on]:shadow-md transition-all',
+        'data-[state=on]:bg-[var(--primary)] data-[state=on]:text-[var(--primary-foreground)] data-[state=on]:border-transparent data-[state=on]:shadow-md transition-[background-color,color,border-color,box-shadow] duration-[80ms] ease-out',
         className
       )}
       {...props}

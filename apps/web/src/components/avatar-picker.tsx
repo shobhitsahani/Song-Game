@@ -30,13 +30,14 @@ export function AvatarPicker({ value, onChange }: AvatarPickerProps) {
             key={url}
             type="button"
             onClick={() => onChange(url)}
-            className="relative rounded-full p-1 transition-transform duration-150 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] cursor-pointer"
+            className="relative rounded-full p-1 transition-opacity duration-[80ms] hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] cursor-pointer"
             aria-pressed={selected}
             aria-label={`Avatar ${i + 1}`}
           >
             {selected && (
               <motion.div
                 layoutId="avatarGlassHalo"
+                style={{ borderRadius: 9999 }}
                 className="absolute -inset-1 rounded-full border-2 border-[var(--primary)] bg-white/[0.08] shadow-[0_0_16px_var(--glow),inset_0_1px_0_var(--glass-highlight)] -z-10 pointer-events-none"
                 transition={liquidSpring}
               />

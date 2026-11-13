@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useCallback, useEffect, useState } from 'react';
+import React, { useRef, useCallback, useEffect, useState, useMemo } from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useLiquidSurface } from '@khoivudev/liquid-glass-react';
@@ -14,6 +14,43 @@ export interface GlassSurfaceProps extends React.HTMLAttributes<HTMLDivElement> 
   refraction?: boolean;
   specularRim?: boolean;
   children?: React.ReactNode;
+}
+
+/**
+ * Isolated Refraction Filter component.
+ * Only mounted when tier === 'refract' and refraction is explicitly true.
+ * This guarantees zero ResizeObserver / MutationObserver / SVG filter overhead for all frosted surfaces.
+ */
+function RefractFilter({
+  targetRef,
+}: {
+  targetRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const options = useMemo(
+    () => ({
+      targetRef: targetRef as unknown as React.RefObject<HTMLDivElement>,
+      glassThickness: 35,
+      bezelWidth: 12,
+      blur: 0.8,
+      refractiveIndex: 1.5,
+      specularOpacity: 0.6,
+      specularSaturation: 2.5,
+    }),
+    [targetRef]
+  );
+
+  const { Filter, filterStyles } = useLiquidSurface<HTMLDivElement>(options);
+
+  useEffect(() => {
+    if (targetRef.current && filterStyles?.backdropFilter) {
+      targetRef.current.style.backdropFilter = filterStyles.backdropFilter as string;
+      if (filterStyles.WebkitBackdropFilter) {
+        (targetRef.current.style as CSSStyleDeclaration & { webkitBackdropFilter: string }).webkitBackdropFilter = filterStyles.WebkitBackdropFilter as string;
+      }
+    }
+  }, [filterStyles, targetRef]);
+
+  return <Filter />;
 }
 
 export function GlassSurface({
@@ -30,9 +67,10 @@ export function GlassSurface({
 }: GlassSurfaceProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [tier, setTier] = useState<GlassTier>('frosted');
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Check accessibility overrides first
+    // Accessibility check: reduced transparency or contrast
     const prefersReduced =
       window.matchMedia?.('(prefers-reduced-transparency: reduce)').matches ||
       window.matchMedia?.('(prefers-contrast: more)').matches;
@@ -60,26 +98,41 @@ export function GlassSurface({
     setTier(isChromium ? 'refract' : 'frosted');
   }, [refraction]);
 
-  // Hook for Chromium SVG displacement-map refraction
-  const { Filter, filterStyles } = useLiquidSurface<HTMLDivElement>({
-    targetRef: ref as unknown as React.RefObject<HTMLDivElement>,
-    glassThickness: 35,
-    bezelWidth: 12,
-    blur: 0.8,
-    refractiveIndex: 1.5,
-    specularOpacity: 0.6,
-    specularSaturation: 2.5,
-  });
+  // Clean up RAF on unmount
+  useEffect(() => {
+    return () => {
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, []);
 
+  // Coalesced pointer-driven specular tracker throttled via requestAnimationFrame
   const handlePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      if (interactive && ref.current) {
-        const rect = ref.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        ref.current.style.setProperty('--pointer-x', `${x}px`);
-        ref.current.style.setProperty('--pointer-y', `${y}px`);
+      if (!interactive || e.pointerType === 'touch') {
+        onPointerMove?.(e);
+        return;
       }
+
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+      }
+
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+
+      rafRef.current = requestAnimationFrame(() => {
+        if (ref.current) {
+          const rect = ref.current.getBoundingClientRect();
+          const x = clientX - rect.left;
+          const y = clientY - rect.top;
+          ref.current.style.setProperty('--pointer-x', `${x}px`);
+          ref.current.style.setProperty('--pointer-y', `${y}px`);
+        }
+        rafRef.current = null;
+      });
+
       onPointerMove?.(e);
     },
     [interactive, onPointerMove]
@@ -101,26 +154,21 @@ export function GlassSurface({
     nav: 'bg-[var(--nav-glass-bg)] border-[var(--nav-glass-border)] shadow-[var(--nav-glass-shadow)] backdrop-blur-[20px] backdrop-saturate-[170%]',
   }[variant];
 
-  const combinedStyles: React.CSSProperties = {
-    ...style,
-    ...(tier === 'refract' ? filterStyles : {}),
-  };
-
   return (
     <>
-      {tier === 'refract' && <Filter />}
+      {refraction && tier === 'refract' && <RefractFilter targetRef={ref} />}
       <div
         ref={ref}
         data-glass={tier}
         onPointerMove={handlePointerMove}
-        style={combinedStyles}
+        style={style}
         className={twMerge(
           clsx(
             'liquid-glass-surface liquid-glass-grain',
             radiusClass,
             variantClass,
             specularRim && 'specular-rim',
-            interactive && 'transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.99] cursor-pointer',
+            interactive && 'transition-transform duration-[80ms] hover:-translate-y-0.5 active:scale-[0.99] cursor-pointer',
             tier === 'reduced' && 'bg-[var(--surface-1)] backdrop-blur-none border-[var(--border)]',
             className
           )

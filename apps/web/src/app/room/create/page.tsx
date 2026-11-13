@@ -191,11 +191,11 @@ export default function CreateRoomPage() {
                 ref={triggerRef}
                 type="button"
                 onClick={() => setOpenCommand(true)}
-                className="w-full h-11 px-3.5 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-between gap-2 text-sm text-[var(--muted-foreground)] hover:border-[var(--glass-highlight)] hover:text-[var(--foreground)] transition-all cursor-pointer shadow-sm group focus-visible:ring-2 focus-visible:ring-[var(--ring)] outline-none"
+                className="w-full h-11 px-3.5 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-between gap-2 text-sm text-[var(--muted-foreground)] hover:border-[var(--glass-highlight)] hover:text-[var(--foreground)] transition-colors duration-[80ms] cursor-pointer shadow-sm group focus-visible:ring-2 focus-visible:ring-[var(--ring)] outline-none"
                 aria-label="Search genres or eras"
               >
                 <div className="flex items-center gap-2.5">
-                  <MagnifyingGlass size={16} className="text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                  <MagnifyingGlass size={16} className="text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors duration-[80ms]" />
                   <span className="text-xs sm:text-sm">Search genres or eras...</span>
                 </div>
                 <kbd className="font-mono text-[10px] font-semibold bg-[var(--surface-2)] text-[var(--foreground)] px-2 py-0.5 rounded-lg border border-[var(--glass-border)] shadow-xs">
@@ -320,7 +320,7 @@ export default function CreateRoomPage() {
         onOpenChange={(open) => {
           setOpenCommand(open);
           if (!open) {
-            setTimeout(() => triggerRef.current?.focus(), 50);
+            triggerRef.current?.focus();
           }
         }}
       >
@@ -341,7 +341,7 @@ export default function CreateRoomPage() {
                 onSelect={() => {
                   setSelectedGenre(g);
                   setOpenCommand(false);
-                  setTimeout(() => triggerRef.current?.focus(), 50);
+                  triggerRef.current?.focus();
                 }}
               >
                 <Sliders className="mr-2 h-4 w-4 text-[var(--accent)] shrink-0" />
@@ -358,7 +358,7 @@ export default function CreateRoomPage() {
                 onSelect={() => {
                   setSelectedDecade(d);
                   setOpenCommand(false);
-                  setTimeout(() => triggerRef.current?.focus(), 50);
+                  triggerRef.current?.focus();
                 }}
               >
                 <CalendarBlank className="mr-2 h-4 w-4 text-[var(--primary)] shrink-0" />

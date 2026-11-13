@@ -4,14 +4,14 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 select-none whitespace-nowrap rounded-2xl text-base font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96]',
+  'inline-flex items-center justify-center gap-2 select-none whitespace-nowrap rounded-2xl text-base font-semibold transition-[color,background-color,border-color,box-shadow,opacity] duration-[80ms] ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]',
   {
     variants: {
       variant: {
         primary:
-          'glass-btn-amber hover:brightness-105 font-bold shadow-lg shadow-amber-500/25 active:scale-[0.96] transition-transform duration-150',
+          'glass-btn-amber hover:brightness-105 font-bold shadow-lg shadow-amber-500/25 active:scale-[0.98] transition-[filter,transform] duration-[80ms]',
         default:
-          'glass-btn-amber hover:brightness-105 font-bold shadow-lg shadow-amber-500/25 active:scale-[0.96] transition-transform duration-150',
+          'glass-btn-amber hover:brightness-105 font-bold shadow-lg shadow-amber-500/25 active:scale-[0.98] transition-[filter,transform] duration-[80ms]',
         glass:
           'liquid-glass-surface bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--foreground)] hover:bg-[var(--card)] hover:border-[var(--glass-highlight)] shadow-sm backdrop-blur-md',
         secondary:

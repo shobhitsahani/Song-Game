@@ -67,9 +67,9 @@ export function HeroSection() {
           <div className="lg:col-span-6 flex flex-col items-start text-left">
             {/* Headline: clamp(40px, 5.2vw, 76px), weight 600-700, letter-spacing 0 to -0.01em */}
             <motion.h1
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="text-[clamp(40px,5.2vw,76px)] font-bold font-display tracking-[-0.01em] text-[var(--foreground)] leading-[1.06] mb-5"
             >
               Name that track before the needle drops.
@@ -77,9 +77,9 @@ export function HeroSection() {
 
             {/* Subhead: max 20 words, body font, 18px */}
             <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
               className="text-base sm:text-lg text-[var(--muted-foreground)] max-w-lg mb-8 font-normal leading-relaxed"
             >
               Real-time music trivia. Hear a 15-second clip, name it first, and race your friends in a live room.
@@ -87,9 +87,9 @@ export function HeroSection() {
 
             {/* Primary Actions: Play + 6-slot InputOTP Join Room */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full max-w-xl"
             >
               <Link href="/room/create" className="shrink-0">
@@ -197,9 +197,9 @@ export function HeroSection() {
           {/* Right Column (6 of 12) - LiveRoundPreview Centerpiece */}
           <div className="lg:col-span-6 w-full">
             <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
               <LiveRoundPreview />
             </motion.div>

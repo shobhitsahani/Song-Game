@@ -61,8 +61,16 @@ export function Navbar() {
   const [joinCode, setJoinCode] = useState('');
 
   useEffect(() => {
+    let isScrolled = false;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 8);
+      const y = window.scrollY;
+      if (!isScrolled && y > 24) {
+        isScrolled = true;
+        setScrolled(true);
+      } else if (isScrolled && y < 8) {
+        isScrolled = false;
+        setScrolled(false);
+      }
     };
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -87,15 +95,15 @@ export function Navbar() {
       style={{ isolation: 'isolate' }}
     >
       <div className="max-w-[1200px] mx-auto pointer-events-auto">
-        {/* ONE floating capsule, 56px tall default, 48px on scroll */}
+        {/* ONE floating capsule, constant 56px height to prevent reflow and map regeneration */}
         <GlassSurface
           variant="nav"
           radius="full"
           refraction={true}
           specularRim={true}
           className={cn(
-            'w-full flex items-center justify-between transition-all duration-300',
-            scrolled ? 'h-12 px-4 shadow-2xl' : 'h-14 px-5 shadow-xl'
+            'w-full h-14 px-5 flex items-center justify-between transition-[box-shadow,border-color,background-color] duration-[80ms]',
+            scrolled ? 'shadow-2xl border-[var(--glass-highlight)]' : 'shadow-xl'
           )}
         >
           {/* Left: wordmark with crisp vinyl mark */}
