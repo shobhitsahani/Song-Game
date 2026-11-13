@@ -3,7 +3,7 @@
    Supports: data-theme="black" | "rose" | "light"
    ========================================================================== */
 
-
+:root,
 html[data-theme="black"] {
   color-scheme: dark;
 
@@ -64,6 +64,14 @@ html[data-theme="black"] {
   --surface-1: oklch(0.14 0.008 270);
   --surface-2: oklch(0.19 0.010 270);
   --surface-3: oklch(0.25 0.012 270);
+
+  /* Badge tokens */
+  --badge-xp: oklch(0.82 0.17 75);
+  --badge-xp-bg: oklch(0.82 0.17 75 / 0.12);
+  --badge-xp-border: oklch(0.82 0.17 75 / 0.25);
+  --badge-danger: oklch(0.72 0.20 25);
+  --badge-danger-bg: oklch(0.72 0.20 25 / 0.12);
+  --badge-danger-border: oklch(0.72 0.20 25 / 0.25);
 }
 
 html[data-theme="rose"] {
@@ -126,9 +134,16 @@ html[data-theme="rose"] {
   --surface-1: oklch(0.20 0.05 350);
   --surface-2: oklch(0.26 0.05 350);
   --surface-3: oklch(0.32 0.05 350);
+
+  /* Badge tokens */
+  --badge-xp: oklch(0.85 0.15 75);
+  --badge-xp-bg: oklch(0.85 0.15 75 / 0.12);
+  --badge-xp-border: oklch(0.85 0.15 75 / 0.25);
+  --badge-danger: oklch(0.75 0.20 25);
+  --badge-danger-bg: oklch(0.75 0.20 25 / 0.12);
+  --badge-danger-border: oklch(0.75 0.20 25 / 0.25);
 }
 
-:root,
 html[data-theme="light"] {
   color-scheme: light;
 
@@ -141,7 +156,7 @@ html[data-theme="light"] {
   --popover-foreground: oklch(0.20 0.02 265);
 
   /* Primary Cobalt Accent */
-  --primary: oklch(0.55 0.22 262);
+  --primary: oklch(0.46 0.22 262);
   --primary-foreground: oklch(1 0 0);
 
   /* Secondary */
@@ -189,6 +204,14 @@ html[data-theme="light"] {
   --surface-1: oklch(0.99 0.004 265);
   --surface-2: oklch(0.94 0.01 265);
   --surface-3: oklch(0.88 0.015 265);
+
+  /* Badge tokens */
+  --badge-xp: oklch(0.42 0.14 75);
+  --badge-xp-bg: oklch(0.82 0.17 75 / 0.15);
+  --badge-xp-border: oklch(0.42 0.14 75 / 0.35);
+  --badge-danger: oklch(0.45 0.22 25);
+  --badge-danger-bg: oklch(0.65 0.20 25 / 0.12);
+  --badge-danger-border: oklch(0.45 0.22 25 / 0.30);
 }
 
 /* 1px inner top highlight + subtle top gradient cards */
@@ -210,29 +233,27 @@ html[data-theme="light"] {
 
 /* Accessibility Fallbacks */
 @supports not (backdrop-filter: blur(10px)) {
-  
+  :root,
   html[data-theme="black"],
   html[data-theme="rose"] {
     --glass-bg: oklch(0.18 0.01 270 / 0.92);
     --glass-border: oklch(0.32 0.01 270);
   }
-  :root,
-html[data-theme="light"] {
+  html[data-theme="light"] {
     --glass-bg: oklch(0.98 0.005 265 / 0.95);
     --glass-border: oklch(0.85 0.01 265);
   }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  
+  :root,
   html[data-theme="black"],
   html[data-theme="rose"] {
     --glass-bg: oklch(0.15 0.01 270);
     --glass-border: oklch(0.30 0.01 270);
     --glass-blur: 0px;
   }
-  :root,
-html[data-theme="light"] {
+  html[data-theme="light"] {
     --glass-bg: oklch(0.98 0.005 265);
     --glass-border: oklch(0.85 0.01 265);
     --glass-blur: 0px;
@@ -240,14 +261,13 @@ html[data-theme="light"] {
 }
 
 @media (prefers-contrast: more) {
-  
+  :root,
   html[data-theme="black"],
   html[data-theme="rose"] {
     --glass-border: oklch(1 0 0 / 0.45);
     --border: oklch(1 0 0 / 0.5);
   }
-  :root,
-html[data-theme="light"] {
+  html[data-theme="light"] {
     --glass-border: oklch(0 0 0 / 0.4);
     --border: oklch(0 0 0 / 0.4);
   }

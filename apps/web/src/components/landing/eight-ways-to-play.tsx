@@ -126,7 +126,7 @@ export function EightWaysToPlay() {
               <Heart size={20} weight="fill" className="text-rose-500 animate-pulse" />
               <Heart size={20} weight="fill" className="text-rose-500 animate-pulse" />
             </div>
-            <span className="text-xs font-mono font-bold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">
+            <span className="text-xs font-mono font-bold text-[var(--badge-danger)] bg-[var(--badge-danger-bg)] px-2 py-0.5 rounded border border-[var(--badge-danger-border)]">
               Knockout active
             </span>
           </div>
@@ -141,10 +141,10 @@ export function EightWaysToPlay() {
         >
           <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Timer size={22} weight="duotone" className="text-rose-400" />
-              <span className="text-sm font-mono font-bold text-rose-400">10s max</span>
+              <Timer size={22} weight="duotone" className="text-[var(--badge-danger)]" />
+              <span className="text-sm font-mono font-bold text-[var(--badge-danger)]">10s max</span>
             </div>
-            <div className="w-8 h-8 rounded-full border-2 border-rose-500/30 border-t-rose-500 animate-spin flex items-center justify-center text-xs font-mono text-rose-400">
+            <div className="w-8 h-8 rounded-full border-2 border-rose-500/30 border-t-[var(--badge-danger)] animate-spin flex items-center justify-center text-xs font-mono font-bold text-[var(--badge-danger)]">
               3s
             </div>
           </div>

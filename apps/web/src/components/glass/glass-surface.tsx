@@ -46,12 +46,14 @@ if (typeof window !== 'undefined' && !(window as unknown as { __liquidMapMemoize
   const originalToDataURL = HTMLCanvasElement.prototype.toDataURL;
   HTMLCanvasElement.prototype.toDataURL = function (this: HTMLCanvasElement & { __liquidKey?: string }, ...args: [type?: string, quality?: number]) {
     if (this.__liquidKey) {
-      const cached = liquidMapCache.get(this.__liquidKey);
+      const key = this.__liquidKey;
+      delete this.__liquidKey;
+      const cached = liquidMapCache.get(key);
       if (cached) return cached;
       const res = originalToDataURL.apply(this, args);
-      liquidMapCache.set(this.__liquidKey, res);
+      liquidMapCache.set(key, res);
       if (process.env.NODE_ENV !== 'production') {
-        console.log('[LiquidGlass] Memoized map generation:', this.__liquidKey);
+        console.log('[LiquidGlass] Memoized map generation:', key);
       }
       return res;
     }

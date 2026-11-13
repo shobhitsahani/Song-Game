@@ -205,7 +205,7 @@ export function LeaderboardAchievementsSection() {
                       </p>
                     </div>
 
-                    <span className="text-xs font-mono font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20 shrink-0">
+                    <span className="text-xs font-mono font-bold text-[var(--badge-xp)] bg-[var(--badge-xp-bg)] px-2 py-0.5 rounded border border-[var(--badge-xp-border)] shrink-0">
                       +{ach.xp} XP
                     </span>
                   </div>

@@ -132,6 +132,7 @@ export const Navbar = React.memo(function Navbar() {
                   {isActive && (
                     <motion.div
                       layoutId="activeNavLens"
+                      style={{ borderRadius: 9999 }}
                       className="absolute inset-0 rounded-full bg-[var(--nav-lens-bg)] border border-[var(--nav-lens-border)] shadow-[inset_0_1px_0_var(--glass-highlight)] -z-10"
                       transition={liquidSpring}
                     />
