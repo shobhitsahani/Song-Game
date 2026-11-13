@@ -19,6 +19,7 @@ import { Slider } from '@/components/ui/slider';
 import { AvatarPicker } from '@/components/avatar-picker';
 import { GlassSurface } from '@/components/glass/glass-surface';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Navbar } from '@/components/landing/navbar';
 import {
   CommandDialog,
   CommandInput,
@@ -26,6 +27,7 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandItem,
+  CommandFooter,
 } from '@/components/ui/command';
 import { useSocket } from '@/providers/socket-provider';
 
@@ -59,13 +61,26 @@ export default function CreateRoomPage() {
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const [openCommand, setOpenCommand] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [shortcutLabel, setShortcutLabel] = useState('Ctrl K');
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const createTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    const isMac =
+      typeof navigator !== 'undefined' &&
+      /Mac|iPod|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+    setShortcutLabel(isMac ? '⌘K' : 'Ctrl K');
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setOpenCommand((prev) => !prev);
+        setOpenCommand((prev) => {
+          if (prev) {
+            setTimeout(() => triggerRef.current?.focus(), 50);
+          }
+          return !prev;
+        });
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -74,6 +89,11 @@ export default function CreateRoomPage() {
       if (createTimeoutRef.current) clearTimeout(createTimeoutRef.current);
     };
   }, []);
+
+  const visibleGenres = [
+    ...ALL_GENRES.slice(0, 6),
+    ...(ALL_GENRES.slice(0, 6).includes(selectedGenre) ? [] : [selectedGenre]),
+  ];
 
   const handleCreate = useCallback(() => {
     if (!socket || !connected || creating) return;
@@ -112,13 +132,15 @@ export default function CreateRoomPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 pt-20 pb-32">
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        className="max-w-xl w-full"
-      >
+    <>
+      <Navbar />
+      <main className="min-h-screen flex items-center justify-center p-4 pt-24 pb-32">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-xl w-full"
+        >
         <GlassSurface variant="strong" radius="xl" className="p-6 sm:p-8 shadow-2xl backdrop-blur-2xl">
           <div className="text-center mb-6">
             <h1 className="text-2xl sm:text-3xl font-extrabold font-display tracking-tight text-[var(--foreground)] mb-1">
@@ -155,32 +177,39 @@ export default function CreateRoomPage() {
             </div>
 
             {/* Genre Preference with Command Search Shortcut */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
                 <label className="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider flex items-center gap-1.5">
                   <Sliders size={14} className="text-[var(--accent)]" /> Genre Preset
                 </label>
-                <button
-                  type="button"
-                  onClick={() => setOpenCommand(true)}
-                  className="flex items-center gap-1.5 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] bg-[var(--glass-bg)] border border-[var(--glass-border)] px-2.5 py-1 rounded-xl transition-colors"
-                >
-                  <MagnifyingGlass size={12} />
-                  <span>Search</span>
-                  <kbd className="font-mono text-[10px] bg-[var(--secondary)] px-1.5 py-0.5 rounded border border-[var(--glass-border)]">
-                    Cmd+K
-                  </kbd>
-                </button>
+                <span className="text-[11px] text-[var(--muted-foreground)]">Press {shortcutLabel} anytime</span>
               </div>
+
+              {/* Glass search field trigger */}
+              <button
+                ref={triggerRef}
+                type="button"
+                onClick={() => setOpenCommand(true)}
+                className="w-full h-11 px-3.5 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-between gap-2 text-sm text-[var(--muted-foreground)] hover:border-[var(--glass-highlight)] hover:text-[var(--foreground)] transition-all cursor-pointer shadow-sm group focus-visible:ring-2 focus-visible:ring-[var(--ring)] outline-none"
+                aria-label="Search genres or eras"
+              >
+                <div className="flex items-center gap-2.5">
+                  <MagnifyingGlass size={16} className="text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                  <span className="text-xs sm:text-sm">Search genres or eras...</span>
+                </div>
+                <kbd className="font-mono text-[10px] font-semibold bg-[var(--surface-2)] text-[var(--foreground)] px-2 py-0.5 rounded-lg border border-[var(--glass-border)] shadow-xs">
+                  {shortcutLabel}
+                </kbd>
+              </button>
 
               <ToggleGroup
                 type="single"
                 value={selectedGenre}
                 onValueChange={(val) => val && setSelectedGenre(val)}
-                className="justify-start gap-1.5"
+                className="justify-start gap-1.5 flex-wrap"
                 spacing="compact"
               >
-                {ALL_GENRES.slice(0, 6).map((genre) => (
+                {visibleGenres.map((genre) => (
                   <ToggleGroupItem
                     key={genre}
                     value={genre}
@@ -300,42 +329,64 @@ export default function CreateRoomPage() {
           </div>
         </div>
 
-        {/* Genre & Artist Command Palette (Cmd+K) */}
-        <CommandDialog open={openCommand} onOpenChange={setOpenCommand}>
-          <CommandInput placeholder="Search genres or music eras..." />
-          <CommandList>
-            <CommandEmpty>No matching genres found.</CommandEmpty>
-            <CommandGroup heading="Genres">
-              {ALL_GENRES.map((g) => (
-                <CommandItem
-                  key={g}
-                  onSelect={() => {
-                    setSelectedGenre(g);
-                    setOpenCommand(false);
-                  }}
-                >
-                  <Sliders className="mr-2 h-4 w-4 text-[var(--accent)]" />
-                  <span>{g}</span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-            <CommandGroup heading="Eras & Decades">
-              {DECADES.map((d) => (
-                <CommandItem
-                  key={d}
-                  onSelect={() => {
-                    setSelectedDecade(d);
-                    setOpenCommand(false);
-                  }}
-                >
-                  <CalendarBlank className="mr-2 h-4 w-4 text-[var(--primary)]" />
-                  <span>{d}</span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </CommandDialog>
       </motion.div>
-    </main>
+      </main>
+
+      {/* Genre & Artist Command Palette (Cmd+K / Ctrl+K) */}
+      <CommandDialog
+        open={openCommand}
+        onOpenChange={(open) => {
+          setOpenCommand(open);
+          if (!open) {
+            setTimeout(() => triggerRef.current?.focus(), 50);
+          }
+        }}
+      >
+        <CommandInput
+          placeholder="Search genres or music eras..."
+          value={searchQuery}
+          onValueChange={setSearchQuery}
+          onClear={() => setSearchQuery('')}
+        />
+        <CommandList>
+          <CommandEmpty onClear={() => setSearchQuery('')} />
+          <CommandGroup heading="Genres">
+            {ALL_GENRES.map((g) => (
+              <CommandItem
+                key={g}
+                value={g}
+                isCurrent={selectedGenre === g}
+                onSelect={() => {
+                  setSelectedGenre(g);
+                  setOpenCommand(false);
+                  setTimeout(() => triggerRef.current?.focus(), 50);
+                }}
+              >
+                <Sliders className="mr-2 h-4 w-4 text-[var(--accent)] shrink-0" />
+                <span>{g}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          <CommandGroup heading="Eras">
+            {DECADES.map((d) => (
+              <CommandItem
+                key={d}
+                value={d}
+                isCurrent={selectedDecade === d}
+                onSelect={() => {
+                  setSelectedDecade(d);
+                  setOpenCommand(false);
+                  setTimeout(() => triggerRef.current?.focus(), 50);
+                }}
+              >
+                <CalendarBlank className="mr-2 h-4 w-4 text-[var(--primary)] shrink-0" />
+                <span>{d}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+        <CommandFooter />
+      </CommandDialog>
+    </>
   );
 }
