@@ -62,7 +62,6 @@ export default function CreateRoomPage() {
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const [openCommand, setOpenCommand] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [shortcutLabel, setShortcutLabel] = useState('Ctrl/⌘K');
   const triggerRef = useRef<HTMLButtonElement>(null);
   const createTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -324,14 +323,9 @@ export default function CreateRoomPage() {
           }
         }}
       >
-        <CommandInput
-          placeholder="Search genres or music eras..."
-          value={searchQuery}
-          onValueChange={setSearchQuery}
-          onClear={() => setSearchQuery('')}
-        />
+        <CommandInput placeholder="Search genres or music eras..." />
         <CommandList>
-          <CommandEmpty onClear={() => setSearchQuery('')} />
+          <CommandEmpty />
           <CommandGroup heading="Genres">
             {ALL_GENRES.map((g) => (
               <CommandItem

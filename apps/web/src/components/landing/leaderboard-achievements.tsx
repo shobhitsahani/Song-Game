@@ -97,7 +97,7 @@ export function LeaderboardAchievementsSection() {
             </div>
 
             {/* Leaderboard Rows / Skeletons */}
-            <div className="card-surface p-4 sm:p-6 space-y-2.5">
+            <div className="card-surface p-4 sm:p-6 space-y-2.5 min-h-[354px]">
               {loading ? (
                 <div className="space-y-3">
                   {[...Array(5)].map((_, i) => (
@@ -105,7 +105,7 @@ export function LeaderboardAchievementsSection() {
                   ))}
                 </div>
               ) : hasError || entries.length === 0 ? (
-                <div className="py-8 text-center text-sm text-[var(--muted-foreground)]">
+                <div className="py-8 min-h-[290px] flex flex-col items-center justify-center text-center text-sm text-[var(--muted-foreground)]">
                   <Trophy size={28} className="mx-auto mb-2 text-[var(--muted-foreground)] opacity-40" />
                   <p>Leaderboard standings update after finished rooms.</p>
                   <Link href="/room/create" className="text-xs text-[var(--primary)] font-semibold hover:underline mt-2 inline-block">

@@ -8,19 +8,19 @@ import { OfflineNotice } from '@/components/shared/offline-notice';
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
-  display: 'swap',
+  display: 'optional',
 });
 
 const unbounded = Unbounded({
   subsets: ['latin'],
   variable: '--font-display',
-  display: 'swap',
+  display: 'optional',
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
-  display: 'swap',
+  display: 'optional',
 });
 
 export const metadata: Metadata = {

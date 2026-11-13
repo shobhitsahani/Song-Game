@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'motion/react';
 import { Check } from '@phosphor-icons/react';
 import { Avatar } from '@/components/ui/avatar';
@@ -20,7 +21,7 @@ interface AvatarPickerProps {
   onChange: (url: string) => void;
 }
 
-export function AvatarPicker({ value, onChange }: AvatarPickerProps) {
+export const AvatarPicker = React.memo(function AvatarPicker({ value, onChange }: AvatarPickerProps) {
   return (
     <div className="grid grid-cols-5 gap-3 p-1">
       {AVATAR_OPTIONS.map((url, i) => {
@@ -53,4 +54,4 @@ export function AvatarPicker({ value, onChange }: AvatarPickerProps) {
       })}
     </div>
   );
-}
+});

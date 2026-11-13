@@ -51,7 +51,7 @@ const THEME_OPTIONS: { id: Theme; label: string; icon: typeof Moon; dot: string 
   { id: 'light', label: 'Daylight', icon: Sun, dot: 'bg-blue-600' },
 ];
 
-export function Navbar() {
+export const Navbar = React.memo(function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { theme, setTheme } = useTheme();
@@ -356,4 +356,4 @@ export function Navbar() {
       </div>
     </header>
   );
-}
+});

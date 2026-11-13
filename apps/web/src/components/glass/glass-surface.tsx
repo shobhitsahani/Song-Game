@@ -7,6 +7,24 @@ import { useLiquidSurface } from '@khoivudev/liquid-glass-react';
 
 export type GlassTier = 'refract' | 'frosted' | 'reduced';
 
+// Cache generated displacement map data URLs to avoid regenerating identical canvas textures
+const displacementMapCache = new Map<string, string>();
+if (typeof window !== 'undefined' && !(window as unknown as { __displacementMapMemoized?: boolean }).__displacementMapMemoized) {
+  (window as unknown as { __displacementMapMemoized?: boolean }).__displacementMapMemoized = true;
+  const originalToDataURL = HTMLCanvasElement.prototype.toDataURL;
+  HTMLCanvasElement.prototype.toDataURL = function (this: HTMLCanvasElement, ...args: [type?: string, quality?: number]) {
+    if (this.width > 0 && this.height > 0 && this.width <= 1024 && this.height <= 1024) {
+      const key = `${this.width}x${this.height}`;
+      const cached = displacementMapCache.get(key);
+      if (cached) return cached;
+      const res = originalToDataURL.apply(this, args);
+      displacementMapCache.set(key, res);
+      return res;
+    }
+    return originalToDataURL.apply(this, args);
+  };
+}
+
 export interface GlassSurfaceProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'regular' | 'strong' | 'tint' | 'nav';
   radius?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';

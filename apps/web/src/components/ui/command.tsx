@@ -122,35 +122,57 @@ export const CommandInput = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
     onClear?: () => void;
   }
->(({ className, value, onClear, style, ...props }, ref) => (
-  <div
-    className="flex items-center border-b border-[var(--glass-border)] px-4 py-1 shrink-0"
-    cmdk-input-wrapper=""
-  >
-    <MagnifyingGlass size={18} className="mr-3 shrink-0 text-[var(--muted-foreground)]" />
-    <CommandPrimitive.Input
-      ref={ref}
-      value={value}
-      autoFocus
-      style={{ outline: 'none', boxShadow: 'none', border: 'none', ...style }}
-      className={cn(
-        'flex h-12 w-full rounded-none bg-transparent py-3 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] outline-none border-none focus:outline-none focus:ring-0 focus-visible:ring-0 shadow-none focus:shadow-none disabled:cursor-not-allowed disabled:opacity-50',
-        className
+>(({ className, value, onClear, style, ...props }, ref) => {
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
+  const search = useCommandState((state) => state.search);
+
+  React.useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
+
+  React.useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const handleClear = () => {
+    if (inputRef.current) {
+      inputRef.current.value = '';
+      inputRef.current.dispatchEvent(new Event('input', { bubbles: true }));
+      inputRef.current.focus();
+    }
+    onClear?.();
+  };
+
+  const showClear = Boolean(value !== undefined ? value : search);
+
+  return (
+    <div
+      className="flex items-center border-b border-[var(--glass-border)] px-4 py-1 shrink-0"
+      cmdk-input-wrapper=""
+    >
+      <MagnifyingGlass size={18} className="mr-3 shrink-0 text-[var(--muted-foreground)]" />
+      <CommandPrimitive.Input
+        ref={inputRef}
+        value={value}
+        autoFocus
+        style={{ outline: 'none', boxShadow: 'none', border: 'none', ...style }}
+        className={cn(
+          'flex h-12 w-full rounded-none bg-transparent py-3 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] outline-none border-none focus:outline-none focus:ring-0 focus-visible:ring-0 shadow-none focus:shadow-none disabled:cursor-not-allowed disabled:opacity-50',
+          className
+        )}
+        {...props}
+      />
+      {showClear && (
+        <button
+          type="button"
+          onClick={handleClear}
+          className="p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full hover:bg-[var(--glass-bg)] transition-colors duration-[80ms] cursor-pointer shrink-0"
+          aria-label="Clear search input"
+        >
+          <X size={14} />
+        </button>
       )}
-      {...props}
-    />
-    {Boolean(value) && onClear && (
-      <button
-        type="button"
-        onClick={onClear}
-        className="p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full hover:bg-[var(--glass-bg)] transition-colors duration-[80ms] cursor-pointer shrink-0"
-        aria-label="Clear search input"
-      >
-        <X size={14} />
-      </button>
-    )}
-  </div>
-));
+    </div>
+  );
+});
 CommandInput.displayName = CommandPrimitive.Input.displayName;
 
 export const CommandList = React.forwardRef<
