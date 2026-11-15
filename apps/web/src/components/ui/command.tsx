@@ -105,7 +105,7 @@ export const CommandDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         hideClose
-        className="max-w-[min(560px,92vw)] h-[521px] flex flex-col overflow-hidden p-0 rounded-[24px] border border-[var(--glass-border)] bg-[var(--card)]/90 backdrop-blur-2xl shadow-2xl focus-within:border-[var(--glass-highlight)] focus-within:shadow-[inset_0_1px_0_var(--glass-highlight),0_0_24px_var(--glow)]"
+        className="max-w-[min(560px,92vw)] h-[521px] flex flex-col overflow-hidden p-0 rounded-[var(--radius-dialog)] border border-[var(--glass-border)] bg-[var(--card)]/90 backdrop-blur-2xl shadow-2xl focus-within:border-[var(--glass-highlight)] focus-within:shadow-[inset_0_1px_0_var(--glass-highlight),0_0_24px_var(--glow)]"
       >
         <DialogTitle className="sr-only">{title}</DialogTitle>
         <DialogDescription className="sr-only">{description}</DialogDescription>
@@ -292,7 +292,7 @@ export const CommandItem = React.forwardRef<
 CommandItem.displayName = CommandPrimitive.Item.displayName;
 
 export const CommandFooter = () => (
-  <div className="flex items-center justify-between border-t border-[var(--glass-border)] px-4 py-2.5 text-[11px] text-[var(--muted-foreground)] bg-[var(--surface-1)]/40 rounded-b-[24px] shrink-0">
+  <div className="flex items-center justify-between border-t border-[var(--glass-border)] px-4 py-2.5 text-[11px] text-[var(--muted-foreground)] bg-[var(--surface-1)]/40 rounded-b-[var(--radius-dialog)] shrink-0">
     <div className="flex items-center gap-3">
       <span className="flex items-center gap-1">
         <kbd className="font-mono rounded border border-[var(--glass-border)] bg-[var(--surface-1)] px-1 py-0.5 text-[10px]">↑</kbd>

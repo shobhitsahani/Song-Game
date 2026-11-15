@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Unbounded, JetBrains_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
+import { cookies } from 'next/headers';
 import './globals.css';
 import { Providers } from './providers';
 import { AmbientBackground } from '@/components/glass/ambient-background';
@@ -54,21 +55,42 @@ export const viewport: Viewport = {
   themeColor: '#f8fafc',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const THEME_COLORS: Record<string, string> = {
+  black: '#121016',
+  rose: '#241219',
+  light: '#f8fafc',
+};
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const themeCookie = cookieStore.get('song-game-theme-v2')?.value;
+  const initialTheme = (themeCookie === 'black' || themeCookie === 'rose' || themeCookie === 'light') ? themeCookie : 'light';
+  const initialThemeColor = THEME_COLORS[initialTheme] || THEME_COLORS.light;
+
   return (
-    <html lang="en" data-theme="light" suppressHydrationWarning>
+    <html
+      lang="en"
+      data-theme={initialTheme}
+      style={{ colorScheme: initialTheme === 'light' ? 'light' : 'dark' }}
+      suppressHydrationWarning
+    >
       <head>
+        <meta name="theme-color" content={initialThemeColor} />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
                   var params = new URLSearchParams(window.location.search);
-                  var t = params.get('theme') || localStorage.getItem('app-theme') || localStorage.getItem('song-game-theme');
+                  var t = params.get('theme') || localStorage.getItem('song-game-theme-v2');
                   if (!t || (t !== 'black' && t !== 'rose' && t !== 'light')) {
                     t = 'light';
                   }
                   document.documentElement.setAttribute('data-theme', t);
+                  document.documentElement.style.colorScheme = (t === 'light' ? 'light' : 'dark');
+                  var meta = document.querySelector('meta[name="theme-color"]');
+                  var colors = { black: '#121016', rose: '#241219', light: '#f8fafc' };
+                  if (meta) meta.setAttribute('content', colors[t] || '#f8fafc');
                 } catch(e) {}
               })();
             `,

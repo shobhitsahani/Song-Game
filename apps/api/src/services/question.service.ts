@@ -51,7 +51,7 @@ export async function generateQuestions(
   totalRounds: number,
   mode: GameMode
 ): Promise<QuestionData[]> {
-  const songs = await getRandomSongs(category, totalRounds);
+  const songs = await getRandomSongs(category, Math.max(totalRounds * 3, 30));
 
   if (songs.length === 0) {
     throw new Error('No songs available. Check Deezer API connection.');
@@ -92,7 +92,7 @@ export async function generateQuestions(
     const correctIndex = allOptions.indexOf(correctAnswer);
 
     questions.push({
-      roundNumber: i + 1,
+      roundNumber: questions.length + 1,
       song,
       correctAnswer,
       options: allOptions,

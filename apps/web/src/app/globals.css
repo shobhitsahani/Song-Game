@@ -35,6 +35,10 @@
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
+  --radius-control: var(--radius-control);
+  --radius-field: var(--radius-field);
+  --radius-card: var(--radius-card);
+  --radius-dialog: var(--radius-dialog);
 }
 
 * {

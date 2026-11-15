@@ -13,6 +13,7 @@ import {
   CircleNotch,
   PaperPlaneRight,
   Check,
+  MusicNotes,
 } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -108,10 +109,23 @@ export default function RoomPage() {
 
     const onSocketConnect = () => {
       if (codeRef.current) {
+        let savedPlayerId = localPlayerIdRef.current || undefined;
+        let savedUsername = nameParam || undefined;
+        let savedAvatar = avatarParam || undefined;
+        try {
+          const stored = sessionStorage.getItem(`room_${codeRef.current}_player`);
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed.playerId) savedPlayerId = parsed.playerId;
+            if (parsed.username && !savedUsername) savedUsername = parsed.username;
+            if (parsed.avatar && !savedAvatar) savedAvatar = parsed.avatar;
+          }
+        } catch {}
+
         socket.emit('room:join', codeRef.current, {
-          username: nameParam || undefined,
-          avatar: avatarParam || undefined,
-          playerId: localPlayerIdRef.current || undefined,
+          username: savedUsername,
+          avatar: savedAvatar,
+          playerId: savedPlayerId,
         });
       }
     };
@@ -145,6 +159,13 @@ export default function RoomPage() {
         localPlayerIdRef.current = local.id;
         setLocalPlayerId(local.id);
         setIsHost(local.isHost);
+        try {
+          sessionStorage.setItem(`room_${data.code}_player`, JSON.stringify({
+            playerId: local.id,
+            username: local.username,
+            avatar: local.avatar,
+          }));
+        } catch {}
       }
       store.setRoom(data);
     };
@@ -387,6 +408,7 @@ export default function RoomPage() {
           <GameResults
             players={gamePlayers.length > 0 ? gamePlayers : players}
             currentPlayerId={localPlayerId}
+            totalRounds={totalRounds || room?.settings?.rounds || 0}
             onPlayAgain={resetGameState}
             onBackToLobby={resetGameState}
             onLeave={handleLeave}
@@ -410,6 +432,9 @@ export default function RoomPage() {
             <div className="flex items-center gap-3">
               <Badge variant="secondary" className="gap-1.5">
                 <Users size={16} /> {activePlayers.length}
+              </Badge>
+              <Badge variant="secondary" className="gap-1.5 font-mono">
+                <MusicNotes size={16} /> {room?.settings?.rounds ?? 10} Tracks
               </Badge>
               {isHost && (
                 <>
@@ -445,7 +470,7 @@ export default function RoomPage() {
             mode={room?.mode || room?.settings?.mode || 'CLASSIC'}
             currentRound={currentRound}
             roundNumber={roundNumber || currentRound?.roundNumber || 0}
-            totalRounds={totalRounds || currentRound?.totalRounds || 0}
+            totalRounds={totalRounds || currentRound?.totalRounds || room?.settings?.rounds || 0}
             timeLeft={timeLeft}
             gameStatus={gameStatus}
             revealData={revealData}

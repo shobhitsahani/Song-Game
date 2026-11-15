@@ -30,21 +30,23 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    // Read persisted theme or URL param or prefers-color-scheme
+    // Read persisted theme or URL param
     const params = new URLSearchParams(window.location.search);
     const urlTheme = params.get('theme') as Theme | null;
     const saved = (urlTheme && (urlTheme === 'black' || urlTheme === 'rose' || urlTheme === 'light'))
       ? urlTheme
-      : ((localStorage.getItem('app-theme') || localStorage.getItem('song-game-theme')) as Theme | null);
+      : (localStorage.getItem('song-game-theme-v2') as Theme | null);
 
     if (saved && (saved === 'black' || saved === 'rose' || saved === 'light')) {
       setThemeState(saved);
       document.documentElement.setAttribute('data-theme', saved);
+      document.documentElement.style.colorScheme = saved === 'light' ? 'light' : 'dark';
     } else {
       // Fallback default for new visitors is always Daylight ('light')
       const initial: Theme = 'light';
       setThemeState(initial);
       document.documentElement.setAttribute('data-theme', initial);
+      document.documentElement.style.colorScheme = 'light';
     }
   }, []);
 
@@ -52,8 +54,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const update = () => {
       setThemeState(newTheme);
       document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('app-theme', newTheme);
-      localStorage.setItem('song-game-theme', newTheme);
+      document.documentElement.style.colorScheme = newTheme === 'light' ? 'light' : 'dark';
+      localStorage.setItem('song-game-theme-v2', newTheme);
+      document.cookie = `song-game-theme-v2=${newTheme}; path=/; max-age=31536000; SameSite=Lax`;
 
       // Update meta theme-color
       const metaThemeColor = document.querySelector('meta[name="theme-color"]');

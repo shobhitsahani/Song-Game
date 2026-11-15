@@ -85,7 +85,8 @@ function toDeezerTrack(t: ItunesSearchResult['results'][number]): DeezerTrack | 
 }
 
 export async function searchItunes(query: string, limit = 25): Promise<DeezerTrack[]> {
-  const url = `${ITUNES_API_BASE}/search?term=${encodeURIComponent(query)}&entity=song&limit=${limit}`;
+  const safeLimit = Math.min(Math.max(limit, 1), 200);
+  const url = `${ITUNES_API_BASE}/search?term=${encodeURIComponent(query)}&entity=song&limit=${safeLimit}`;
   const res = await itunesGet<ItunesSearchResult>(url);
   if (!res) return [];
   return res.results
@@ -123,8 +124,9 @@ function rssEntryToTrack(entry: ItunesRssEntry): DeezerTrack | null {
 }
 
 export async function getItunesTopSongs(genreId?: number, limit = 50, country = 'us'): Promise<DeezerTrack[]> {
+  const safeLimit = Math.min(Math.max(limit, 1), 200);
   const genrePath = genreId ? `/genre=${genreId}` : '';
-  const url = `${ITUNES_API_BASE}/${country}/rss/topsongs${genrePath}/limit=${limit}/json`;
+  const url = `${ITUNES_API_BASE}/${country}/rss/topsongs${genrePath}/limit=${safeLimit}/json`;
   const res = await itunesGet<ItunesRssFeed>(url);
   if (!res?.feed?.entry) return [];
   return res.feed.entry

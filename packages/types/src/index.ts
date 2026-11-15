@@ -296,7 +296,7 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  'room:create': (data: { username?: string; avatar?: string }) => void;
+  'room:create': (data?: { username?: string; avatar?: string; settings?: Partial<RoomSettings> }) => void;
   'room:join': (code: string, data?: { username?: string; playerId?: string; avatar?: string }) => void;
   'room:leave': () => void;
   'room:ready': () => void;

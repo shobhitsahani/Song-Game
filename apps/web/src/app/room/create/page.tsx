@@ -12,11 +12,13 @@ import {
   MagnifyingGlass,
   CalendarBlank,
   Gauge,
+  MusicNotes,
+  Check,
 } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
-import { AvatarPicker } from '@/components/avatar-picker';
+import { AvatarPicker, AVATAR_OPTIONS } from '@/components/avatar-picker';
 import { GlassSurface } from '@/components/glass/glass-surface';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { SegmentedControl } from '@/components/ui/segmented-control';
@@ -31,6 +33,9 @@ import {
   CommandFooter,
 } from '@/components/ui/command';
 import { useSocket } from '@/providers/socket-provider';
+import { ROUND_LIMITS } from '@song-game/shared';
+import type { GameCategory } from '@song-game/types';
+import { cn } from '@/lib/utils';
 
 const ALL_GENRES = [
   'Any Mixed',
@@ -47,6 +52,29 @@ const ALL_GENRES = [
   'Jazz & Chill',
 ];
 
+const GENRE_TO_CATEGORY: Record<string, GameCategory> = {
+  'Any Mixed': 'any',
+  'Pop Hits': 'pop',
+  'Classic Rock': 'rock',
+  'Hip-Hop': 'hip-hop',
+  'R&B / Soul': 'r&b',
+  'Indie / Alternative': 'indie',
+  'Electronic / Dance': 'electronic',
+  '2010s-2020s': 'hits-2010-26',
+  'TikTok Viral': 'tiktok',
+  '80s Synthwave': 'rock',
+  '90s Grunge': 'rock',
+  'Jazz & Chill': 'jazz',
+};
+
+const DECADE_TO_CATEGORY: Record<string, GameCategory> = {
+  '80s': 'rock',
+  '90s': 'rock',
+  '2000s': 'pop',
+  '2010s': 'hits-2010-26',
+  '2020s': 'hits-2020s',
+};
+
 const DECADES = ['All Time', '80s', '90s', '2000s', '2010s', '2020s'];
 const DIFFICULTIES = ['Normal', 'Hardcore', 'Survival'];
 
@@ -54,8 +82,9 @@ export default function CreateRoomPage() {
   const router = useRouter();
   const { socket, connected } = useSocket();
   const [name, setName] = useState('');
-  const [avatar, setAvatar] = useState<string | null>(null);
-  const [rounds, setRounds] = useState(10);
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(AVATAR_OPTIONS[0]);
+  const [rounds, setRounds] = useState<number>(ROUND_LIMITS.DEFAULT);
   const [selectedGenre, setSelectedGenre] = useState('Any Mixed');
   const [selectedDecade, setSelectedDecade] = useState('All Time');
   const [selectedDifficulty, setSelectedDifficulty] = useState('Normal');
@@ -64,6 +93,7 @@ export default function CreateRoomPage() {
   const [openCommand, setOpenCommand] = useState(false);
   const [shortcutLabel, setShortcutLabel] = useState('Ctrl/⌘K');
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
   const createTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -92,23 +122,53 @@ export default function CreateRoomPage() {
 
   const handleCreate = useCallback(() => {
     if (!socket || !connected || creating) return;
-    if (!name.trim() || !avatar) return;
+    if (!name.trim()) {
+      setNameError('Enter a display name');
+      nameInputRef.current?.focus();
+      return;
+    }
+    if (!avatar) return;
     setCreating(true);
     setCreateError(null);
 
-    socket.emit('room:create', { username: name.trim(), avatar });
+    const mode = selectedDifficulty === 'Hardcore' ? 'HARDCORE' : selectedDifficulty === 'Survival' ? 'SURVIVAL' : 'CLASSIC';
+    const category = selectedDecade !== 'All Time' && DECADE_TO_CATEGORY[selectedDecade]
+      ? DECADE_TO_CATEGORY[selectedDecade]
+      : (GENRE_TO_CATEGORY[selectedGenre] || 'any');
+
+    socket.emit('room:create', {
+      username: name.trim(),
+      avatar,
+      settings: {
+        rounds,
+        mode,
+        category,
+        difficulty: selectedDifficulty === 'Hardcore' || selectedDifficulty === 'Survival' ? 'hard' : 'medium',
+      },
+    });
+
     socket.once('room:joined', (room) => {
       try {
         localStorage.setItem('last_room_code', room.code);
+        const hostPlayer = room.players?.find((p: { isHost: boolean }) => p.isHost);
+        if (hostPlayer) {
+          sessionStorage.setItem(`room_${room.code}_player`, JSON.stringify({
+            playerId: hostPlayer.id,
+            username: hostPlayer.username,
+            avatar: hostPlayer.avatar,
+          }));
+        }
       } catch {}
-      router.push(`/room/${room.code}`);
+      router.push(`/room/${room.code}?name=${encodeURIComponent(name.trim())}&avatar=${encodeURIComponent(avatar)}`);
     });
 
     createTimeoutRef.current = setTimeout(() => {
       setCreating(false);
       setCreateError('The server did not respond. Please try again.');
     }, 10000);
-  }, [socket, connected, creating, name, avatar, router]);
+  }, [socket, connected, creating, name, avatar, rounds, selectedDifficulty, selectedGenre, selectedDecade, router]);
+
+  const isStartDisabled = !connected || !name.trim() || !avatar;
 
   if (creating) {
     return (
@@ -153,14 +213,27 @@ export default function CreateRoomPage() {
                 <User size={14} className="text-[var(--primary)]" /> Your Display Name
               </label>
               <Input
+                ref={nameInputRef}
                 id="display-name"
                 placeholder="e.g. VinylJunkie"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (nameError && e.target.value.trim()) setNameError(null);
+                }}
                 maxLength={20}
                 autoFocus
-                className="text-center text-lg font-semibold h-12"
+                className="text-left text-base font-semibold h-[52px] rounded-[var(--radius-field)] px-4"
               />
+              {nameError ? (
+                <p id="name-error" className="text-xs text-[var(--destructive)] mt-1.5 font-medium flex items-center gap-1">
+                  {nameError}
+                </p>
+              ) : (
+                <p className="text-xs text-[var(--muted-foreground)] mt-1.5 font-medium">
+                  Choose a display name to start your session
+                </p>
+              )}
             </div>
 
             {/* Avatar Selector */}
@@ -175,7 +248,7 @@ export default function CreateRoomPage() {
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider flex items-center gap-1.5">
-                  <Sliders size={14} className="text-[var(--accent)]" /> Genre Preset
+                  <Sliders size={14} className="text-[var(--primary)]" /> Genre Preset
                 </label>
                 <span className="text-[11px] text-[var(--muted-foreground)]">Press {shortcutLabel} anytime</span>
               </div>
@@ -185,7 +258,7 @@ export default function CreateRoomPage() {
                 ref={triggerRef}
                 type="button"
                 onClick={() => setOpenCommand(true)}
-                className="w-full h-11 px-3.5 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-between gap-2 text-sm text-[var(--muted-foreground)] hover:border-[var(--glass-highlight)] hover:text-[var(--foreground)] transition-colors duration-[80ms] cursor-pointer shadow-sm group focus-visible:ring-2 focus-visible:ring-[var(--ring)] outline-none"
+                className="w-full h-[52px] px-4 rounded-[var(--radius-field)] bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-between gap-2 text-sm text-[var(--muted-foreground)] hover:border-[var(--glass-highlight)] hover:text-[var(--foreground)] transition-colors duration-[80ms] cursor-pointer shadow-xs group focus-visible:ring-2 focus-visible:ring-[var(--ring)] outline-none"
                 aria-label="Search genres or eras"
               >
                 <div className="flex items-center gap-2.5">
@@ -204,16 +277,20 @@ export default function CreateRoomPage() {
                 className="justify-start gap-1.5 flex-wrap"
                 spacing="compact"
               >
-                {visibleGenres.map((genre) => (
-                  <ToggleGroupItem
-                    key={genre}
-                    value={genre}
-                    size="sm"
-                    className="text-xs rounded-xl h-8 px-3"
-                  >
-                    {genre}
-                  </ToggleGroupItem>
-                ))}
+                {visibleGenres.map((genre) => {
+                  const isSelected = selectedGenre === genre;
+                  return (
+                    <ToggleGroupItem
+                      key={genre}
+                      value={genre}
+                      size="sm"
+                      className="text-xs rounded-full h-9 px-3.5 flex items-center gap-1.5 font-medium"
+                    >
+                      {isSelected && <Check size={12} weight="bold" className="shrink-0" />}
+                      <span>{genre}</span>
+                    </ToggleGroupItem>
+                  );
+                })}
               </ToggleGroup>
             </div>
 
@@ -235,7 +312,7 @@ export default function CreateRoomPage() {
             {/* Difficulty Mode */}
             <div>
               <label className="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <Gauge size={14} className="text-[var(--destructive)]" /> Difficulty
+                <Gauge size={14} className="text-[var(--primary)]" /> Difficulty
               </label>
               <SegmentedControl
                 name="createDifficulty"
@@ -248,15 +325,17 @@ export default function CreateRoomPage() {
 
             {/* Round Length Slider */}
             <div>
-              <div className="flex items-center justify-between text-xs text-[var(--muted-foreground)] mb-1">
-                <span className="font-bold uppercase tracking-wider">Round Length</span>
+              <div className="flex items-center justify-between text-xs text-[var(--muted-foreground)] mb-2">
+                <span className="font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <MusicNotes size={14} className="text-[var(--primary)]" /> Round Length
+                </span>
                 <span className="font-mono font-bold text-[var(--foreground)]">{rounds} tracks</span>
               </div>
               <Slider
                 value={rounds}
-                min={5}
-                max={20}
-                step={5}
+                min={ROUND_LIMITS.MIN}
+                max={ROUND_LIMITS.MAX}
+                step={ROUND_LIMITS.STEP}
                 onChange={setRounds}
                 aria-label="Round length in tracks"
               />
@@ -270,19 +349,26 @@ export default function CreateRoomPage() {
             <GlassSurface
               variant="strong"
               radius="xl"
-              className="p-3 sm:p-4 shadow-2xl backdrop-blur-2xl border border-[var(--glass-border)] flex flex-col sm:flex-row items-center justify-between gap-3"
+              className="p-3 sm:p-4 shadow-2xl backdrop-blur-2xl border border-[var(--glass-border)] flex flex-col sm:flex-row items-center justify-between gap-3 rounded-[28px]"
             >
               <div className="flex flex-wrap items-center gap-1.5 justify-center sm:justify-start">
-                <span className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)]/80 border border-[var(--glass-border)] text-[var(--foreground)] font-semibold text-xs shadow-xs">
+                <span className="px-3 py-1 rounded-full bg-[var(--surface-2)]/90 border border-[var(--border)] text-[var(--foreground)] font-semibold text-xs shadow-xs">
                   {selectedGenre}
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)]/80 border border-[var(--glass-border)] text-[var(--foreground)] font-semibold text-xs shadow-xs">
+                <span className="px-3 py-1 rounded-full bg-[var(--surface-2)]/90 border border-[var(--border)] text-[var(--foreground)] font-semibold text-xs shadow-xs">
                   {selectedDecade}
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[var(--surface-2)]/80 border border-[var(--glass-border)] text-[var(--foreground)] font-semibold text-xs shadow-xs">
+                <span className="px-3 py-1 rounded-full bg-[var(--surface-2)]/90 border border-[var(--border)] text-[var(--foreground)] font-semibold text-xs shadow-xs">
                   {selectedDifficulty}
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-500 dark:text-amber-400 font-mono font-bold text-xs shadow-xs">
+                <span
+                  className={cn(
+                    'px-3 py-1 rounded-full font-mono text-xs shadow-xs transition-colors duration-[80ms]',
+                    rounds === ROUND_LIMITS.DEFAULT
+                      ? 'bg-[var(--surface-2)]/90 border border-[var(--border)] text-[var(--foreground)] font-medium'
+                      : 'bg-[var(--primary)]/10 border border-[var(--primary)]/30 text-[var(--primary)] font-bold'
+                  )}
+                >
                   {rounds} tracks
                 </span>
               </div>
@@ -290,9 +376,21 @@ export default function CreateRoomPage() {
               <Button
                 variant="primary"
                 size="lg"
-                className="w-full sm:w-auto min-w-[200px] h-12 font-bold shadow-xl shrink-0"
-                disabled={!connected || !name.trim() || !avatar}
-                onClick={handleCreate}
+                aria-disabled={isStartDisabled}
+                className={cn(
+                  "w-full sm:w-auto min-w-[200px] h-[52px] font-bold shadow-sm shrink-0 rounded-full",
+                  isStartDisabled && "bg-[var(--surface-2)] text-[var(--muted-foreground)] border border-[var(--border)] cursor-not-allowed shadow-none hover:brightness-100"
+                )}
+                onClick={() => {
+                  if (isStartDisabled) {
+                    if (!name.trim()) {
+                      setNameError('Enter a display name');
+                      nameInputRef.current?.focus();
+                    }
+                    return;
+                  }
+                  handleCreate();
+                }}
               >
                 <Play size={18} weight="fill" /> Start Round
               </Button>

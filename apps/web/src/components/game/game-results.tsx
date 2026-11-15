@@ -37,6 +37,7 @@ import type { Player } from '@song-game/types';
 interface GameResultsProps {
   players: Player[];
   currentPlayerId?: string | null;
+  totalRounds?: number;
   onPlayAgain: () => void;
   onBackToLobby: () => void;
   onLeave: () => void;
@@ -53,6 +54,7 @@ const PODIUM_HEIGHTS = [180, 140, 100];
 export function GameResults({
   players,
   currentPlayerId,
+  totalRounds,
   onPlayAgain,
   onBackToLobby,
   onLeave,
@@ -375,12 +377,12 @@ export function GameResults({
                     Review each round&apos;s track details and answers:
                   </p>
                   <Accordion type="single" collapsible className="w-full">
-                    {Array.from({ length: currentPlayerStats?.totalAnswers || 5 }).map((_, idx) => (
+                    {Array.from({ length: totalRounds || currentPlayerStats?.totalAnswers || 5 }).map((_, idx) => (
                       <AccordionItem key={idx} value={`item-${idx}`}>
                         <AccordionTrigger className="text-sm py-3 px-3 rounded-xl hover:bg-[var(--glass-bg)]">
                           <span className="flex items-center gap-2">
                             <CheckCircle size={16} className="text-[var(--success)]" weight="fill" />
-                            <span>Round {idx + 1}: Featured Music Track</span>
+                            <span>Question {idx + 1} of {totalRounds || currentPlayerStats?.totalAnswers || 5}: Featured Music Track</span>
                           </span>
                         </AccordionTrigger>
                         <AccordionContent className="px-3 pt-2 text-xs text-[var(--muted-foreground)]">

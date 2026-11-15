@@ -159,7 +159,7 @@ async function getCharts(limit = 50): Promise<SongData[]> {
 }
 
 export async function getRandomSongs(category: string, count: number): Promise<SongData[]> {
-  const poolSize = Math.max(count * 5, 50);
+  const poolSize = Math.min(Math.max(count * 4, 50), 200);
   let pool = await getSongsByCategory(category, poolSize);
 
   if (pool.length < count) {

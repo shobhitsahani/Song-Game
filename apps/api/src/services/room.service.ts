@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { prisma } from '../config/database.js';
 import { getRedis } from '../config/redis.js';
-import { generateRoomCode } from '@song-game/shared';
+import { generateRoomCode, ROUND_LIMITS, isValidRoundCount } from '@song-game/shared';
 import type { Room, RoomSettings, Player, RoomStatus, GameMode, ChatMessage } from '@song-game/types';
 
 const rooms = new Map<string, RoomState>();
@@ -44,7 +44,7 @@ interface RoomState {
 
 const DEFAULT_SETTINGS: RoomSettings = {
   mode: 'CLASSIC',
-  rounds: 10,
+  rounds: ROUND_LIMITS.DEFAULT,
   guessTime: 20,
   category: 'any',
   difficulty: 'medium',
@@ -53,7 +53,20 @@ const DEFAULT_SETTINGS: RoomSettings = {
   allowSpectators: true,
 };
 
-export function createRoom(userId: string | undefined, username: string, avatar: string | null): { room: Room; playerId: string } {
+export function createRoom(
+  userId: string | undefined,
+  username: string,
+  avatar: string | null,
+  customSettings?: Partial<RoomSettings>
+): { room: Room; playerId: string } | { error: string } {
+  if (customSettings?.rounds !== undefined) {
+    if (!isValidRoundCount(customSettings.rounds)) {
+      return {
+        error: `Invalid round count: must be between ${ROUND_LIMITS.MIN} and ${ROUND_LIMITS.MAX} in steps of ${ROUND_LIMITS.STEP}`,
+      };
+    }
+  }
+
   const code = generateRoomCode();
   const playerId = uuidv4();
 
@@ -75,17 +88,23 @@ export function createRoom(userId: string | undefined, username: string, avatar:
     socketId: '',
   };
 
+  const settings: RoomSettings = {
+    ...DEFAULT_SETTINGS,
+    rounds: ROUND_LIMITS.DEFAULT,
+    ...customSettings,
+  };
+
   const roomState: RoomState = {
     code,
     hostId: playerId,
     players: new Map([[playerId, player]]),
     spectators: new Map(),
-    settings: { ...DEFAULT_SETTINGS },
+    settings,
     status: 'WAITING',
     currentRound: 0,
-    mode: 'CLASSIC',
+    mode: settings.mode || 'CLASSIC',
     bannedPlayers: new Set(),
-    maxPlayers: DEFAULT_SETTINGS.maxPlayers,
+    maxPlayers: settings.maxPlayers || DEFAULT_SETTINGS.maxPlayers,
     createdAt: Date.now(),
     chatHistory: [],
     rounds: [],
@@ -216,12 +235,24 @@ export function toggleReady(socketId: string, code: string): Player | undefined 
   return player;
 }
 
-export function updateSettings(socketId: string, code: string, newSettings: Partial<RoomSettings>): RoomSettings | undefined {
+export function updateSettings(
+  socketId: string,
+  code: string,
+  newSettings: Partial<RoomSettings>
+): RoomSettings | { error: string } | undefined {
   const roomState = rooms.get(code);
   if (!roomState || roomState.status !== 'WAITING') return undefined;
 
   const player = findPlayerInRoom(socketId, roomState);
   if (!player?.isHost) return undefined;
+
+  if (newSettings.rounds !== undefined) {
+    if (!isValidRoundCount(newSettings.rounds)) {
+      return {
+        error: `Invalid round count: must be between ${ROUND_LIMITS.MIN} and ${ROUND_LIMITS.MAX} in steps of ${ROUND_LIMITS.STEP}`,
+      };
+    }
+  }
 
   Object.assign(roomState.settings, newSettings);
   if (newSettings.mode) roomState.mode = newSettings.mode;

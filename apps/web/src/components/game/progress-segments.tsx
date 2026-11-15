@@ -20,9 +20,11 @@ export function ProgressSegments({
   return (
     <div className={clsx('flex flex-col gap-1.5', className)}>
       <div className="flex items-center justify-between text-xs text-[var(--muted-foreground)] font-medium">
-        <span>Round</span>
-        <span className="font-mono tabular-nums text-[var(--foreground)] font-semibold">
-          {currentRound} of {rounds}
+        <span className="font-semibold text-[var(--foreground)]">
+          Question {currentRound} of {rounds}
+        </span>
+        <span className="font-mono tabular-nums text-[var(--muted-foreground)]">
+          {Math.round((Math.min(currentRound, rounds) / rounds) * 100)}%
         </span>
       </div>
       <div className="flex items-center gap-1.5 w-full">

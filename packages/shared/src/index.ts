@@ -97,3 +97,18 @@ export const XP_REWARDS = {
   DAILY_LOGIN: 50,
   COMPLETE_CHALLENGE: 150,
 } as const;
+
+export const ROUND_LIMITS = {
+  MIN: 5,
+  MAX: 20,
+  STEP: 5,
+  DEFAULT: 10,
+} as const;
+
+export function isValidRoundCount(rounds: unknown): rounds is number {
+  if (typeof rounds !== 'number' || !Number.isInteger(rounds)) return false;
+  if (rounds < ROUND_LIMITS.MIN || rounds > ROUND_LIMITS.MAX) return false;
+  if ((rounds - ROUND_LIMITS.MIN) % ROUND_LIMITS.STEP !== 0) return false;
+  return true;
+}
+

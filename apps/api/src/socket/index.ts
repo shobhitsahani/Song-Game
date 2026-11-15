@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
 import { prisma } from '../config/database.js';
 import { getRedis } from '../config/redis.js';
-import type { JWTPayload, SafeUser, Player, GameMode } from '@song-game/types';
+import type { JWTPayload, SafeUser, Player, GameMode, RoomSettings } from '@song-game/types';
 import {
   createRoom,
   joinRoom,
@@ -55,6 +55,7 @@ interface GameTimers {
 
 const gameTimers = new Map<string, GameTimers>();
 const startingGames = new Set<string>();
+const pendingDisconnects = new Map<string, NodeJS.Timeout>();
 
 function clearGameTimers(code: string): void {
   const timers = gameTimers.get(code);
@@ -162,10 +163,15 @@ export function setupSocketHandlers(io: Server): void {
     }
 
     // ─── Room Handlers ─────────────────────────────────
-    socket.on('room:create', (data?: { username?: string; avatar?: string }) => {
+    socket.on('room:create', (data?: { username?: string; avatar?: string; settings?: Partial<RoomSettings> }) => {
       const username = data?.username || socket.username || `Player_${socket.id.slice(0, 4)}`;
       const avatar = data?.avatar || socket.avatar || null;
-      const { room, playerId } = createRoom(socket.userId, username, avatar);
+      const result = createRoom(socket.userId, username, avatar, data?.settings);
+      if ('error' in result) {
+        socket.emit('error', result.error);
+        return;
+      }
+      const { room, playerId } = result;
       setPlayerSocketId(playerId, socket.id, room.code);
       socket.join(room.code);
       socket.roomCode = room.code;
@@ -173,11 +179,16 @@ export function setupSocketHandlers(io: Server): void {
       socket.emit('room:chat-history', getChatHistory(room.code));
     });
 
-    socket.on('room:join', (code: string, data?: { username?: string; playerId?: string; avatar?: string }) => {
+    socket.on('room:join', (code: string, data?: { username?: string; playerId?: string; avatar?: string; settings?: Partial<RoomSettings> }) => {
       if (code === 'CREATE') {
         const username = data?.username || socket.username || `Player_${socket.id.slice(0, 4)}`;
         const avatar = data?.avatar || socket.avatar || null;
-        const { room, playerId } = createRoom(socket.userId, username, avatar);
+        const result = createRoom(socket.userId, username, avatar, data?.settings);
+        if ('error' in result) {
+          socket.emit('error', result.error);
+          return;
+        }
+        const { room, playerId } = result;
         setPlayerSocketId(playerId, socket.id, room.code);
         socket.join(room.code);
         socket.roomCode = room.code;
@@ -201,11 +212,16 @@ export function setupSocketHandlers(io: Server): void {
         const player = roomState.players.get(data.playerId) || roomState.spectators.get(data.playerId);
         const usernameMatch = !data.username || player?.username === data.username;
         if (player && !player.kicked && usernameMatch && (player.userId === socket.userId || !player.userId)) {
+          if (player.socketId && pendingDisconnects.has(player.socketId)) {
+            clearTimeout(pendingDisconnects.get(player.socketId)!);
+            pendingDisconnects.delete(player.socketId);
+          }
           player.socketId = socket.id;
           socket.join(code);
           socket.roomCode = code;
           socket.emit('room:joined', serializeRoom(roomState));
           socket.emit('room:chat-history', getChatHistory(code));
+          io.to(code).emit('room:joined', serializeRoom(roomState));
           resyncPlayingRound(socket, roomState);
           return;
         }
@@ -215,12 +231,35 @@ export function setupSocketHandlers(io: Server): void {
       if (roomState && socket.userId) {
         const player = findPlayerByUserId(socket.userId, roomState);
         if (player && !player.kicked) {
+          if (player.socketId && pendingDisconnects.has(player.socketId)) {
+            clearTimeout(pendingDisconnects.get(player.socketId)!);
+            pendingDisconnects.delete(player.socketId);
+          }
           player.socketId = socket.id;
           socket.join(code);
           socket.roomCode = code;
           socket.emit('room:joined', serializeRoom(roomState));
           socket.emit('room:chat-history', getChatHistory(code));
+          io.to(code).emit('room:joined', serializeRoom(roomState));
           resyncPlayingRound(socket, roomState);
+          return;
+        }
+      }
+
+      // Reconnection when single host reloaded (e.g. without stored playerId)
+      if (roomState && !data?.playerId && roomState.players.size === 1) {
+        const singlePlayer = [...roomState.players.values()][0];
+        if (singlePlayer && singlePlayer.isHost && (!data?.username || singlePlayer.username === data.username)) {
+          if (singlePlayer.socketId && pendingDisconnects.has(singlePlayer.socketId)) {
+            clearTimeout(pendingDisconnects.get(singlePlayer.socketId)!);
+            pendingDisconnects.delete(singlePlayer.socketId);
+          }
+          singlePlayer.socketId = socket.id;
+          socket.join(code);
+          socket.roomCode = code;
+          socket.emit('room:joined', serializeRoom(roomState));
+          socket.emit('room:chat-history', getChatHistory(code));
+          io.to(code).emit('room:joined', serializeRoom(roomState));
           return;
         }
       }
@@ -244,6 +283,11 @@ export function setupSocketHandlers(io: Server): void {
     socket.on('room:leave', () => {
       const code = socket.roomCode;
       if (!code) return;
+
+      if (pendingDisconnects.has(socket.id)) {
+        clearTimeout(pendingDisconnects.get(socket.id)!);
+        pendingDisconnects.delete(socket.id);
+      }
 
       const result = leaveRoom(socket.id, code);
 
@@ -307,6 +351,10 @@ export function setupSocketHandlers(io: Server): void {
       if (!code) return;
       const updated = updateSettings(socket.id, code, settings as any);
       if (updated) {
+        if ('error' in updated) {
+          socket.emit('error', updated.error);
+          return;
+        }
         io.to(code).emit('room:settings-updated', updated);
       }
     });
@@ -381,8 +429,7 @@ export function setupSocketHandlers(io: Server): void {
       startingGames.add(code);
 
       try {
-        const isHardcore = roomState.mode === 'HARDCORE';
-        const totalRounds = isHardcore ? Math.min(roomState.settings.rounds, 5) : roomState.settings.rounds;
+        const totalRounds = roomState.settings.rounds;
 
         let questions;
         try {
@@ -505,7 +552,8 @@ export function setupSocketHandlers(io: Server): void {
       }
 
       // No public rooms — create one
-      const { room } = createRoom(socket.userId, socket.username || 'Player', socket.avatar || null);
+      const created = createRoom(socket.userId, socket.username || 'Player', socket.avatar || null);
+      if ('error' in created) return;
       socket.emit('matchmaking:waiting', { mode: 'CLASSIC' });
     });
 
@@ -575,12 +623,22 @@ export function setupSocketHandlers(io: Server): void {
           socket.to(code).emit('room:player-left', socket.id);
 
           if (!wasPlaying) {
-            const result = leaveRoom(socket.id, code);
-            if (result.updatedRoom) {
-              io.to(code).emit('room:joined', result.updatedRoom);
-            } else {
-              clearGameTimers(code);
-            }
+            // Give 15 seconds grace period for lobby page refreshes / reconnection
+            const timer = setTimeout(() => {
+              pendingDisconnects.delete(socket.id);
+              const currentRoom = getRoomState(code);
+              if (!currentRoom || currentRoom.status === 'PLAYING') return;
+              const player = findPlayerInRoom(socket.id, currentRoom);
+              if (player && player.socketId === socket.id) {
+                const result = leaveRoom(socket.id, code);
+                if (result.updatedRoom) {
+                  io.to(code).emit('room:joined', result.updatedRoom);
+                } else {
+                  clearGameTimers(code);
+                }
+              }
+            }, 15000);
+            pendingDisconnects.set(socket.id, timer);
           }
         }
       }

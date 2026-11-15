@@ -43,12 +43,17 @@ export function Slider({
       {/* Accessible native range input */}
       <input
         type="range"
+        role="slider"
         id={id}
         min={min}
         max={max}
         step={step}
         value={value}
         aria-label={ariaLabel}
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-valuenow={value}
+        aria-valuetext={`${value} tracks`}
         onChange={(e) => onChange(Number(e.target.value))}
         onPointerDown={() => setIsDragging(true)}
         onPointerUp={() => setIsDragging(false)}
