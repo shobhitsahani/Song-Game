@@ -190,8 +190,49 @@ export const Navbar = React.memo(function Navbar() {
 
   return (
     <header className="sticky top-3 sm:top-4 z-40 w-full pointer-events-none">
+      {/* Hidden SVG Refraction Filter for Chromium */}
+      {glassMode === 'refract' && displacementUrl && (
+        <svg
+          width="0"
+          height="0"
+          style={{ position: 'absolute', pointerEvents: 'none', width: 0, height: 0 }}
+          aria-hidden="true"
+          focusable="false"
+        >
+          <filter
+            id={filterId}
+            x="-10%"
+            y="-10%"
+            width="120%"
+            height="120%"
+            colorInterpolationFilters="sRGB"
+          >
+            <feImage href={displacementUrl} xlinkHref={displacementUrl} result="map" preserveAspectRatio="none" />
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="map"
+              scale="32"
+              xChannelSelector="R"
+              yChannelSelector="G"
+              result="displaced"
+            />
+            <feGaussianBlur in="displaced" stdDeviation="1" result="blurred" />
+            <feColorMatrix in="blurred" type="saturate" values="1.5" />
+          </filter>
+        </svg>
+      )}
+
       <Container className="pointer-events-auto">
-        <div className="glass group" data-glass="frosted">
+        <div
+          ref={glassRef}
+          className="glass group"
+          data-glass={glassMode}
+          data-entrance="true"
+          style={{
+            ['--glass-filter-ref' as string]:
+              glassMode === 'refract' && displacementUrl ? `url(#${filterId})` : undefined,
+          }}
+        >
           {/* Layer 1: Backdrop with frosted blur + saturate */}
           <div className="glass__backdrop" aria-hidden="true" />
 
