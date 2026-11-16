@@ -54,6 +54,19 @@ html[data-theme="black"] {
   --nav-lens-bg: oklch(0.19 0.010 75);
   --nav-lens-border: oklch(0.28 0.010 75 / 0.6);
 
+  /* Liquid Glass tokens - Vinyl (warm charcoal) */
+  --glass-tint: rgba(255, 255, 255, 0.07);
+  --glass-tint-scrolled: rgba(18, 16, 14, 0.45);
+  --glass-blur: 10px;
+  --glass-blur-scrolled: 16px;
+  --glass-saturate: 1.35;
+  --glass-rim-hi: rgba(255, 255, 255, 0.45);
+  --glass-rim-lo: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --glass-lens-fill: rgba(255, 255, 255, 0.14);
+  --glass-lens-border: rgba(255, 255, 255, 0.22);
+  --glass-lens-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.4);
+
   /* Ambient Orbs */
   --orb-1: oklch(0.82 0.16 75 / 0.12);
   --orb-2: oklch(0.76 0.12 210 / 0.10);
@@ -123,6 +136,19 @@ html[data-theme="rose"] {
   --nav-glass-shadow: 0 12px 36px -8px oklch(0.1 0.04 350 / 0.6), inset 0 1px 0 oklch(1 0.02 350 / 0.40), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
   --nav-lens-bg: oklch(1 0.03 350 / 0.12);
   --nav-lens-border: oklch(1 0.03 350 / 0.20);
+
+  /* Liquid Glass tokens - Rose (deep berry) */
+  --glass-tint: rgba(244, 114, 182, 0.08);
+  --glass-tint-scrolled: rgba(40, 15, 25, 0.38);
+  --glass-blur: 10px;
+  --glass-blur-scrolled: 16px;
+  --glass-saturate: 1.5;
+  --glass-rim-hi: rgba(255, 220, 235, 0.55);
+  --glass-rim-lo: rgba(236, 72, 153, 0.15);
+  --glass-shadow: 0 10px 30px -12px rgba(20, 5, 12, 0.5), 0 1px 2px rgba(0, 0, 0, 0.25);
+  --glass-lens-fill: rgba(255, 255, 255, 0.16);
+  --glass-lens-border: rgba(255, 210, 230, 0.28);
+  --glass-lens-shadow: 0 2px 8px -2px rgba(20, 5, 12, 0.35);
 
   /* Ambient Orbs */
   --orb-1: oklch(0.72 0.21 355 / 0.25); /* Pink */
@@ -195,6 +221,19 @@ html[data-theme="light"] {
   --nav-glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   --nav-lens-bg: oklch(0.95 0.007 85);
   --nav-lens-border: oklch(0.86 0.008 85 / 0.8);
+
+  /* Liquid Glass tokens - Daylight (warm paper & vinyl blue) */
+  --glass-tint: rgba(255, 255, 255, 0.14);
+  --glass-tint-scrolled: rgba(255, 255, 255, 0.32);
+  --glass-blur: 10px;
+  --glass-blur-scrolled: 16px;
+  --glass-saturate: 1.6;
+  --glass-rim-hi: rgba(255, 255, 255, 0.88);
+  --glass-rim-lo: rgba(255, 255, 255, 0.20);
+  --glass-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.18), 0 1px 2px rgba(0, 0, 0, 0.05);
+  --glass-lens-fill: rgba(255, 255, 255, 0.65);
+  --glass-lens-border: rgba(255, 255, 255, 0.85);
+  --glass-lens-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.08);
 
   /* Ambient Orbs - subdued warm light */
   --orb-1: oklch(0.88 0.06 250 / 0.12);

@@ -20,6 +20,7 @@ import { ThemeMenu } from './theme-menu';
 import { MobileNavPanel } from './mobile-nav';
 import { Container } from '@/components/ui/container';
 import { cn } from '@/lib/utils';
+import './liquid-glass.css';
 
 export function NavLogoMark({ className }: { className?: string }) {
   return (
@@ -133,24 +134,26 @@ export const Navbar = React.memo(function Navbar() {
   return (
     <header className="sticky top-3 sm:top-4 z-40 w-full pointer-events-none">
       <Container className="pointer-events-auto">
-        <nav
-          aria-label="Primary"
-          className={cn(
-            'w-full h-14 p-2 rounded-full grid grid-cols-[1fr_auto] min-[900px]:grid-cols-[1fr_auto_1fr] items-center transition-[background-color,border-color,box-shadow,opacity] duration-200 border',
-            scrolled
-              ? 'bg-[var(--surface-1)]/95 shadow-md border-[var(--border)] backdrop-blur-md'
-              : 'bg-[var(--surface-1)]/80 shadow-xs border-[var(--border)]/70 backdrop-blur-md'
-          )}
-          style={{
-            backgroundColor: 'var(--nav-glass-bg)',
-            borderColor: 'var(--nav-glass-border)',
-            boxShadow: scrolled
-              ? '0 8px 30px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.05)'
-              : 'var(--nav-glass-shadow)',
-          }}
-        >
-        {/* Left: Brand - 24-28px custom mark + 1-color display wordmark */}
-        <div className="justify-self-start flex items-center pl-2">
+        <div className="glass group" data-glass="frosted">
+          {/* Layer 1: Backdrop with frosted blur + saturate */}
+          <div className="glass__backdrop" aria-hidden="true" />
+
+          {/* Layer 2: Tint & inner highlights */}
+          <div className="glass__tint" aria-hidden="true" />
+
+          {/* Layer 3: Dynamic 1.25px bright rim */}
+          <div className="glass__rim" aria-hidden="true" />
+
+          {/* Layer 4: Pointer-lit sheen */}
+          <div className="glass__sheen" aria-hidden="true" />
+
+          {/* Layer 5: Nav Content Grid */}
+          <nav
+            aria-label="Primary"
+            className="glass__content"
+          >
+            {/* Left: Brand - 24-28px custom mark + 1-color display wordmark */}
+            <div className="justify-self-start flex items-center pl-2">
           <Link
             href="/"
             aria-label="SongGame home"
@@ -286,6 +289,7 @@ export const Navbar = React.memo(function Navbar() {
           </div>
         </div>
       </nav>
+      </div>
       </Container>
 
       {/* Mobile navigation panel anchored under the bar */}
