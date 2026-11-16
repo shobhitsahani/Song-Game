@@ -7,7 +7,6 @@ import {
   Timer,
   Disc,
   ArrowRight,
-  Lightning,
   Microphone,
   MusicNotes,
 } from '@phosphor-icons/react';

@@ -3,8 +3,6 @@
 import React from 'react';
 import {
   Stage,
-  Avatar,
-  Badge,
   Bar,
   Count,
   Roll,
@@ -150,7 +148,7 @@ export function HowRoundWorksTile2() {
                 <span className="font-semibold">Neon Midnight</span>
               </div>
               {s.selected ? (
-                <Check size={15} weight="bold" className="text-emerald-400 shrink-0" />
+                <Check size={16} weight="bold" className="text-emerald-400 shrink-0" />
               ) : (
                 <Bar w={24} h={5} tone={1} />
               )}

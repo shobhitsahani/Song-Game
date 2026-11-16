@@ -6,6 +6,10 @@
   user-select: none;
 }
 
+.hero-stageshow-container .ss-stage {
+  overflow: hidden;
+}
+
 .hero-window {
   width: 100%;
   height: 100%;
@@ -132,7 +136,7 @@
 .hero-options-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 10px;
 }
 
 .hero-opt-btn {
@@ -218,11 +222,11 @@
 /* Satellite phone overlay */
 .hero-phone-satellite {
   position: absolute;
-  right: -24px;
-  bottom: -32px;
-  width: 210px;
+  right: 18px;
+  bottom: -40px;
+  width: 190px;
   z-index: 20;
-  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.35));
+  box-shadow: var(--ss-shadow-satellite);
   pointer-events: none;
 }
 

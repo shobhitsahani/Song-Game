@@ -5,7 +5,6 @@ import Link from 'next/link';
 import {
   Trophy,
   Crown,
-  Medal,
   ArrowRight,
   Star,
   Fire,

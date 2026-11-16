@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 @import '../styles/themes.css';
-@import '../components/stageshow/kit/stageshow.css';
 @import '../components/stageshow/songgame-look.css';
 
 @theme {

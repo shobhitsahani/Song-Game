@@ -8,7 +8,7 @@ import {
   Roll,
   type Act,
 } from '../stageshow/kit';
-import { Copy, Check, Users, Sparkle } from '@phosphor-icons/react';
+import { Copy, Check, Users } from '@phosphor-icons/react';
 
 interface ShareState {
   copied: boolean;
@@ -60,7 +60,7 @@ const REST = {
 
 export function RoomSharePopover() {
   return (
-    <div className="w-full max-w-md mx-auto mb-8" aria-hidden="true">
+    <div id="final-cta-stageshow-container" className="w-full max-w-md mx-auto mb-8" aria-hidden="true">
       <Stage<ShareState>
         width={420}
         height={150}
@@ -90,7 +90,7 @@ export function RoomSharePopover() {
 
             {/* Share / Copy code row */}
             <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-1)] border border-[var(--border)]">
-              <span className="text-xs font-mono text-[var(--muted-foreground)] tracking-wide truncate mr-2">
+              <span className="pl-2 text-xs font-mono text-[var(--muted-foreground)] tracking-wide truncate mr-2">
                 songgame.io/VR426D
               </span>
 

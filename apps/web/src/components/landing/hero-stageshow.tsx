@@ -14,7 +14,7 @@ import {
   WALLPAPER,
   type Act,
 } from '../stageshow/kit';
-import { Disc, Trophy, Lightning, Check, Users } from '@phosphor-icons/react';
+import { Disc, Trophy, Lightning, Check } from '@phosphor-icons/react';
 import './hero-stageshow.css';
 
 interface HeroState {

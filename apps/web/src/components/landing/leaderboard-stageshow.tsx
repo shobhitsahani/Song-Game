@@ -5,7 +5,6 @@ import {
   Stage,
   Window,
   Avatar,
-  Badge,
   Count,
   type Act,
 } from '../stageshow/kit';
@@ -85,7 +84,7 @@ const REST = {
 
 export function LeaderboardStageshow() {
   return (
-    <div className="w-full" aria-hidden="true">
+    <div id="leaderboard-stageshow-container" className="w-full" aria-hidden="true">
       <Stage<LeaderboardState>
         width={580}
         height={390}
@@ -151,11 +150,11 @@ export function LeaderboardStageshow() {
                     <div className="flex items-center gap-3 min-w-0">
                       <span className="w-5 text-center font-mono font-bold text-sm text-[var(--muted-foreground)] flex items-center justify-center">
                         {entry.rank === 1 ? (
-                          <Crown size={17} weight="fill" className="text-amber-400 inline" />
+                          <Crown size={16} weight="fill" className="text-amber-400 inline" />
                         ) : entry.rank === 2 ? (
-                          <Medal size={17} weight="fill" className="text-zinc-300 inline" />
+                          <Medal size={16} weight="fill" className="text-zinc-300 inline" />
                         ) : entry.rank === 3 ? (
-                          <Medal size={17} weight="fill" className="text-amber-700 inline" />
+                          <Medal size={16} weight="fill" className="text-amber-700 inline" />
                         ) : (
                           entry.rank
                         )}

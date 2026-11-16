@@ -8,7 +8,7 @@ import {
   Roll,
   type Act,
 } from '../stageshow/kit';
-import { Trophy, Sparkle } from '@phosphor-icons/react';
+import { Trophy } from '@phosphor-icons/react';
 
 interface AchievementUnlockState {
   revealed: boolean;
@@ -54,7 +54,7 @@ async function script(a: Act<AchievementUnlockState>) {
 
 export function AchievementsStageshow() {
   return (
-    <div className="w-full mb-3" aria-hidden="true">
+    <div id="achievements-stageshow-container" className="w-full mb-3" aria-hidden="true">
       <Stage<AchievementUnlockState>
         width={440}
         height={90}
