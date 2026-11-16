@@ -154,7 +154,6 @@ export function isRefractionSupported(): boolean {
   // Viewport & Pointer checks
   if (window.innerWidth < 768) return false;
   if (window.matchMedia('(pointer: coarse)').matches) return false;
-  if (window.matchMedia('(hover: none)').matches) return false;
 
   // Chromium check
   const uad = (navigator as unknown as { userAgentData?: { brands?: { brand: string }[] } })?.userAgentData;

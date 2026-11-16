@@ -24,18 +24,16 @@
 
 /* Entrance transition (once on initial load, skipped in reduced motion) */
 @media (prefers-reduced-motion: no-preference) {
-  .glass[data-entrance="true"] {
-    animation: glass-entrance 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  .nav-entrance {
+    animation: nav-entrance 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 }
 
-@keyframes glass-entrance {
+@keyframes nav-entrance {
   from {
-    opacity: 0;
     transform: translateY(-8px);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
@@ -52,10 +50,10 @@
   -webkit-backdrop-filter: blur(calc(var(--glass-blur, 10px) + var(--glass-p, 0) * (var(--glass-blur-scrolled, 16px) - var(--glass-blur, 10px)))) saturate(var(--glass-saturate, 1.5));
 }
 
-/* Refract enhancement for Chromium: SVG displacement map + soft blur */
+/* Refract enhancement for Chromium: SVG displacement map */
 .glass[data-glass="refract"] .glass__backdrop {
-  backdrop-filter: var(--glass-filter-ref, none) blur(calc(var(--glass-blur-refract, 2px) + var(--glass-p, 0) * 1.5px)) saturate(var(--glass-saturate, 1.5));
-  -webkit-backdrop-filter: var(--glass-filter-ref, none) blur(calc(var(--glass-blur-refract, 2px) + var(--glass-p, 0) * 1.5px)) saturate(var(--glass-saturate, 1.5));
+  backdrop-filter: var(--glass-filter-ref, none);
+  -webkit-backdrop-filter: var(--glass-filter-ref, none);
 }
 
 /* Opaque surface fallback if backdrop-filter is completely unsupported */

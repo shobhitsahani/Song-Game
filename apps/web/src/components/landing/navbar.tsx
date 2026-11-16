@@ -67,7 +67,7 @@ export const Navbar = React.memo(function Navbar() {
   const glassRef = useRef<HTMLDivElement>(null);
   const [glassMode, setGlassMode] = useState<'frosted' | 'refract'>('frosted');
   const [displacementUrl, setDisplacementUrl] = useState<string>('');
-  const [glassSize, setGlassSize] = useState<{ width: number; height: number }>({ width: 1200, height: 56 });
+  const [glassSize, setGlassSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
   const [activeAnchor, setActiveAnchor] = useState<string | null>(null);
   const [hoveredHref, setHoveredHref] = useState<string | null>(null);
@@ -245,7 +245,7 @@ export const Navbar = React.memo(function Navbar() {
 
   // Generate SVG refraction displacement map if Chromium is detected
   useEffect(() => {
-    if (isRefractionSupported()) {
+    if (glassSize.width > 0 && glassSize.height > 0 && isRefractionSupported()) {
       const url = generateDisplacementMap({
         width: glassSize.width,
         height: glassSize.height,
@@ -416,9 +416,9 @@ export const Navbar = React.memo(function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-3 sm:top-4 z-40 w-full pointer-events-none">
+    <header className="sticky top-3 sm:top-4 z-40 w-full pointer-events-none nav-entrance">
       {/* Hidden SVG Refraction Filter for Chromium */}
-      {glassMode === 'refract' && displacementUrl && (
+      {glassMode === 'refract' && displacementUrl && glassSize.width > 0 && glassSize.height > 0 && (
         <svg
           width="0"
           height="0"
@@ -428,13 +428,23 @@ export const Navbar = React.memo(function Navbar() {
         >
           <filter
             id={filterId}
-            x="-10%"
-            y="-10%"
-            width="120%"
-            height="120%"
+            filterUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width={glassSize.width}
+            height={glassSize.height}
             colorInterpolationFilters="sRGB"
           >
-            <feImage href={displacementUrl} xlinkHref={displacementUrl} result="map" preserveAspectRatio="none" />
+            <feImage
+              href={displacementUrl}
+              xlinkHref={displacementUrl}
+              x="0"
+              y="0"
+              width={glassSize.width}
+              height={glassSize.height}
+              result="map"
+              preserveAspectRatio="none"
+            />
             <feDisplacementMap
               in="SourceGraphic"
               in2="map"
@@ -443,8 +453,7 @@ export const Navbar = React.memo(function Navbar() {
               yChannelSelector="G"
               result="displaced"
             />
-            <feGaussianBlur in="displaced" stdDeviation="1" result="blurred" />
-            <feColorMatrix in="blurred" type="saturate" values="1.5" />
+            <feColorMatrix in="displaced" type="saturate" values="1.5" />
           </filter>
         </svg>
       )}
@@ -454,7 +463,6 @@ export const Navbar = React.memo(function Navbar() {
           ref={glassRef}
           className="glass group"
           data-glass={glassMode}
-          data-entrance="true"
           style={{
             ['--glass-filter-ref' as string]:
               glassMode === 'refract' && displacementUrl ? `url(#${filterId})` : undefined,
