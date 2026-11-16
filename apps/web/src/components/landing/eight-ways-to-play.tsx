@@ -7,7 +7,11 @@ import {
   Timer,
   Disc,
   ArrowRight,
+  Lightning,
+  Microphone,
+  MusicNotes,
 } from '@phosphor-icons/react';
+import { Avatar, Badge, Bar } from '../stageshow/kit';
 import { cn } from '@/lib/utils';
 
 interface ModeTileProps {
@@ -50,8 +54,10 @@ function ModeTile({ title, description, mode, className, children }: ModeTilePro
         }}
       />
 
-      {/* Mini-UI visual fitting the mode */}
-      <div className="relative z-10 w-full mb-4">{children}</div>
+      {/* Mini faux UI visual fitting the mode */}
+      <div className="relative z-10 w-full mb-4" aria-hidden="true">
+        {children}
+      </div>
 
       {/* Title + Description */}
       <div className="relative z-10 flex flex-col gap-1.5">
@@ -95,19 +101,35 @@ export function EightWaysToPlay() {
           mode="CLASSIC"
           className="md:col-span-2 lg:col-span-2 lg:row-span-2 min-h-[300px] sm:min-h-[360px] justify-between"
         >
-          <div className="h-44 sm:h-52 w-full rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] relative overflow-hidden flex items-center justify-center p-4">
-            {/* Spinning grooved vinyl disc visual */}
-            <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-gradient-to-tr from-black via-zinc-900 to-black border-4 border-zinc-800 shadow-xl flex items-center justify-center">
-              <div className="w-28 h-28 rounded-full border border-zinc-700/60 flex items-center justify-center">
-                <div className="w-20 h-20 rounded-full border border-zinc-800 flex items-center justify-center">
-                  <div className="w-14 h-14 rounded-full bg-[var(--primary)] flex items-center justify-center shadow-md">
-                    <Disc size={20} weight="fill" className="text-[var(--primary-foreground)]" />
+          <div className="h-44 sm:h-52 w-full rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] relative overflow-hidden flex flex-col justify-between p-4 shadow-inner">
+            <div className="flex items-center justify-between">
+              <Badge tone="accent" dot>15s Audio Clip</Badge>
+              <span className="text-[11px] font-mono font-semibold text-[var(--muted-foreground)]">
+                4 Choices
+              </span>
+            </div>
+
+            <div className="flex items-center justify-center my-auto">
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-black via-zinc-900 to-black border-2 border-white/10 shadow-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                <div className="w-20 h-20 rounded-full border border-zinc-700/50 flex items-center justify-center">
+                  <div className="w-14 h-14 rounded-full border border-zinc-800 flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-full bg-[var(--primary)] flex items-center justify-center shadow-md">
+                      <Disc size={16} weight="fill" className="text-[var(--primary-foreground)]" />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="absolute bottom-3 left-3 text-xs font-mono text-[var(--muted-foreground)] uppercase tracking-wider">
-              15s Audio Clip · 4 Choices
+
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              <div className="flex items-center gap-2 p-2 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-xs text-[var(--muted-foreground)]">
+                <span className="font-mono font-bold text-[10px]">A</span>
+                <Bar w={64} h={5} tone={2} />
+              </div>
+              <div className="flex items-center gap-2 p-2 rounded-lg bg-[var(--primary)]/15 border border-[var(--primary)]/30 text-xs text-[var(--foreground)] font-semibold">
+                <span className="font-mono font-bold text-[10px] text-[var(--primary)]">B</span>
+                <span className="truncate text-[11px]">Neon Midnight</span>
+              </div>
             </div>
           </div>
         </ModeTile>
@@ -119,16 +141,14 @@ export function EightWaysToPlay() {
           mode="SURVIVAL"
           className="md:col-span-2 lg:col-span-2 min-h-[170px]"
         >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-4 flex items-center justify-between shadow-inner">
+            <div className="flex items-center gap-2.5">
               <span className="text-xs font-mono text-[var(--muted-foreground)] mr-1">Lives:</span>
-              <Heart size={20} weight="fill" className="text-rose-500 animate-pulse" />
-              <Heart size={20} weight="fill" className="text-rose-500 animate-pulse" />
-              <Heart size={20} weight="fill" className="text-rose-500 animate-pulse" />
+              <Heart size={20} weight="fill" className="text-rose-500 group-hover:scale-110 transition-transform" />
+              <Heart size={20} weight="fill" className="text-rose-500 group-hover:scale-110 transition-transform delay-75" />
+              <Heart size={20} weight="fill" className="text-rose-500/30" />
             </div>
-            <span className="text-xs font-mono font-bold text-[var(--badge-danger)] bg-[var(--badge-danger-bg)] px-2 py-0.5 rounded border border-[var(--badge-danger-border)]">
-              Knockout active
-            </span>
+            <Badge tone="danger" dot>Knockout active</Badge>
           </div>
         </ModeTile>
 
@@ -139,12 +159,12 @@ export function EightWaysToPlay() {
           mode="HARDCORE"
           className="min-h-[170px]"
         >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-4 flex items-center justify-between">
+          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-4 flex items-center justify-between shadow-inner">
             <div className="flex items-center gap-2">
-              <Timer size={22} weight="duotone" className="text-[var(--badge-danger)]" />
-              <span className="text-sm font-mono font-bold text-[var(--badge-danger)]">10s max</span>
+              <Timer size={22} weight="duotone" className="text-[var(--destructive)]" />
+              <span className="text-sm font-mono font-bold text-[var(--destructive)]">10s max</span>
             </div>
-            <div className="w-8 h-8 rounded-full border-2 border-rose-500/30 border-t-[var(--badge-danger)] animate-spin flex items-center justify-center text-xs font-mono font-bold text-[var(--badge-danger)]">
+            <div className="w-8 h-8 rounded-full border-2 border-rose-500/30 border-t-[var(--destructive)] flex items-center justify-center text-xs font-mono font-bold text-[var(--destructive)] group-hover:rotate-45 transition-transform">
               3s
             </div>
           </div>
@@ -157,9 +177,14 @@ export function EightWaysToPlay() {
           mode="LYRICS"
           className="min-h-[170px]"
         >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-3.5 flex items-center">
-            <p className="text-xs font-mono text-[var(--muted-foreground)] truncate">
-              &quot;I got the <span className="text-[var(--primary)] font-bold bg-[var(--surface-2)] px-1.5 py-0.5 rounded border border-[var(--glass-border)]">____</span> in the back&quot;
+          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-3.5 flex items-center shadow-inner">
+            <p className="text-xs font-mono text-[var(--muted-foreground)] truncate flex items-center gap-1.5">
+              <Microphone size={14} className="text-[var(--primary)] shrink-0" />
+              <span>&quot;City streets with</span>
+              <span className="text-[var(--primary)] font-bold bg-[var(--surface-2)] px-1.5 py-0.5 rounded border border-[var(--border)]">
+                neon
+              </span>
+              <span>glow&quot;</span>
             </p>
           </div>
         </ModeTile>
@@ -171,12 +196,10 @@ export function EightWaysToPlay() {
           mode="DECADE"
           className="min-h-[170px]"
         >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-3 flex items-center justify-between overflow-hidden gap-1 text-xs font-mono">
+          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-3 flex items-center justify-between overflow-hidden gap-1 text-xs font-mono shadow-inner">
             <span className="text-[var(--muted-foreground)]">70s</span>
             <span className="text-[var(--muted-foreground)]">80s</span>
-            <span className="text-[var(--primary)] font-bold bg-[var(--surface-2)] px-1.5 py-0.5 rounded border border-[var(--border)]">
-              90s
-            </span>
+            <Badge tone="accent">90s</Badge>
             <span className="text-[var(--muted-foreground)]">00s</span>
             <span className="text-[var(--muted-foreground)]">20s</span>
           </div>
@@ -189,17 +212,11 @@ export function EightWaysToPlay() {
           mode="ARTIST"
           className="min-h-[170px]"
         >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-4 flex items-center justify-between">
-            <div className="flex items-center -space-x-2">
-              <div className="w-8 h-8 rounded-full bg-amber-500/20 border-2 border-[var(--card)] flex items-center justify-center text-xs font-bold text-amber-300">
-                A
-              </div>
-              <div className="w-8 h-8 rounded-full bg-indigo-500/20 border-2 border-[var(--card)] flex items-center justify-center text-xs font-bold text-indigo-300">
-                B
-              </div>
-              <div className="w-8 h-8 rounded-full bg-pink-500/20 border-2 border-[var(--card)] flex items-center justify-center text-xs font-bold text-pink-300">
-                C
-              </div>
+          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-4 flex items-center justify-between shadow-inner">
+            <div className="flex items-center -space-x-1.5">
+              <Avatar name="VW" size={26} tone="person" />
+              <Avatar name="NS" size={26} tone="person" />
+              <Avatar name="SD" size={26} tone="person" />
             </div>
             <span className="text-xs font-mono text-[var(--muted-foreground)]">Who sang it?</span>
           </div>
@@ -212,13 +229,19 @@ export function EightWaysToPlay() {
           mode="ALBUM"
           className="min-h-[170px]"
         >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-2 grid grid-cols-4 gap-1.5">
-            <div className="rounded bg-[var(--surface-2)] border border-[var(--border)]" />
-            <div className="rounded bg-[var(--primary)]/20 border border-[var(--primary)]/40 flex items-center justify-center">
-              <Disc size={14} className="text-[var(--primary)]" />
+          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-2 grid grid-cols-4 gap-1.5 shadow-inner">
+            <div className="rounded bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center">
+              <MusicNotes size={13} className="text-[var(--muted-foreground)] opacity-50" />
             </div>
-            <div className="rounded bg-[var(--surface-2)] border border-[var(--border)]" />
-            <div className="rounded bg-[var(--surface-2)] border border-[var(--border)]" />
+            <div className="rounded bg-[var(--primary)]/15 border border-[var(--primary)]/30 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <Disc size={15} className="text-[var(--primary)]" />
+            </div>
+            <div className="rounded bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center">
+              <Bar w={12} h={4} tone={1} />
+            </div>
+            <div className="rounded bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center">
+              <Bar w={12} h={4} tone={1} />
+            </div>
           </div>
         </ModeTile>
 
@@ -229,14 +252,12 @@ export function EightWaysToPlay() {
           mode="GENRE"
           className="min-h-[170px]"
         >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-3 flex items-center gap-1.5 overflow-hidden text-xs font-mono">
-            <span className="px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--foreground)]">
+          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-3 flex items-center gap-1.5 overflow-hidden text-xs font-mono shadow-inner">
+            <span className="px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--foreground)] text-[11px]">
               Rock
             </span>
-            <span className="px-2 py-0.5 rounded-full bg-[var(--primary)]/15 border border-[var(--primary)]/30 text-[var(--primary)] font-bold">
-              Pop
-            </span>
-            <span className="px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--foreground)]">
+            <Badge tone="accent">Pop</Badge>
+            <span className="px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--foreground)] text-[11px]">
               R&amp;B
             </span>
           </div>
