@@ -1,266 +1,326 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
+  ArrowRight,
+  Disc,
   Heart,
   Timer,
-  Disc,
-  ArrowRight,
   Microphone,
-  MusicNotes,
+  Calendar,
+  User,
+  VinylRecord,
+  SpeakerHigh,
+  Check,
 } from '@phosphor-icons/react';
-import { Avatar, Badge, Bar } from '../stageshow/kit';
+import { Window } from '../stageshow/kit';
 import { cn } from '@/lib/utils';
 
-interface ModeTileProps {
+interface GameMode {
+  num: string;
+  key: string;
   title: string;
-  description: string;
-  mode: string;
-  className?: string;
-  children: React.ReactNode;
-}
-
-function ModeTile({ title, description, mode, className, children }: ModeTileProps) {
-  const cardRef = useRef<HTMLAnchorElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    cardRef.current.style.setProperty('--mouse-x', `${x}px`);
-    cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+  rules: string;
+  badge?: string;
+  icon: typeof Disc;
+  settings: {
+    timer: string;
+    lives: string;
+    target: string;
+    scoring: string;
   };
-
-  return (
-    <Link
-      ref={cardRef}
-      href={`/room/create?mode=${mode}`}
-      onMouseMove={handleMouseMove}
-      className={cn(
-        'group relative flex flex-col justify-between overflow-hidden rounded-[20px] p-6',
-        'card-surface hover:-translate-y-0.5 transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]',
-        className
-      )}
-    >
-      {/* Cursor-follow spotlight reflection */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{
-          background:
-            'radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--glass-highlight) 0%, transparent 80%)',
-        }}
-      />
-
-      {/* Mini faux UI visual fitting the mode */}
-      <div className="relative z-10 w-full mb-4" aria-hidden="true">
-        {children}
-      </div>
-
-      {/* Title + Description */}
-      <div className="relative z-10 flex flex-col gap-1.5">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xl font-bold font-sans text-[var(--foreground)] group-hover:text-[var(--primary)] transition-colors">
-            {title}
-          </h3>
-          <ArrowRight
-            size={16}
-            weight="bold"
-            className="text-[var(--muted-foreground)] group-hover:text-[var(--primary)] group-hover:translate-x-1 transition-all"
-          />
-        </div>
-        <p className="text-sm text-[var(--muted-foreground)] leading-relaxed">
-          {description}
-        </p>
-      </div>
-    </Link>
-  );
 }
+
+const GAME_MODES: GameMode[] = [
+  {
+    num: '01',
+    key: 'CLASSIC',
+    title: 'Classic',
+    rules: 'Name the song title from 15-second audio snippets across all playlists.',
+    icon: Disc,
+    settings: {
+      timer: '15 seconds',
+      lives: 'Unlimited',
+      target: 'Song title',
+      scoring: 'Up to 1,000 pts / speed',
+    },
+  },
+  {
+    num: '02',
+    key: 'SURVIVAL',
+    title: 'Survival',
+    rules: 'Sudden-death elimination: miss one track and you are knocked out of the room.',
+    badge: 'Knockout',
+    icon: Heart,
+    settings: {
+      timer: '15 seconds',
+      lives: '1 Life only',
+      target: 'Song title',
+      scoring: 'Elimination on miss',
+    },
+  },
+  {
+    num: '03',
+    key: 'HARDCORE',
+    title: 'Hardcore',
+    rules: 'Compressed 10-second timer with zero room for second guesses.',
+    badge: 'Blitz',
+    icon: Timer,
+    settings: {
+      timer: '10 seconds (blitz)',
+      lives: '1 Life',
+      target: 'Song title',
+      scoring: '1.5x score multiplier',
+    },
+  },
+  {
+    num: '04',
+    key: 'LYRICS',
+    title: 'Lyrics',
+    rules: 'Identify the track from missing lyrics and vocal phrases.',
+    icon: Microphone,
+    settings: {
+      timer: '15 seconds',
+      lives: 'Unlimited',
+      target: 'Missing lyric phrase',
+      scoring: 'Up to 1,000 pts',
+    },
+  },
+  {
+    num: '05',
+    key: 'DECADE',
+    title: 'Decade',
+    rules: 'Filter clips strictly to your era, from 70s rock to modern 2020s hits.',
+    badge: 'Filtered',
+    icon: Calendar,
+    settings: {
+      timer: '15 seconds',
+      lives: 'Unlimited',
+      target: '1970s – 2020s hits',
+      scoring: 'Era-calibrated points',
+    },
+  },
+  {
+    num: '06',
+    key: 'ARTIST',
+    title: 'Artist',
+    rules: 'Name the vocalist, band, or producer behind the track instead of the song.',
+    icon: User,
+    settings: {
+      timer: '15 seconds',
+      lives: 'Unlimited',
+      target: 'Artist / Producer',
+      scoring: 'Up to 1,000 pts',
+    },
+  },
+  {
+    num: '07',
+    key: 'ALBUM',
+    title: 'Album',
+    rules: 'Pick the exact studio album or LP release where the track first debuted.',
+    icon: VinylRecord,
+    settings: {
+      timer: '15 seconds',
+      lives: 'Unlimited',
+      target: 'Studio album / LP',
+      scoring: 'Up to 1,000 pts',
+    },
+  },
+  {
+    num: '08',
+    key: 'GENRE',
+    title: 'Genre',
+    rules: 'Target specific soundscapes: Pop Hits, Classic Rock, Hip-Hop, Indie, Electronic.',
+    badge: 'Filtered',
+    icon: SpeakerHigh,
+    settings: {
+      timer: '15 seconds',
+      lives: 'Unlimited',
+      target: 'Selected genre',
+      scoring: 'Up to 1,000 pts',
+    },
+  },
+];
 
 export function EightWaysToPlay() {
+  const [activeKey, setActiveKey] = useState('CLASSIC');
+  const activeMode = GAME_MODES.find((m) => m.key === activeKey) || GAME_MODES[0];
+  const ActiveIcon = activeMode.icon;
+
   return (
     <section className="relative py-16 sm:py-24 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Section heading: left-aligned */}
-      <div className="mb-10 text-left">
-        <h2 className="text-[clamp(28px,3vw,40px)] font-bold tracking-[-0.02em] text-[var(--foreground)]">
+      {/* Section heading */}
+      <div className="mb-12 text-left">
+        <h2 className="text-[clamp(28px,3.2vw,42px)] font-semibold font-display tracking-[-0.02em] text-[var(--foreground)]">
           Eight ways to play
         </h2>
-        <p className="text-base sm:text-lg text-[var(--muted-foreground)] mt-2 max-w-xl">
+        <p className="text-base sm:text-lg text-[var(--muted-foreground)] mt-2 max-w-xl font-normal">
           From party casual to sudden-death elimination. Choose your rules before opening the room.
         </p>
       </div>
 
-      {/* Bento Grid layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        {/* 1. Classic - Large 2x2 tile */}
-        <ModeTile
-          title="Classic"
-          description="Guess the song title from 15-second audio snippets across all playlists."
-          mode="CLASSIC"
-          className="md:col-span-2 lg:col-span-2 lg:row-span-2 min-h-[300px] sm:min-h-[360px] justify-between"
+      {/* Tracklist layout: 8 rows left, 1 browser still preview right */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start border-t border-[var(--border)] pt-10">
+        {/* Left Column (7 of 12): Tracklist rows */}
+        <div
+          role="list"
+          aria-label="Game modes tracklist"
+          className="lg:col-span-7 flex flex-col divide-y divide-[var(--border)] border border-[var(--border)] rounded-[var(--radius-card)] bg-[var(--surface-1)] p-2 shadow-xs"
         >
-          <div className="h-44 sm:h-52 w-full rounded-2xl bg-[var(--surface-1)] border border-[var(--border)] relative overflow-hidden flex flex-col justify-between p-4 shadow-inner">
-            <div className="flex items-center justify-between">
-              <Badge tone="accent" dot>15s Audio Clip</Badge>
-              <span className="text-[11px] font-mono font-semibold text-[var(--muted-foreground)]">
-                4 Choices
-              </span>
-            </div>
+          {GAME_MODES.map((mode) => {
+            const isSelected = mode.key === activeKey;
+            const Icon = mode.icon;
 
-            <div className="flex items-center justify-center my-auto">
-              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-black via-zinc-900 to-black border-2 border-white/10 shadow-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                <div className="w-20 h-20 rounded-full border border-zinc-700/50 flex items-center justify-center">
-                  <div className="w-14 h-14 rounded-full border border-zinc-800 flex items-center justify-center">
-                    <div className="w-9 h-9 rounded-full bg-[var(--primary)] flex items-center justify-center shadow-md">
-                      <Disc size={16} weight="fill" className="text-[var(--primary-foreground)]" />
+            return (
+              <Link
+                key={mode.key}
+                role="listitem"
+                href={`/room/create?mode=${mode.key}`}
+                onMouseEnter={() => setActiveKey(mode.key)}
+                onFocus={() => setActiveKey(mode.key)}
+                className={cn(
+                  'group flex items-center justify-between py-3 px-3.5 rounded-[var(--radius-control)] transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]',
+                  isSelected
+                    ? 'bg-[var(--surface-2)] text-[var(--foreground)] shadow-xs'
+                    : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]/60'
+                )}
+              >
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <span className="font-mono text-xs font-bold text-[var(--muted-foreground)] tabular-nums w-5 shrink-0">
+                    {mode.num}
+                  </span>
+                  <div className="flex flex-col min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-sm sm:text-base text-[var(--foreground)] group-hover:text-[var(--primary)] transition-colors">
+                        {mode.title}
+                      </span>
+                      {mode.badge && (
+                        <span className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded-[var(--radius-sm)] bg-[var(--surface-3)] text-[var(--muted-foreground)]">
+                          {mode.badge}
+                        </span>
+                      )}
                     </div>
+                    <p className="text-xs text-[var(--muted-foreground)] truncate mt-0.5">
+                      {mode.rules}
+                    </p>
                   </div>
                 </div>
+
+                <div className="flex items-center gap-2 shrink-0 ml-3">
+                  <Icon
+                    size={18}
+                    className={cn(
+                      'transition-colors',
+                      isSelected ? 'text-[var(--primary)]' : 'text-[var(--muted-foreground)] opacity-60'
+                    )}
+                  />
+                  <ArrowRight
+                    size={14}
+                    weight="bold"
+                    className="text-[var(--muted-foreground)] group-hover:text-[var(--primary)] group-hover:translate-x-0.5 transition-all"
+                  />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Right Column (5 of 12): ONE Stageshow Browser Preview */}
+        <div className="lg:col-span-5 lg:sticky lg:top-24 w-full">
+          <div aria-hidden="true" className="w-full">
+            <Window
+              tabs={['SongGame — Setup']}
+              nav
+              url={
+                <span className="inline-flex items-center gap-1.5 text-xs text-[var(--muted-foreground)]">
+                  <span>https://songgame.app/room/create</span>
+                </span>
+              }
+              urlShape="pill"
+              chrome="native"
+              lights="color"
+              className="w-full bg-[var(--surface-1)] border border-[var(--border)] rounded-[var(--radius-card)] shadow-md overflow-hidden"
+            >
+              <div className="p-4 sm:p-5 flex flex-col gap-4">
+                {/* Mode Header */}
+                <div className="flex items-center justify-between pb-3 border-b border-[var(--border)]">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-[var(--radius-control)] bg-[var(--primary)] text-[var(--primary-foreground)] flex items-center justify-center shadow-xs">
+                      <ActiveIcon size={18} weight="fill" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-[var(--foreground)] font-sans flex items-center gap-2">
+                        {activeMode.title} Mode
+                      </div>
+                      <span className="text-[11px] text-[var(--muted-foreground)] font-mono">
+                        Rule Preset {activeMode.num} of 08
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-[var(--radius-sm)] bg-[var(--surface-2)] border border-[var(--border)] text-[var(--foreground)]">
+                    Ready
+                  </span>
+                </div>
+
+                {/* Mode Rules description */}
+                <p className="text-xs text-[var(--muted-foreground)] leading-relaxed bg-[var(--surface-2)] p-3 rounded-[var(--radius-control)] border border-[var(--border)]">
+                  {activeMode.rules}
+                </p>
+
+                {/* Setting Specs Grid */}
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
+                    <span className="text-[10px] text-[var(--muted-foreground)] uppercase font-mono block mb-1">
+                      Clip Timer
+                    </span>
+                    <span className="font-semibold text-[var(--foreground)]">
+                      {activeMode.settings.timer}
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
+                    <span className="text-[10px] text-[var(--muted-foreground)] uppercase font-mono block mb-1">
+                      Lives / Survival
+                    </span>
+                    <span className="font-semibold text-[var(--foreground)]">
+                      {activeMode.settings.lives}
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
+                    <span className="text-[10px] text-[var(--muted-foreground)] uppercase font-mono block mb-1">
+                      Answer Target
+                    </span>
+                    <span className="font-semibold text-[var(--foreground)]">
+                      {activeMode.settings.target}
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
+                    <span className="text-[10px] text-[var(--muted-foreground)] uppercase font-mono block mb-1">
+                      Scoring Rule
+                    </span>
+                    <span className="font-semibold text-[var(--foreground)]">
+                      {activeMode.settings.scoring}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Faux Launch Button */}
+                <div className="pt-2 border-t border-[var(--border)] flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold text-[11px]">
+                    <Check size={14} weight="bold" />
+                    <span>Lobby config verified</span>
+                  </div>
+                  <span className="text-[11px] font-mono text-[var(--muted-foreground)]">
+                    /room/create?mode={activeMode.key}
+                  </span>
+                </div>
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              <div className="flex items-center gap-2 p-2 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-xs text-[var(--muted-foreground)]">
-                <span className="font-mono font-bold text-[10px]">A</span>
-                <Bar w={64} h={5} tone={2} />
-              </div>
-              <div className="flex items-center gap-2 p-2 rounded-lg bg-[var(--primary)]/15 border border-[var(--primary)]/30 text-xs text-[var(--foreground)] font-semibold">
-                <span className="font-mono font-bold text-[10px] text-[var(--primary)]">B</span>
-                <span className="truncate text-[11px]">Neon Midnight</span>
-              </div>
-            </div>
+            </Window>
           </div>
-        </ModeTile>
-
-        {/* 2. Survival - Wide tile */}
-        <ModeTile
-          title="Survival"
-          description="Sudden-death elimination: miss one question and you are knocked out of the room."
-          mode="SURVIVAL"
-          className="md:col-span-2 lg:col-span-2 min-h-[170px]"
-        >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-4 flex items-center justify-between shadow-inner">
-            <div className="flex items-center gap-2.5">
-              <span className="text-xs font-mono text-[var(--muted-foreground)] mr-1">Lives:</span>
-              <Heart size={20} weight="fill" className="text-rose-500 group-hover:scale-110 transition-transform" />
-              <Heart size={20} weight="fill" className="text-rose-500 group-hover:scale-110 transition-transform delay-75" />
-              <Heart size={20} weight="fill" className="text-rose-500/30" />
-            </div>
-            <Badge tone="danger" dot>Knockout active</Badge>
-          </div>
-        </ModeTile>
-
-        {/* 3. Hardcore - Standard tile */}
-        <ModeTile
-          title="Hardcore"
-          description="Compressed 10-second timer with zero room for second guesses."
-          mode="HARDCORE"
-          className="min-h-[170px]"
-        >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-4 flex items-center justify-between shadow-inner">
-            <div className="flex items-center gap-2">
-              <Timer size={22} weight="duotone" className="text-[var(--destructive)]" />
-              <span className="text-sm font-mono font-bold text-[var(--destructive)]">10s max</span>
-            </div>
-            <div className="w-8 h-8 rounded-full border-2 border-rose-500/30 border-t-[var(--destructive)] flex items-center justify-center text-xs font-mono font-bold text-[var(--destructive)] group-hover:rotate-45 transition-transform">
-              3s
-            </div>
-          </div>
-        </ModeTile>
-
-        {/* 4. Lyrics - Standard tile */}
-        <ModeTile
-          title="Lyrics"
-          description="Identify the track from missing lyrics and vocal phrases."
-          mode="LYRICS"
-          className="min-h-[170px]"
-        >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-3.5 flex items-center shadow-inner">
-            <p className="text-xs font-mono text-[var(--muted-foreground)] truncate flex items-center gap-1.5">
-              <Microphone size={14} className="text-[var(--primary)] shrink-0" />
-              <span>&quot;City streets with</span>
-              <span className="text-[var(--primary)] font-bold bg-[var(--surface-2)] px-1.5 py-0.5 rounded border border-[var(--border)]">
-                neon
-              </span>
-              <span>glow&quot;</span>
-            </p>
-          </div>
-        </ModeTile>
-
-        {/* 5. Decade - Standard tile */}
-        <ModeTile
-          title="Decade"
-          description="Filter clips strictly to your era, from 70s rock to modern 2020s hits."
-          mode="DECADE"
-          className="min-h-[170px]"
-        >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-3 flex items-center justify-between overflow-hidden gap-1 text-xs font-mono shadow-inner">
-            <span className="text-[var(--muted-foreground)]">70s</span>
-            <span className="text-[var(--muted-foreground)]">80s</span>
-            <Badge tone="accent">90s</Badge>
-            <span className="text-[var(--muted-foreground)]">00s</span>
-            <span className="text-[var(--muted-foreground)]">20s</span>
-          </div>
-        </ModeTile>
-
-        {/* 6. Artist - Standard tile */}
-        <ModeTile
-          title="Artist"
-          description="Name the vocalist, band, or producer behind the track instead of the song title."
-          mode="ARTIST"
-          className="min-h-[170px]"
-        >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-4 flex items-center justify-between shadow-inner">
-            <div className="flex items-center -space-x-1.5">
-              <Avatar name="VW" size={26} tone="person" />
-              <Avatar name="NS" size={26} tone="person" />
-              <Avatar name="SD" size={26} tone="person" />
-            </div>
-            <span className="text-xs font-mono text-[var(--muted-foreground)]">Who sang it?</span>
-          </div>
-        </ModeTile>
-
-        {/* 7. Album - Standard tile */}
-        <ModeTile
-          title="Album"
-          description="Pick the exact studio album or LP release where the track first debuted."
-          mode="ALBUM"
-          className="min-h-[170px]"
-        >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] p-2 grid grid-cols-4 gap-1.5 shadow-inner">
-            <div className="rounded bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center">
-              <MusicNotes size={13} className="text-[var(--muted-foreground)] opacity-50" />
-            </div>
-            <div className="rounded bg-[var(--primary)]/15 border border-[var(--primary)]/30 flex items-center justify-center group-hover:scale-105 transition-transform">
-              <Disc size={15} className="text-[var(--primary)]" />
-            </div>
-            <div className="rounded bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center">
-              <Bar w={12} h={4} tone={1} />
-            </div>
-            <div className="rounded bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center">
-              <Bar w={12} h={4} tone={1} />
-            </div>
-          </div>
-        </ModeTile>
-
-        {/* 8. Genre - Standard tile */}
-        <ModeTile
-          title="Genre"
-          description="Target specific soundscapes: Pop Hits, Classic Rock, Hip-Hop, Indie, or Electronic."
-          mode="GENRE"
-          className="min-h-[170px]"
-        >
-          <div className="h-16 w-full rounded-xl bg-[var(--surface-1)] border border-[var(--border)] px-3 flex items-center gap-1.5 overflow-hidden text-xs font-mono shadow-inner">
-            <span className="px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--foreground)] text-[11px]">
-              Rock
-            </span>
-            <Badge tone="accent">Pop</Badge>
-            <span className="px-2 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--foreground)] text-[11px]">
-              R&amp;B
-            </span>
-          </div>
-        </ModeTile>
+        </div>
       </div>
     </section>
   );
