@@ -27,6 +27,7 @@
     --ss-lights-y: 19px;
     --ss-dot: 9px;
     --ss-side-inset: 0px;
+    --ss-radius-window: var(--radius-card, 14px);
   }
 
   .ss-window {
@@ -34,7 +35,7 @@
     flex-direction: column;
     overflow: hidden;
     background: var(--ss-canvas);
-    border-radius: var(--ss-radius-window);
+    border-radius: var(--ss-radius-window, var(--radius-card, 14px));
     box-shadow: var(--ss-shadow-window);
   }
 

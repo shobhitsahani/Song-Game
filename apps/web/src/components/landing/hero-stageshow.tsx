@@ -155,9 +155,11 @@ export function HeroStageshow() {
 
                   {/* Vinyl turntable clip player (Larger clip card with 72px vinyl) */}
                   <div className="hero-player-deck" data-crop="true">
-                    <div className="hero-vinyl-groove" data-spinning={s.spinning}>
-                      <div className="hero-vinyl-label">
-                        <div className="hero-vinyl-spindle" />
+                    <div className="hero-vinyl-groove">
+                      <div className="hero-vinyl-disc" data-spinning={s.spinning}>
+                        <div className="hero-vinyl-label">
+                          <div className="hero-vinyl-spindle" />
+                        </div>
                       </div>
                     </div>
                     {/* Tone arm needle */}
@@ -393,9 +395,11 @@ export function HeroStageshow() {
 
                 {/* Compact Player Deck */}
                 <div className="hero-player-deck" data-crop="true">
-                  <div className="hero-vinyl-groove" data-spinning={s.spinning}>
-                    <div className="hero-vinyl-label">
-                      <div className="hero-vinyl-spindle" />
+                  <div className="hero-vinyl-groove">
+                    <div className="hero-vinyl-disc" data-spinning={s.spinning}>
+                      <div className="hero-vinyl-label">
+                        <div className="hero-vinyl-spindle" />
+                      </div>
                     </div>
                   </div>
                   <div className="hero-mystery-info">

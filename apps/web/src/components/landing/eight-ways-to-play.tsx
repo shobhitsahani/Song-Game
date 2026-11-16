@@ -168,7 +168,8 @@ export function EightWaysToPlay() {
                 urlShape="rounded"
                 chrome="native"
                 lights="color"
-                className="w-full bg-[var(--surface-1)] border border-[var(--border)] rounded-[var(--radius-card)] shadow-md overflow-hidden min-h-[540px] flex flex-col justify-between"
+                body={{ className: 'flex flex-col justify-between h-full' }}
+                className="w-full bg-[var(--surface-1)] border border-[var(--border)] rounded-[var(--radius-card)] shadow-md overflow-hidden min-h-[540px] flex flex-col"
               >
                 <div className="p-5 flex flex-col gap-4 flex-1">
                   {/* Pane Header */}
