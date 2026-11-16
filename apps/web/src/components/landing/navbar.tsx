@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Play, ArrowRight, List, X } from '@phosphor-icons/react';
@@ -124,6 +124,10 @@ export const Navbar = React.memo(function Navbar() {
       router.push(`/room/${trimmed}`);
     }
   };
+
+  const handleCloseMobile = useCallback(() => {
+    setMobileMenuOpen(false);
+  }, []);
 
   return (
     <header className="sticky top-3 sm:top-4 z-40 w-full px-4 sm:px-6 lg:px-8 pointer-events-none">
@@ -284,7 +288,7 @@ export const Navbar = React.memo(function Navbar() {
       {/* Mobile navigation panel anchored under the bar */}
       <MobileNavPanel
         isOpen={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
+        onClose={handleCloseMobile}
         toggleButtonRef={mobileToggleRef}
       />
     </header>

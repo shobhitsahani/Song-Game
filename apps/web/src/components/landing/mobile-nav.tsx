@@ -62,9 +62,13 @@ export function MobileNavPanel({ isOpen, onClose, toggleButtonRef }: MobileNavPr
   const [showJoinInput, setShowJoinInput] = useState(false);
   const [joinCode, setJoinCode] = useState('');
 
-  // Close on route change
+  // Close only on actual route change
+  const prevPathRef = useRef(pathname);
   useEffect(() => {
-    onClose();
+    if (prevPathRef.current !== pathname) {
+      prevPathRef.current = pathname;
+      onClose();
+    }
   }, [pathname, onClose]);
 
   // Focus trap and keyboard handling
