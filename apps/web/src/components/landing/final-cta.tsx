@@ -11,33 +11,37 @@ export function FinalCTA() {
   const [showJoinModal, setShowJoinModal] = useState(false);
 
   return (
-    <section className="relative py-16 sm:py-24 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-      {/* One quiet glass panel over the subtle background */}
-      <div className="relative rounded-[24px] sm:rounded-[28px] p-8 sm:p-14 text-center liquid-glass-surface bg-[var(--surface-1)]/80 border border-[var(--glass-border)] shadow-2xl backdrop-blur-2xl max-w-3xl mx-auto overflow-hidden">
-        <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-3">
+    <section className="relative py-20 sm:py-28 border-t border-[var(--border)] bg-[var(--surface-1)]/40">
+      <div className="max-w-[760px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 className="text-3xl sm:text-5xl font-semibold font-display tracking-[-0.02em] text-[var(--foreground)] mb-4 text-balance">
           Ready to test your ear against friends?
         </h2>
-        <p className="text-base text-[var(--muted-foreground)] max-w-md mx-auto mb-8">
+        <p className="text-base sm:text-lg text-[var(--muted-foreground)] max-w-lg mx-auto mb-8 font-normal leading-relaxed text-pretty">
           Start a room in seconds, share the code, and hear who really knows their music.
         </p>
 
         {/* Room created StageShow popover */}
         <RoomSharePopover />
 
+        {/* Primary and Secondary system buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">
           <Link href="/room/create" className="w-full sm:w-auto">
-            <Button size="lg" variant="primary" className="w-full sm:w-auto min-w-[180px] h-12 text-base font-bold shadow-xl rounded-xl">
+            <Button
+              size="lg"
+              variant="primary"
+              className="w-full sm:w-auto min-w-[180px] h-12 text-base font-semibold shadow-md"
+            >
               <Play size={18} weight="fill" /> Play
             </Button>
           </Link>
 
           <Button
             size="lg"
-            variant="glass"
+            variant="secondary"
             onClick={() => setShowJoinModal(true)}
-            className="w-full sm:w-auto min-w-[180px] h-12 text-base font-semibold rounded-xl"
+            className="w-full sm:w-auto min-w-[180px] h-12 text-base font-semibold"
           >
-            Join room <ArrowRight size={18} weight="bold" />
+            Join room <ArrowRight size={16} weight="bold" />
           </Button>
         </div>
       </div>

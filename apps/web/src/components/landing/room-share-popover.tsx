@@ -4,7 +4,6 @@ import React from 'react';
 import {
   Stage,
   Avatar,
-  Badge,
   Roll,
   type Act,
 } from '../stageshow/kit';
@@ -25,6 +24,11 @@ const poster: ShareState = {
   playersCount: 4,
 };
 
+const REST = {
+  wide: { x: 380, y: 135 },
+  compact: { x: 290, y: 135 },
+};
+
 async function script(a: Act<ShareState>) {
   // Calm opening beat
   await a.wait(700);
@@ -34,7 +38,11 @@ async function script(a: Act<ShareState>) {
   await a.wait(200);
   await a.click();
   await a.set({ copied: true });
-  await a.wait(500);
+
+  // Move cursor away so it does NOT obscure the button or text
+  await a.wait(150);
+  await a.move(REST.wide);
+  await a.wait(400);
 
   // Jordan joins
   await a.set({ playersCount: 2 });
@@ -46,17 +54,12 @@ async function script(a: Act<ShareState>) {
 
   // Alex joins
   await a.set({ playersCount: 4 });
-  await a.wait(3200);
+  await a.wait(3400);
 
   // Reset seam
   await a.set({ copied: false, playersCount: 1 });
-  await a.wait(800);
+  await a.wait(700);
 }
-
-const REST = {
-  wide: { x: 360, y: 35 },
-  compact: { x: 280, y: 35 },
-};
 
 export function RoomSharePopover() {
   return (
@@ -73,34 +76,38 @@ export function RoomSharePopover() {
         className="look-songgame"
       >
         {(s) => (
-          <div className="w-full h-full rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] p-3.5 shadow-xl flex flex-col justify-between">
+          <div className="w-full h-full rounded-[var(--radius-card)] bg-[var(--surface-1)] border border-[var(--border)] p-3.5 shadow-md flex flex-col justify-between">
             {/* Popover Header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-mono font-bold text-[var(--foreground)]">Room VR426D</span>
-                <Badge tone="accent">Lobby</Badge>
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="text-xs font-semibold text-[var(--foreground)] font-mono">
+                  Room VR426D
+                </span>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-[var(--radius-sm)] bg-[var(--surface-2)] text-[var(--muted-foreground)]">
+                  Lobby
+                </span>
               </div>
 
-              <span className="text-[11px] font-mono font-semibold text-[var(--muted-foreground)] flex items-center gap-1">
+              <span className="text-xs font-sans text-[var(--muted-foreground)] flex items-center gap-1">
                 <Users size={13} weight="bold" />
-                <span>{s.playersCount}/4 players</span>
+                <span className="font-mono tabular-nums">{s.playersCount}/4 players</span>
               </span>
             </div>
 
-            {/* Share / Copy code row */}
-            <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-1)] border border-[var(--border)]">
-              <span className="pl-2 text-xs font-mono text-[var(--muted-foreground)] tracking-wide truncate mr-2">
-                songgame.io/VR426D
+            {/* Share / Copy code row with real host */}
+            <div className="flex items-center justify-between p-2 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
+              <span className="pl-2 text-xs font-sans text-[var(--muted-foreground)] tracking-tight truncate mr-2">
+                https://songgame.app/room/VR426D
               </span>
 
               <button
                 type="button"
                 data-target="copy-code"
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                className={`flex items-center gap-1 px-3 py-1 rounded-[var(--radius-sm)] text-xs font-semibold transition-all duration-150 ${
                   s.copied
-                    ? 'bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 shadow-sm'
-                    : 'bg-[var(--surface-2)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)]'
+                    ? 'bg-emerald-500 text-white shadow-xs'
+                    : 'bg-[var(--surface-1)] border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--surface-3)]'
                 }`}
               >
                 {s.copied ? (
@@ -117,30 +124,30 @@ export function RoomSharePopover() {
               </button>
             </div>
 
-            {/* Player facepile presence */}
+            {/* Player presence in clean body font */}
             <div className="flex items-center justify-between pt-0.5">
               <div className="flex items-center -space-x-1.5">
-                <Avatar name="YOU" size={24} tone="accent" ring="confirmed" />
+                <Avatar name="YOU" size={22} tone="accent" ring="confirmed" />
                 {s.playersCount >= 2 && (
-                  <Avatar name="JD" size={24} tone="person" ring="confirmed" className="transition-all duration-300" />
+                  <Avatar name="JD" size={22} tone="person" ring="confirmed" />
                 )}
                 {s.playersCount >= 3 && (
-                  <Avatar name="SM" size={24} tone="person" ring="confirmed" className="transition-all duration-300" />
+                  <Avatar name="SM" size={22} tone="person" ring="confirmed" />
                 )}
                 {s.playersCount >= 4 && (
-                  <Avatar name="AX" size={24} tone="person" ring="confirmed" className="transition-all duration-300" />
+                  <Avatar name="AX" size={22} tone="person" ring="confirmed" />
                 )}
               </div>
 
-              <span className="text-[11px] font-mono text-emerald-400 font-semibold">
+              <span className="text-xs text-[var(--muted-foreground)] font-medium">
                 <Roll>
                   {s.playersCount === 4
-                    ? 'All players ready · Starting'
+                    ? 'All 4 players joined · Starting'
                     : s.playersCount === 3
-                    ? 'Sam joined the room'
-                    : s.playersCount === 2
-                    ? 'Jordan joined the room'
-                    : 'Waiting for players...'}
+                      ? 'Sam joined the room'
+                      : s.playersCount === 2
+                        ? 'Jordan joined the room'
+                        : 'Waiting for players...'}
                 </Roll>
               </span>
             </div>
