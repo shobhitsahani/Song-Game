@@ -25,8 +25,8 @@ const poster: ShareState = {
 };
 
 const REST = {
-  wide: { x: 410, y: 190 },
-  compact: { x: 310, y: 190 },
+  wide: { x: 380, y: 135 },
+  compact: { x: 280, y: 135 },
 };
 
 async function script(a: Act<ShareState>) {
@@ -68,7 +68,7 @@ export function RoomSharePopover() {
         poster={poster}
         script={script}
         play="loop"
-        cursor={{ at: REST, style: 'arrow', ripple: true, idle: 600 }}
+        cursor={{ at: REST, style: 'arrow', ripple: true, idle: 300 }}
         className="look-songgame"
       >
         {(s) => (

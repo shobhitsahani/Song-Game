@@ -18,6 +18,20 @@
     transition-duration: 0.6s;
   }
 
+  .ss-stage[data-still] .ss-cursor,
+  .ss-stage[data-still] .ss-cursor * {
+    display: none !important;
+    opacity: 0 !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ss-cursor,
+    .ss-cursor * {
+      display: none !important;
+      opacity: 0 !important;
+    }
+  }
+
   .ss-cursor__press {
     display: grid;
     /* The glyphs' hotspots meet at 0,0; pressing keeps that contact fixed. */

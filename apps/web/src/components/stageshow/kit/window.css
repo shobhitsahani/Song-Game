@@ -83,16 +83,17 @@
     /* Chrome type is the browser's, never the page's: small and quiet, whatever
        size the page inside sets */
     color: var(--ss-text-faint);
-    font-size: 10.5px;
+    font-size: 12px;
+    font-weight: 500;
     line-height: 1.4;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 
-  /* urlShape="pill": the round address field of current Safari and Chrome */
+  /* urlShape="pill": rounded control radius adhering to strict tokens */
   .ss-window[data-url-shape="pill"] .ss-window__url {
     padding-inline: 12px;
-    border-radius: 999px;
+    border-radius: var(--radius-control, 10px);
   }
 
   .ss-window__title {
@@ -327,7 +328,7 @@
     left: 50%;
     translate: -50% 0;
     color: rgba(255, 255, 255, 0.42);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     white-space: nowrap;
   }
@@ -444,7 +445,8 @@
     height: 30px;
     padding: 0 12px;
     border-radius: 8px 8px 0 0;
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: 500;
     color: var(--ss-text-faint);
   }
 

@@ -137,7 +137,7 @@ export function HowRoundWorksTile2() {
               {/* Option A */}
               <div className={`flex items-center justify-between px-2.5 py-1 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)] text-[12px] transition-opacity ${s.selected ? 'opacity-50' : 'opacity-100'}`}>
                 <div className="flex items-center gap-2">
-                  <span className="w-4 h-4 rounded-[4px] bg-[var(--surface-3)] text-[var(--muted-foreground)] font-bold text-[11px] flex items-center justify-center font-mono">
+                  <span className="w-5 h-5 rounded-[4px] bg-[var(--surface-3)] text-[var(--muted-foreground)] font-bold text-[12px] flex items-center justify-center font-mono">
                     A
                   </span>
                   <span className="text-[var(--muted-foreground)]">Echoes in the Rain</span>
@@ -154,7 +154,7 @@ export function HowRoundWorksTile2() {
               >
                 <div className="flex items-center gap-2">
                   <span
-                    className={`w-4 h-4 rounded-[4px] font-bold text-[11px] flex items-center justify-center font-mono ${
+                    className={`w-5 h-5 rounded-[4px] font-bold text-[12px] flex items-center justify-center font-mono ${
                       s.selected
                         ? 'bg-emerald-500 text-white'
                         : 'bg-[var(--surface-3)] text-[var(--muted-foreground)]'
@@ -165,7 +165,7 @@ export function HowRoundWorksTile2() {
                   <span className="font-semibold">Neon Midnight</span>
                 </div>
                 {s.selected && (
-                  <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                  <span className="flex items-center gap-1 text-[12px] font-bold text-emerald-600 dark:text-emerald-400">
                     <Check size={13} weight="bold" /> +1,000 pts
                   </span>
                 )}
@@ -174,7 +174,7 @@ export function HowRoundWorksTile2() {
               {/* Option C */}
               <div className={`flex items-center justify-between px-2.5 py-1 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)] text-[12px] transition-opacity ${s.selected ? 'opacity-50' : 'opacity-100'}`}>
                 <div className="flex items-center gap-2">
-                  <span className="w-4 h-4 rounded-[4px] bg-[var(--surface-3)] text-[var(--muted-foreground)] font-bold text-[11px] flex items-center justify-center font-mono">
+                  <span className="w-5 h-5 rounded-[4px] bg-[var(--surface-3)] text-[var(--muted-foreground)] font-bold text-[12px] flex items-center justify-center font-mono">
                     C
                   </span>
                   <span className="text-[var(--muted-foreground)]">Solar Flare</span>
@@ -184,7 +184,7 @@ export function HowRoundWorksTile2() {
               {/* Option D */}
               <div className={`flex items-center justify-between px-2.5 py-1 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)] text-[12px] transition-opacity ${s.selected ? 'opacity-50' : 'opacity-100'}`}>
                 <div className="flex items-center gap-2">
-                  <span className="w-4 h-4 rounded-[4px] bg-[var(--surface-3)] text-[var(--muted-foreground)] font-bold text-[11px] flex items-center justify-center font-mono">
+                  <span className="w-5 h-5 rounded-[4px] bg-[var(--surface-3)] text-[var(--muted-foreground)] font-bold text-[12px] flex items-center justify-center font-mono">
                     D
                   </span>
                   <span className="text-[var(--muted-foreground)]">Starlight Avenue</span>
@@ -255,7 +255,7 @@ export function HowRoundWorksTile3() {
                   </span>
                   <Avatar name="YOU" size={22} tone="accent" />
                   <span className="font-bold text-[var(--foreground)]">You</span>
-                  <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
+                  <span className="text-[12px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
                     <Roll>{s.climbed ? '▲ 1' : '—'}</Roll>
                   </span>
                 </div>

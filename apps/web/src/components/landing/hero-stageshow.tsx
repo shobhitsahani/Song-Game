@@ -45,8 +45,8 @@ const poster: HeroState = {
 };
 
 const REST = {
-  wide: { x: 740, y: 460 },
-  compact: { x: 330, y: 440 },
+  wide: { x: 505, y: 470 },
+  compact: { x: 340, y: 460 },
 };
 
 async function script(a: Act<HeroState>) {
@@ -100,7 +100,7 @@ export function HeroStageshow() {
         poster={poster}
         script={script}
         play="loop"
-        cursor={{ at: REST, style: 'arrow', ripple: true, idle: 600 }}
+        cursor={{ at: REST, style: 'arrow', ripple: true, idle: 300 }}
         className="look-songgame"
       >
         {(s, _rect, layout) => (
@@ -128,7 +128,7 @@ export function HeroStageshow() {
                 <span>https://songgame.app/room/VR426D</span>
               </span>
             }
-            urlShape="pill"
+            urlShape="rounded"
             chrome="native"
             lights="color"
             className="hero-window"

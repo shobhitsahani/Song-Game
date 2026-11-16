@@ -165,7 +165,7 @@ export function EightWaysToPlay() {
                     <span>https://songgame.app/room/create</span>
                   </span>
                 }
-                urlShape="pill"
+                urlShape="rounded"
                 chrome="native"
                 lights="color"
                 className="w-full bg-[var(--surface-1)] border border-[var(--border)] rounded-[var(--radius-card)] shadow-md overflow-hidden min-h-[540px] flex flex-col justify-between"

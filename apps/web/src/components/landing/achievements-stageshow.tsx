@@ -86,11 +86,11 @@ export function AchievementsStageshow() {
                     <span className="text-xs font-bold text-[var(--foreground)]">
                       {s.unlocked ? 'Achievement Unlocked!' : 'Recent Progress'}
                     </span>
-                    <span className="text-[11px] font-mono font-semibold text-[var(--primary)]">
+                    <span className="text-[12px] font-mono font-semibold text-[var(--primary)]">
                       +50 XP
                     </span>
                   </div>
-                  <span className="text-[11px] text-[var(--muted-foreground)]">
+                  <span className="text-[12px] text-[var(--muted-foreground)]">
                     First Win · Win your first game
                   </span>
                 </div>
@@ -99,7 +99,7 @@ export function AchievementsStageshow() {
               <div className="text-right">
                 <span className="text-xs font-mono font-semibold text-[var(--foreground)] tabular-nums">
                   <Count value={s.xp} />{' '}
-                  <span className="text-[11px] text-[var(--muted-foreground)]">/ 500 XP</span>
+                  <span className="text-[12px] text-[var(--muted-foreground)]">/ 500 XP</span>
                 </span>
               </div>
             </div>
@@ -112,7 +112,7 @@ export function AchievementsStageshow() {
                   style={{ width: `${s.progress}%` }}
                 />
               </div>
-              <span className="text-[11px] font-mono font-semibold text-[var(--muted-foreground)]">
+              <span className="text-[12px] font-mono font-semibold text-[var(--muted-foreground)]">
                 <Roll>{s.levelUp ? 'Level 15' : 'Level 14'}</Roll>
               </span>
             </div>
