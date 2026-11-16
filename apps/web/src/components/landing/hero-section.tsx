@@ -7,7 +7,7 @@ import { motion } from 'motion/react';
 import { Play, ArrowRight, X, ArrowClockwise } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { InputOTP, InputOTPGroup, InputOTPSlot, REGEXP_ONLY_DIGITS_AND_CHARS } from '@/components/ui/input-otp';
-import { LiveRoundPreview } from './live-round-preview';
+import { HeroStageshow } from './hero-stageshow';
 import { HeroShaderBackground } from './hero-shader-background';
 
 export function HeroSection() {
@@ -201,7 +201,7 @@ export function HeroSection() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <LiveRoundPreview />
+              <HeroStageshow />
             </motion.div>
           </div>
         </div>
