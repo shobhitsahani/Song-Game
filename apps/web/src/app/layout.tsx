@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Unbounded, JetBrains_Mono } from 'next/font/google';
+import { Fraunces, Hanken_Grotesk } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { cookies } from 'next/headers';
 import './globals.css';
@@ -7,22 +7,18 @@ import { Providers } from './providers';
 import { AmbientBackground } from '@/components/glass/ambient-background';
 import { OfflineNotice } from '@/components/shared/offline-notice';
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'optional',
-});
-
-const unbounded = Unbounded({
+const fraunces = Fraunces({
   subsets: ['latin'],
   variable: '--font-display',
-  display: 'optional',
+  display: 'swap',
+  axes: ['opsz'],
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const hankenGrotesk = Hanken_Grotesk({
   subsets: ['latin'],
-  variable: '--font-mono',
-  display: 'optional',
+  variable: '--font-sans',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -98,7 +94,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body
-        className={`${inter.variable} ${unbounded.variable} ${jetbrainsMono.variable} font-sans antialiased text-[var(--foreground)] bg-[var(--background)] min-h-[100dvh] relative selection:bg-[var(--primary)] selection:text-[var(--primary-foreground)]`}
+        className={`${fraunces.variable} ${hankenGrotesk.variable} font-sans antialiased text-[var(--foreground)] bg-[var(--background)] min-h-[100dvh] relative selection:bg-[var(--primary)] selection:text-[var(--primary-foreground)]`}
       >
         <a href="#main-content" className="skip-link">
           Skip to main content

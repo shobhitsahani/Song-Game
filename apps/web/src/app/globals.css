@@ -29,9 +29,9 @@
   --color-surface-1: var(--surface-1);
   --color-surface-2: var(--surface-2);
   --color-surface-3: var(--surface-3);
-  --font-display: var(--font-display), 'Unbounded', system-ui, sans-serif;
-  --font-sans: var(--font-sans), 'Inter', system-ui, sans-serif;
-  --font-mono: var(--font-mono), monospace;
+  --font-display: var(--font-display), 'Fraunces', serif;
+  --font-sans: var(--font-sans), 'Hanken Grotesk', system-ui, sans-serif;
+  --font-mono: var(--font-sans), 'Hanken Grotesk', system-ui, sans-serif;
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);

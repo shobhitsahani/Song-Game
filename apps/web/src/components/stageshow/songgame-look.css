@@ -7,8 +7,8 @@
   .look-songgame.ss-stage,
   .look-songgame .ss-stage,
   .ss-stage[data-look="songgame"] {
-    --ss-font: var(--font-sans), 'Inter', system-ui, sans-serif;
-    --ss-mono: var(--font-mono), monospace;
+    --ss-font: var(--font-sans), 'Hanken Grotesk', system-ui, sans-serif;
+    --ss-mono: var(--font-sans), 'Hanken Grotesk', system-ui, sans-serif;
 
     /* Primary Accent */
     --ss-accent: var(--primary);
