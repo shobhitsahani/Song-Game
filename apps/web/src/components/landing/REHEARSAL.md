@@ -1,70 +1,61 @@
-# Stageshow Rehearsal Report: SongGame Landing Page
+# Stageshow Rehearsal Report: SongGame Landing Page Revamp
 
 ## 1. Overview & Gold Reference Mapping
 
-| Section | Component | Closest Gold Example(s) | Role & Focal Object |
+| Section | Component | Gold Reference(s) | Role & Focal Object |
 | :--- | :--- | :--- | :--- |
-| **Hero Demo** | `HeroStageshow` (`hero-stageshow.tsx`) | `hero-demo`, `presence`, `device-pair` | Realistic live game window: 15s timer countdown, vinyl disc spinning, 4 multiple-choice answers. Cursor selects Option B ("Neon Midnight"), locks in, rolls `+1,000 pts`, standings reorder to place YOU at #1 with 4,250 pts. Satellite phone notification ("Jordan joined your room"). |
-| **How a Round Works** | `HowRoundWorksTile1-3` (`how-round-works-stageshow.tsx`) | `bento`, `dark-bento`, `ai-cards`, `choreography` | 3 sequential tiles with `play="once"` on viewport entry:<br>1. *Hear the clip*: vinyl turntable and streaming progress bar.<br>2. *Lock in*: Option B pressed with speed chip (1.8s) and score chip (`+1,000 pts`).<br>3. *Beat the room*: climbing rank chip (▲1) and live score count roll to 4,250 pts. |
-| **Game Modes** | `EightWaysToPlay` (`eight-ways-to-play.tsx`) | `many-of-one`, `staggered-bento` | Mini faux UI per mode (Classic 4-bar choices, Survival hearts/elimination, Hardcore 10s blitz countdown, Lyrics blank phrase, Decade vinyl chips, Artist avatar badge, Album 2x2 artwork grid, Genre tag chips). Stills with hover accent. |
-| **Speed Scoring** | `ScoringDemo` (`scoring-demo.tsx`) | Real UI preserved | Kept the real interactive response-time slider and point formula untouched. No faux UI substituted. |
-| **Leaderboard** | `LeaderboardStageshow` (`leaderboard-stageshow.tsx`) | `table-edit`, `choreography` | Leaderboard window with All Time / Weekly / Monthly tabs. Authed cursor switches tabs, rows reorder, and scores roll dynamically via `<Count>`. Real "See full leaderboard" link kept intact. |
-| **Achievements** | `AchievementsStageshow` (`achievements-stageshow.tsx`) | `payout-flow` | Generous payoff unlock toast: "Achievement Unlocked: First Win (+50 XP)", XP progress bar fills from 450 to 500, Level 15 badge roll with ample rest hold. Real badge list preserved. |
-| **Final CTA** | `RoomSharePopover` (`room-share-popover.tsx`) | `share`, `presence` | Popover illustrating Room `VR426D` creation, copy button click animation ("Copied!"), and facepile player presence (YOU, JD, SM, AX joining). Real Play / Join room action buttons untouched. |
+| **Navbar** | `Navbar` (`navbar.tsx`) | System Top Bar | Clean sticky bar (`sticky top-0 z-40 border-b bg-background/90 backdrop-blur-md`). Small crisp vinyl logo mark + "SongGame", 15px nav links, segmented ThemeSwitcher, ghost "Join room" popover, primary "Play" button. Floating capsule slop removed. |
+| **Hero Section** | `HeroSection` (`hero-section.tsx`) | Editorial Liner Notes | 45/55 desktop two-column layout. Balanced Fraunces headline max 3 lines (`clamp(2.5rem, 4.5vw, 4.25rem)`), honest 18-word subhead, unified OTP input with attached Join button, and quiet inline resume banner with zero layout jump. |
+| **Hero Room Demo** | `HeroStageshow` (`hero-stageshow.tsx`) | `hero-demo`, `table-edit` | **Browser-only faux UI (phone completely removed)**. Desktop native Window (`https://songgame.app/room/VR426D`). Left: turntable deck with spinning grooved vinyl, tone arm, audio equalizer, hidden title ("Playing Clip · Mystery Track", no spoilers), 2x2 answers A-D. Right: players rail (You, Jordan, Sam, Alex). 5-beat story: needle drops -> cursor moves to B -> B locks at ~1.8s -> B turns emerald green, `+1,000 pts` rolls to You, standings reorder to You #1 with 4,250 pts -> hold payoff. |
+| **How a Round Works** | `HowRoundWorks` (`how-round-works.tsx`) | `liner-notes`, `bento` | 3 editorial columns with large Fraunces numerals 1, 2, 3 joined by a clean top border (no nested cards):<br>1. *Hear the clip*: vinyl turntable, countdown `0:03 / 0:15`, waveform equalizer.<br>2. *Lock in*: Option B selected & confirmed with green checkmark and `Response time: 1.8s`.<br>3. *Beat the room*: consistent tabular rank numerals `#1`, `#2`, `#3`, avatars, and live score roll to 4,250 pts. Colored status filler ("Audio Sync OK") removed. |
+| **Eight Ways to Play** | `EightWaysToPlay` (`eight-ways-to-play.tsx`) | `tracklist`, `window-preview` | Uneven bento eliminated. Left: 8-track LP tracklist (01 Classic to 08 Genre) with real accessible `<Link href="/room/create?mode=...">`. Right: ONE Stageshow browser preview window crossfading rules and settings dynamically on hover/focus. |
+| **Scoring Demo** | `ScoringDemo` (`scoring-demo.tsx`) | Real UI preserved | Heading balanced with `text-wrap: balance` (orphan "more" fixed). 3 tiers as a clean 3-column legend. "Blitz Bonus" colored pill removed. Chart text enlarged to 12px. Custom-styled slider with clear label and live readout. |
+| **Leaderboard** | `LeaderboardStageshow` (`leaderboard-stageshow.tsx`) | `table-edit`, `segmented-control` | Window with SegmentedControl tabs (All Time / Weekly / Monthly). Consistent tabular rank numerals 1-5 (inconsistent crowns/medals removed), avatars, levels, wins, and rolling `<Count>` scores. "Example standings" caption with "See full leaderboard" link directly below. Equalized column height. |
+| **Achievements** | `AchievementsStageshow` (`achievements-stageshow.tsx`) | `payout-flow` | Clear, un-ghosted unlock toast (`opacity-100`, solid surface) with XP bar filling to 100% and Level 15 roll. 6 real badges as clean rows without tinted square boxes or pill borders. "View all achievements" link directly below. |
+| **Final CTA** | `FinalCTA` (`final-cta.tsx`) | `share`, `presence` | Full-width band (card-in-card removed). Balanced headline and sentence. Lobby popover with real production host `https://songgame.app/room/VR426D`, "Copied!" feedback, cursor moves off copy button to rest position, avatars joining, and status in body font. |
 
 ---
 
-## 2. What Changed vs. Original
+## 2. Slop & Vibe-Coded Anti-Pattern Audit
 
-1. **Theme & Token Architecture**:
-   - Mapped all Stageshow CSS tokens (`--ss-*`) to SongGame design system variables (`--primary`, `--surface-1/2`, `--border`, `--foreground`, etc.) in `songgame-look.css`.
-   - All faux UI surfaces reactively switch live across Daylight (`light`), Vinyl Dark (`black`), and Rose (`rose`) themes.
-2. **Hero Interactive-to-Authored Transition**:
-   - Replaced static/mock stateful card ("click any answer to test") with a deterministic, authored Stageshow animation sequence simulating realistic multi-player gameplay.
-3. **Preservation of Real Controls**:
-   - Navigation links, join room code input, scoring response-time simulation slider, full leaderboard link, create-room mode links, and final CTA buttons remain genuine accessible interactive controls in the DOM.
-4. **Banned Patterns Eliminated**:
-   - Removed all sparkles, purple gradients, and generic letter-in-colored-square placeholders.
-   - Used fictional song and artist names (*Neon Midnight* by *The Velvet Waves*, Room `VR426D`), abstract artwork, and deterministic values matching game rules (15s timer, 1,000 / 700 / 500 pts).
-
----
-
-## 3. Rehearsal Gate Verification (`film.mjs --gate`)
-
-Headless Chromium rehearsal runs passed with **0 never-intentional lines**:
-- **Hero Stage**:
-  - Cleared framing, crop, and layout checks.
-  - Satellite phone positioned within stage gutters (`right: 18px; bottom: -40px`) with `overflow: hidden` on stage.
-  - Option button grid gap adjusted to 10px (`tight control` gate check >= 8px satisfied).
-  - Outcome: `rehearsal passed`.
-- **How a Round Works Tiles (Stages 1–3)**:
-  - Bounding geometry and scale factor 1:1 verified.
-  - Corrected half-pixel glyph on checkmark icon (16px even-in-even box).
-  - Outcome: `rehearsal passed`.
-- **Leaderboard Stage**:
-  - Tab switching motion, cursor coordinates, and `<Count>` number transitions verified.
-  - Corrected medal icon sizes to 16px.
-  - Outcome: `rehearsal passed`.
-- **Achievements Stage**:
-  - Toast slide-in and XP bar progress fill verified with generous payoff hold.
-  - Outcome: `rehearsal passed`.
-- **Final CTA Popover**:
-  - Corrected text alignment of room code and share link (both aligned at 16px left inset).
-  - Outcome: `rehearsal passed`.
+| Banned Anti-Pattern | Status | What Replaced It |
+| :--- | :--- | :--- |
+| **Monospace microcopy in colored text** ("Audio Sync OK", "Speed: 1.8s", "Blitz Bonus") | **ELIMINATED** | Replaced with clean body font (`font-sans`), tabular figures where appropriate, and real product copy. |
+| **Pills on everything** (`rounded-full` everywhere) | **ELIMINATED** | Standardized radius scale: 6px small, 10px control/field (`--radius-control`), 14px card/dialog (`--radius-card`). `rounded-full` reserved solely for avatars and status dots. |
+| **Cards inside cards inside cards** | **ELIMINATED** | Replaced with editorial rules, clean borders, and full-width section bands. |
+| **Huge 5-line hero headline** | **ELIMINATED** | Balanced 2–3 line headline (`clamp(2.5rem, 4.5vw, 4.25rem)`), Fraunces weight 600, leading 1.05. |
+| **Phone covering hero answers** | **ELIMINATED** | Phone satellite deleted. Hero is a 2-column browser window (65% room / 35% roster rail). |
+| **Hero clip card spoiling the answer** | **ELIMINATED** | Displays "Playing Clip · Mystery Track", vinyl grooves, tone arm, and equalizer. Answer revealed only after lock-in. |
+| **Invented host domains** (`songgame.io`) | **ELIMINATED** | All faux UI URLs use the real production domain `https://songgame.app/room/...`. |
+| **Cursor obscuring buttons** | **ELIMINATED** | In Final CTA popover, cursor clicks Copy and moves away to rest coordinates during the hold frame. |
+| **Inconsistent leaderboard ranks** | **ELIMINATED** | Clean tabular numerals 1, 2, 3, 4, 5 across all rows. |
+| **Ghosted/unreadable achievement toast** | **ELIMINATED** | Solid, legible surface with clear XP meter and level roll payoff. |
 
 ---
 
-## 4. Accessibility, Performance & Motion Constraints
+## 3. Typography & Theme System
 
-- **Accessibility**: All faux UI stages wrapped in `aria-hidden="true"`, with `pointer-events: none` on presentation layers. Native buttons and links inside cards retain proper keyboard focus, labels, and `href` routes.
-- **Prefers-Reduced-Motion**: Every `<Stage>` provides a complete `poster` state. When reduced motion is preferred, animations do not play and the calm poster frame is rendered immediately.
-- **Hydration & Determinism**: All stage scripts use static deterministic seeds (zero `Math.random()`, zero unseeded `Date.now()` during SSR).
-- **Responsive**: Compact stage configurations (`compact={{ below: ... }}`) provided for mobile column widths (280–350px).
+- **Display Typeface**: `Fraunces` via `next/font/google` (variable optical size `opsz` 9–144, weight 600) for authentic record-sleeve editorial authority.
+- **Body & Numeric Typeface**: `Hanken_Grotesk` via `next/font/google` with native tabular numerals (`font-variant-numeric: tabular-nums`).
+- **Surface Themes**:
+  - **Daylight (`light`)**: Warm paper neutrals (`oklch(0.982 0.006 85)` background, `oklch(0.18 0.012 85)` ink, vinyl blue accent).
+  - **Vinyl (`black`)**: Warm charcoal vinyl (`oklch(0.12 0.008 75)` background, amber neon accent).
+  - **Rose (`rose`)**: Deep plum vinyl (`oklch(0.13 0.025 350)` background, vibrant rose accent).
+- Full-page before/after screenshots verified across all 3 themes at 1440px and 390px in `/tmp/after_*`.
+
+---
+
+## 4. Verification & Gate Checks
+
+- **TypeScript Typecheck**: `turbo run typecheck` passes with **0 errors** across all 6 workspace packages (`apps-web`, `apps-api`, `@song-game/shared`, `@song-game/socket`, `@song-game/types`, `@song-game/ui`).
+- **ESLint Linting**: `turbo run lint` passes with **0 errors**.
+- **Next.js Production Build**: `turbo run build` completes successfully (`6 successful, 6 total`, all static and dynamic routes compiled).
+- **Reduced Motion**: All Stageshow components (`Stage`, `HeroStageshow`, `HowRoundWorks`, `LeaderboardStageshow`, `AchievementsStageshow`, `RoomSharePopover`) provide static `poster` states; when `prefers-reduced-motion` is active, loops and transitions immediately lock to the calm payoff frame.
+- **Accessibility**: Real links, input OTP, buttons, and segmented controls retain full keyboard focus and screen reader labels. All presentation stages carry `aria-hidden="true"`.
 
 ---
 
 ## 5. What Was Not Checked
 
-- Live audio streaming (explicitly forbidden and isolated in faux UI).
-- Real backend WebSocket/socket.io connectivity for faux stages (simulated locally via authored scripts).
-- WebGL or GPU acceleration variations on low-end hardware.
+- Live audio streaming during trivia rounds (simulated strictly via SVG waveform/groove animation in faux UI).
+- Real backend multiplayer WebSocket socket.io traffic during simulated stages (client-side deterministic scripts only).
