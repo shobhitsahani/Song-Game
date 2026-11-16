@@ -62,30 +62,30 @@ export function HeroSection() {
       <HeroShaderBackground />
 
       <div className="relative z-10 max-w-[1200px] w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center min-h-[646px]">
-          {/* Left Column (6 of 12) */}
-          <div className="lg:col-span-6 flex flex-col items-start text-left min-h-[560px] lg:min-h-[646px] justify-center">
-            {/* Headline: clamp(40px, 5.2vw, 76px), weight 600-700, letter-spacing 0 to -0.01em */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
+          {/* Left Column (5 of 12 = ~42-45%) */}
+          <div className="lg:col-span-5 flex flex-col items-start text-left justify-center">
+            {/* Headline: max 3 lines, clamp(2.5rem, 4.5vw, 4.25rem), weight 600 */}
             <motion.h1
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[clamp(40px,5.2vw,76px)] font-bold font-display tracking-[-0.01em] text-[var(--foreground)] leading-[1.06] mb-5 min-h-[170px] sm:min-h-[250px] lg:min-h-[398px]"
+              className="text-[clamp(2.5rem,4.5vw,4.25rem)] font-semibold font-display tracking-[-0.02em] text-[var(--foreground)] leading-[1.05] mb-5 text-balance"
             >
               Name that track before the needle drops.
             </motion.h1>
 
-            {/* Subhead: max 20 words, body font, 18px */}
+            {/* Subhead: max 20 words, body font, 17-18px */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-              className="text-base sm:text-lg text-[var(--muted-foreground)] max-w-lg mb-8 font-normal leading-relaxed"
+              className="text-base sm:text-lg text-[var(--muted-foreground)] max-w-lg mb-8 font-normal leading-relaxed text-pretty"
             >
-              Real-time music trivia. Hear a 15-second clip, name it first, and race your friends in a live room.
+              Real-time music trivia in your browser. Hear 15 seconds, lock in first, and outscore friends in live rooms.
             </motion.p>
 
-            {/* Primary Actions: Play + 6-slot InputOTP Join Room */}
+            {/* Primary Actions: Play + InputOTP Join Room */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -96,7 +96,7 @@ export function HeroSection() {
                 <Button
                   size="lg"
                   variant="primary"
-                  className="w-full sm:w-auto h-12 px-7 text-base font-bold shadow-xl rounded-xl"
+                  className="w-full sm:w-auto h-12 px-7 text-base font-semibold shadow-md"
                 >
                   <Play size={18} weight="fill" /> Play
                 </Button>
@@ -134,11 +134,11 @@ export function HeroSection() {
 
                   <Button
                     type="submit"
-                    variant="glass"
-                    className="h-11 sm:h-12 px-3.5 sm:px-4 text-sm font-semibold rounded-xl shrink-0"
+                    variant="secondary"
+                    className="h-11 sm:h-12 px-4 text-sm font-semibold shrink-0"
                     disabled={roomCode.trim().length < 4}
                   >
-                    Join <ArrowRight size={16} weight="bold" />
+                    Join <ArrowRight size={15} weight="bold" />
                   </Button>
                 </div>
 
@@ -147,7 +147,7 @@ export function HeroSection() {
                     Have a code? Enter 6 characters to join.
                   </span>
                   {codeError && (
-                    <span className="text-xs font-medium text-rose-400">
+                    <span className="text-xs font-medium text-[var(--destructive)]">
                       {codeError}
                     </span>
                   )}
@@ -155,28 +155,25 @@ export function HeroSection() {
               </form>
             </motion.div>
 
-            {/* Reserved space for Resume Banner */}
-            <div className="min-h-[48px] w-full max-w-lg mt-5">
+            {/* Reserved space for Resume Banner (quiet inline, no layout jump) */}
+            <div className="min-h-[44px] w-full max-w-lg mt-4">
               {savedRoom && !isDismissed && (
                 <motion.div
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 4 }}
-                  className="flex items-center justify-between gap-3 p-3 rounded-xl liquid-glass-surface bg-[var(--surface-1)]/90 border border-[var(--glass-border)] shadow-md"
+                  className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)] text-xs text-[var(--muted-foreground)]"
                 >
-                  <div className="flex items-center gap-2 text-xs">
-                    <ArrowClockwise size={16} className="text-[var(--primary)] shrink-0" weight="bold" />
-                    <span className="text-[var(--foreground)] font-semibold font-mono">
-                      Room {savedRoom.code}
-                    </span>
-                    <span className="text-[var(--muted-foreground)]">
-                      · question {savedRoom.round ?? 4} of {savedRoom.total ?? 10}
+                  <div className="flex items-center gap-2">
+                    <ArrowClockwise size={14} className="text-[var(--primary)] shrink-0" weight="bold" />
+                    <span>
+                      Room <span className="font-semibold text-[var(--foreground)] font-mono">{savedRoom.code}</span> · question {savedRoom.round ?? 4} of {savedRoom.total ?? 10}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 shrink-0">
                     <Link href={`/room/${savedRoom.code}`}>
-                      <Button size="sm" variant="glass" className="h-7 px-3 text-xs font-semibold rounded-lg">
+                      <Button size="sm" variant="outline" className="h-7 px-2.5 text-xs font-semibold">
                         Resume
                       </Button>
                     </Link>
@@ -184,9 +181,9 @@ export function HeroSection() {
                       type="button"
                       onClick={handleDismissResume}
                       aria-label="Dismiss resume prompt"
-                      className="p-1 rounded-md text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                      className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
                     >
-                      <X size={14} weight="bold" />
+                      <X size={13} weight="bold" />
                     </button>
                   </div>
                 </motion.div>
@@ -194,8 +191,8 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Right Column (6 of 12) - LiveRoundPreview Centerpiece */}
-          <div className="lg:col-span-6 w-full">
+          {/* Right Column (7 of 12 = ~55-58%) - Hero Stageshow Centerpiece */}
+          <div className="lg:col-span-7 w-full overflow-hidden lg:overflow-visible">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
