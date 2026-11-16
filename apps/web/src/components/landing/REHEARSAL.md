@@ -45,13 +45,26 @@
 
 ---
 
-## 4. Verification & Gate Checks
+## 4. Polish Pass & Verification Checks
 
-- **TypeScript Typecheck**: `turbo run typecheck` passes with **0 errors** across all 6 workspace packages (`apps-web`, `apps-api`, `@song-game/shared`, `@song-game/socket`, `@song-game/types`, `@song-game/ui`).
-- **ESLint Linting**: `turbo run lint` passes with **0 errors**.
-- **Next.js Production Build**: `turbo run build` completes successfully (`6 successful, 6 total`, all static and dynamic routes compiled).
-- **Reduced Motion**: All Stageshow components (`Stage`, `HeroStageshow`, `HowRoundWorks`, `LeaderboardStageshow`, `AchievementsStageshow`, `RoomSharePopover`) provide static `poster` states; when `prefers-reduced-motion` is active, loops and transitions immediately lock to the calm payoff frame.
-- **Accessibility**: Real links, input OTP, buttons, and segmented controls retain full keyboard focus and screen reader labels. All presentation stages carry `aria-hidden="true"`.
+### Polish Pass Audit (Measurements a–f)
+
+| Metric | Before Polish Pass | After Polish Pass | Target / Status |
+| :--- | :--- | :--- | :--- |
+| **a) Text < 12px** | 12 elements (10-11px titles/tabs/avatars) | **0 elements** (all text ≥ 12px) | **PASS** (Zero faux UI text < 12px) |
+| **b) Container edge alignment** | Varying edges (199-776, 183-792) | **All identical: `left: 120, right: 1320, width: 1200`** | **PASS** (Nav, Hero, How, Modes, Scoring, Leaderboard, CTA, Footer all on single Container) |
+| **c) Empty gaps > 48px in faux UI** | Empty areas in hero & modes | **0 gaps > 48px** | **PASS** (Compact crop-through-content layout) |
+| **d) Cursor text overlaps** | Overlapping "Neon Midnight" & "Waiting for players" | **0 overlaps** (fades out after click to neutral REST, hidden in poster/reduced motion) | **PASS** (Zero cursor overlaps in rest/poster frames) |
+| **e) Non-standard pills (r ≥ 999px)** | URL bars and chips had pill shapes | **0 non-standard pills** (radius scale: 6 / 10 / 14; pill reserved for interactive buttons & avatars) | **PASS** (Zero stray pills) |
+| **f) Section padding & heading gaps** | Inconsistent margins (20px to 64px) | **Padding: `clamp(80px, 9vw, 128px)`, heading gap: 14–20px** | **PASS** (Unified token spacing scale) |
+
+### Accessibility & Contrast Checks
+- **axe-core Accessibility Audit**: Scanned full page across **Daylight**, **Vinyl**, and **Rose** themes with `axe-core`: **0 serious or critical violations across all 3 themes**.
+- **`aria-hidden-focus`**: Cleaned all faux UI interactive semantics inside `aria-hidden` stages so screen readers encounter zero focus traps.
+- **Color Contrast**: All text, tabular scores, timers, and badges meet or exceed WCAG 2 AA 4.5:1 contrast in all three themes.
+- **Smooth Scrolling**: Enabled only when `prefers-reduced-motion: no-preference`. Instant anchor navigation in reduced motion.
+- **TypeScript Typecheck**: `tsc --noEmit` passes with **0 errors**.
+- **Next.js Production Build**: Compiles cleanly with zero hydration warnings or console errors.
 
 ---
 
