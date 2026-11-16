@@ -8,6 +8,7 @@ import {
   type Act,
 } from '../stageshow/kit';
 import { Copy, Check, Users } from '@phosphor-icons/react';
+import { SITE_HOST, SITE_ORIGIN } from '@/lib/site';
 
 interface ShareState {
   copied: boolean;
@@ -90,8 +91,8 @@ export function RoomSharePopover() {
 
             {/* Share / Copy code row with real host */}
             <div className="flex items-center justify-between p-2 px-3 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
-              <span className="text-[13px] font-sans text-[var(--foreground)] tracking-tight truncate mr-2 font-medium">
-                https://songgame.app/room/VR426D
+              <span className="text-[13px] font-sans text-[var(--foreground)] tracking-tight truncate mr-2 font-medium" title={`${SITE_ORIGIN}/room/VR426D`}>
+                {`${SITE_HOST}/room/VR426D`}
               </span>
 
               <span

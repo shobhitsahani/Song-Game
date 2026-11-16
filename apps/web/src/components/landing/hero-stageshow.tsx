@@ -9,6 +9,7 @@ import {
   type Act,
 } from '../stageshow/kit';
 import { Timer, Check, SpeakerHigh } from '@phosphor-icons/react';
+import { SITE_HOST, SITE_ORIGIN } from '@/lib/site';
 import './hero-stageshow.css';
 
 interface HeroState {
@@ -125,7 +126,7 @@ export function HeroStageshow() {
                   />
                   <rect x="0" y="3.3" width="7" height="4.7" rx="1.2" />
                 </svg>
-                <span>https://songgame.app/room/VR426D</span>
+                <span className="truncate">{layout === 'wide' ? `${SITE_ORIGIN}/room/VR426D` : `${SITE_HOST}/room/VR426D`}</span>
               </span>
             }
             urlShape="rounded"

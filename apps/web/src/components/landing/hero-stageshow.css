@@ -31,6 +31,8 @@
   color: var(--muted-foreground);
   font-family: var(--font-sans);
   white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 /* Wide 2-Column Room Layout */

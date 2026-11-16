@@ -16,6 +16,7 @@ import {
 } from '@phosphor-icons/react';
 import { Window } from '../stageshow/kit';
 import { Container } from '@/components/ui/container';
+import { SITE_ORIGIN } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
 interface GameMode {
@@ -161,8 +162,8 @@ export function EightWaysToPlay() {
                 tabs={['SongGame — Setup']}
                 nav
                 url={
-                  <span className="inline-flex items-center gap-1.5 text-[12px] text-[var(--muted-foreground)]">
-                    <span>https://songgame.app/room/create</span>
+                  <span className="inline-flex items-center gap-1.5 text-[12px] text-[var(--muted-foreground)] truncate max-w-full">
+                    <span className="truncate">{`${SITE_ORIGIN}/room/create`}</span>
                   </span>
                 }
                 urlShape="rounded"
