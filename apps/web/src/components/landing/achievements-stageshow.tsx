@@ -3,7 +3,6 @@
 import React from 'react';
 import {
   Stage,
-  Badge,
   Count,
   Roll,
   type Act,
@@ -11,43 +10,41 @@ import {
 import { Trophy } from '@phosphor-icons/react';
 
 interface AchievementUnlockState {
-  revealed: boolean;
+  unlocked: boolean;
   xp: number;
   progress: number;
   levelUp: boolean;
 }
 
 const initial: AchievementUnlockState = {
-  revealed: false,
+  unlocked: false,
   xp: 450,
   progress: 65,
   levelUp: false,
 };
 
 const poster: AchievementUnlockState = {
-  revealed: true,
+  unlocked: true,
   xp: 500,
   progress: 100,
   levelUp: true,
 };
 
 async function script(a: Act<AchievementUnlockState>) {
-  // Opening calm beat
-  await a.wait(700);
+  // Opening beat
+  await a.wait(800);
 
-  // Toast arrives smoothly
-  await a.set({ revealed: true });
-  await a.wait(600);
+  // Trigger unlock event
+  await a.set({ unlocked: true });
+  await a.wait(500);
 
-  // XP fills and level up triggers
+  // XP meter fills to 100% and triggers Level Up
   await a.set({ xp: 500, progress: 100, levelUp: true });
 
-  // Payoff holds for 3.5s
-  await a.wait(3500);
+  // Hold payoff frame for 3.2s
+  await a.wait(3200);
 
-  // Reverse fade exit to loop seam
-  await a.set({ revealed: false });
-  await a.wait(400);
+  // Reset to initial
   await a.set(initial);
   await a.wait(600);
 }
@@ -67,42 +64,55 @@ export function AchievementsStageshow() {
       >
         {(s) => (
           <div
-            className={`w-full h-full rounded-xl bg-[var(--surface-2)] border border-[var(--border)] p-3 shadow-lg flex flex-col justify-between transition-all duration-500 ${
-              s.revealed
-                ? 'opacity-100 translate-y-0 border-[var(--primary)]/50 shadow-[var(--glow)]'
-                : 'opacity-40 -translate-y-1'
+            className={`w-full h-full rounded-[var(--radius-control)] bg-[var(--surface-2)] border p-3 flex flex-col justify-between transition-all duration-300 ${
+              s.unlocked
+                ? 'border-[var(--primary)] shadow-sm'
+                : 'border-[var(--border)]'
             }`}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[var(--primary)]/15 border border-[var(--primary)]/30 flex items-center justify-center text-[var(--primary)] shadow-sm shrink-0">
+                <div
+                  className={`w-8 h-8 rounded-[var(--radius-sm)] flex items-center justify-center transition-colors ${
+                    s.unlocked
+                      ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
+                      : 'bg-[var(--surface-3)] text-[var(--muted-foreground)]'
+                  }`}
+                >
                   <Trophy size={18} weight="fill" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-bold text-[var(--foreground)]">Achievement Unlocked!</span>
-                    <Badge tone="accent" dot>+50 XP</Badge>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-[var(--foreground)]">
+                      {s.unlocked ? 'Achievement Unlocked!' : 'Recent Progress'}
+                    </span>
+                    <span className="text-[11px] font-mono font-semibold text-[var(--primary)]">
+                      +50 XP
+                    </span>
                   </div>
-                  <span className="text-[11px] text-[var(--muted-foreground)]">First Win · Win your first game</span>
+                  <span className="text-[11px] text-[var(--muted-foreground)]">
+                    First Win · Win your first game
+                  </span>
                 </div>
               </div>
 
               <div className="text-right">
-                <span className="text-xs font-mono font-bold text-[var(--primary)]">
-                  <Count value={s.xp} /> <span className="text-[10px] text-[var(--muted-foreground)]">/ 500 XP</span>
+                <span className="text-xs font-mono font-semibold text-[var(--foreground)] tabular-nums">
+                  <Count value={s.xp} />{' '}
+                  <span className="text-[11px] text-[var(--muted-foreground)]">/ 500 XP</span>
                 </span>
               </div>
             </div>
 
             {/* XP progress meter */}
-            <div className="w-full flex items-center gap-2 mt-1">
-              <div className="flex-1 h-2 rounded-full bg-[var(--surface-3)] overflow-hidden">
+            <div className="w-full flex items-center gap-2.5 mt-1">
+              <div className="flex-1 h-1.5 rounded-full bg-[var(--surface-3)] overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-[var(--primary)] to-amber-400 rounded-full transition-all duration-700 ease-out"
+                  className="h-full bg-[var(--primary)] rounded-full transition-all duration-700 ease-out"
                   style={{ width: `${s.progress}%` }}
                 />
               </div>
-              <span className="text-[10px] font-mono font-semibold text-[var(--muted-foreground)]">
+              <span className="text-[11px] font-mono font-semibold text-[var(--muted-foreground)]">
                 <Roll>{s.levelUp ? 'Level 15' : 'Level 14'}</Roll>
               </span>
             </div>

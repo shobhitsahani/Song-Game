@@ -8,7 +8,6 @@ import {
   Count,
   type Act,
 } from '../stageshow/kit';
-import { Crown, Medal } from '@phosphor-icons/react';
 
 type Period = 'alltime' | 'weekly' | 'monthly';
 
@@ -60,26 +59,26 @@ async function script(a: Act<LeaderboardState>) {
   await a.wait(250);
   await a.click();
   await a.set({ period: 'weekly' });
-  await a.wait(2500);
+  await a.wait(2800);
 
   // Switch to Monthly
   await a.move('tab-monthly');
   await a.wait(250);
   await a.click();
   await a.set({ period: 'monthly' });
-  await a.wait(2500);
+  await a.wait(2800);
 
   // Switch back to All Time
   await a.move('tab-alltime');
   await a.wait(250);
   await a.click();
   await a.set({ period: 'alltime' });
-  await a.wait(1200);
+  await a.wait(1400);
 }
 
 const REST = {
-  wide: { x: 340, y: 30 },
-  compact: { x: 260, y: 30 },
+  wide: { x: 380, y: 22 },
+  compact: { x: 260, y: 22 },
 };
 
 export function LeaderboardStageshow() {
@@ -88,7 +87,7 @@ export function LeaderboardStageshow() {
       <Stage<LeaderboardState>
         width={580}
         height={390}
-        compact={{ below: 580, width: 350, height: 420 }}
+        compact={{ below: 580, width: 340, height: 410 }}
         initial={initial}
         poster={poster}
         script={script}
@@ -100,17 +99,19 @@ export function LeaderboardStageshow() {
           const list = LEADERBOARD_DATA[s.period];
           return (
             <Window
-              title="SongGame Leaderboard"
+              title="Global Standings"
               chrome="native"
+              lights="color"
               toolbar={
-                <div className="flex items-center gap-1 bg-[var(--surface-2)] p-0.5 rounded-lg border border-[var(--border)] text-xs">
+                /* Clean Segmented Control Tabs */
+                <div className="flex items-center gap-0.5 bg-[var(--surface-2)] p-0.5 rounded-[var(--radius-control)] border border-[var(--border)] text-xs">
                   <button
                     type="button"
                     data-target="tab-alltime"
-                    className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${
+                    className={`px-2.5 py-1 rounded-[var(--radius-sm)] text-xs font-medium transition-colors ${
                       s.period === 'alltime'
-                        ? 'bg-[var(--surface-1)] text-[var(--foreground)] shadow-sm'
-                        : 'text-[var(--muted-foreground)]'
+                        ? 'bg-[var(--surface-1)] text-[var(--foreground)] font-semibold shadow-xs'
+                        : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
                     }`}
                   >
                     All Time
@@ -118,10 +119,10 @@ export function LeaderboardStageshow() {
                   <button
                     type="button"
                     data-target="tab-weekly"
-                    className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${
+                    className={`px-2.5 py-1 rounded-[var(--radius-sm)] text-xs font-medium transition-colors ${
                       s.period === 'weekly'
-                        ? 'bg-[var(--surface-1)] text-[var(--foreground)] shadow-sm'
-                        : 'text-[var(--muted-foreground)]'
+                        ? 'bg-[var(--surface-1)] text-[var(--foreground)] font-semibold shadow-xs'
+                        : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
                     }`}
                   >
                     Weekly
@@ -129,35 +130,28 @@ export function LeaderboardStageshow() {
                   <button
                     type="button"
                     data-target="tab-monthly"
-                    className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${
+                    className={`px-2.5 py-1 rounded-[var(--radius-sm)] text-xs font-medium transition-colors ${
                       s.period === 'monthly'
-                        ? 'bg-[var(--surface-1)] text-[var(--foreground)] shadow-sm'
-                        : 'text-[var(--muted-foreground)]'
+                        ? 'bg-[var(--surface-1)] text-[var(--foreground)] font-semibold shadow-xs'
+                        : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
                     }`}
                   >
                     Monthly
                   </button>
                 </div>
               }
-              className="w-full h-full bg-[var(--surface-1)] border border-[var(--border)] shadow-md rounded-2xl overflow-hidden"
+              className="w-full h-full bg-[var(--surface-1)] border border-[var(--border)] shadow-sm rounded-[var(--radius-card)] overflow-hidden"
             >
               <div className="p-3 sm:p-4 space-y-2">
                 {list.map((entry) => (
                   <div
                     key={entry.username}
-                    className="flex items-center justify-between p-2.5 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] transition-all duration-300"
+                    className="flex items-center justify-between p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)] transition-all duration-200"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <span className="w-5 text-center font-mono font-bold text-sm text-[var(--muted-foreground)] flex items-center justify-center">
-                        {entry.rank === 1 ? (
-                          <Crown size={16} weight="fill" className="text-amber-400 inline" />
-                        ) : entry.rank === 2 ? (
-                          <Medal size={16} weight="fill" className="text-zinc-300 inline" />
-                        ) : entry.rank === 3 ? (
-                          <Medal size={16} weight="fill" className="text-amber-700 inline" />
-                        ) : (
-                          entry.rank
-                        )}
+                      {/* Consistent tabular rank numerals 1-5 */}
+                      <span className="w-5 text-center font-mono font-bold text-xs sm:text-sm text-[var(--muted-foreground)] tabular-nums">
+                        {entry.rank}
                       </span>
 
                       <Avatar name={entry.initials} size={28} tone="person" />
@@ -166,14 +160,14 @@ export function LeaderboardStageshow() {
                         <div className="text-xs sm:text-sm font-semibold text-[var(--foreground)] truncate">
                           {entry.username}
                         </div>
-                        <div className="text-[11px] text-[var(--muted-foreground)]">
+                        <div className="text-[11px] text-[var(--muted-foreground)] font-mono">
                           Level {entry.level} · {entry.wins} wins
                         </div>
                       </div>
                     </div>
 
                     <div className="text-right">
-                      <div className="font-mono font-bold text-xs sm:text-sm text-[var(--foreground)] tabular-nums">
+                      <div className="font-mono font-semibold text-xs sm:text-sm text-[var(--foreground)] tabular-nums">
                         <Count value={entry.points} format={(n) => `${n.toLocaleString()} pts`} />
                       </div>
                     </div>
