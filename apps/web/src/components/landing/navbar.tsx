@@ -70,7 +70,6 @@ export const Navbar = React.memo(function Navbar() {
   const [displacementUrl, setDisplacementUrl] = useState<string>('');
   const [glassSize, setGlassSize] = useState<{ width: number; height: number }>({ width: 1200, height: 56 });
 
-  const [scrolled, setScrolled] = useState(false);
   const [activeAnchor, setActiveAnchor] = useState<string | null>(null);
   const [joinPopoverOpen, setJoinPopoverOpen] = useState(false);
   const [joinCode, setJoinCode] = useState('');
@@ -127,21 +126,113 @@ export const Navbar = React.memo(function Navbar() {
     }
   }, [glassSize]);
 
-  // 1. Passive scroll listener to raise opacity and add shadow after 8px scroll
+  // 1. Scroll reactivity & pointer-lit rim (passive, rAF-lerped, zero React re-renders)
   useEffect(() => {
-    let ticking = false;
+    let scrollP = 0;
+    let pointerAngle = 0;
+    let currentX = 50;
+    let currentY = 50;
+    let currentOpacity = 0;
+    let targetOpacity = 0;
+    let targetX = 50;
+    let targetY = 50;
+    let targetPointerAngle = 0;
+    let rafId: number | null = null;
+    let isFinePointer = false;
+
+    if (typeof window !== 'undefined') {
+      const isCoarse = window.matchMedia('(pointer: coarse)').matches;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      isFinePointer = !isCoarse && !prefersReducedMotion;
+    }
+
+    const updateProperties = () => {
+      if (!glassRef.current) return;
+      const angle = 135 + scrollP * 25 + pointerAngle;
+      glassRef.current.style.setProperty('--glass-p', scrollP.toFixed(3));
+      glassRef.current.style.setProperty('--light-angle', `${angle.toFixed(1)}deg`);
+      glassRef.current.style.setProperty('--mx', `${currentX.toFixed(1)}px`);
+      glassRef.current.style.setProperty('--my', `${currentY.toFixed(1)}px`);
+      glassRef.current.style.setProperty('--sheen-opacity', currentOpacity.toFixed(3));
+      glassRef.current.dataset.scrolled = scrollP > 0.05 ? 'true' : 'false';
+    };
+
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 8);
-          ticking = false;
-        });
-        ticking = true;
+      const scrollY = window.scrollY || 0;
+      const p = Math.min(1, Math.max(0, scrollY / 140));
+      scrollP = p;
+      if (!rafId) {
+        updateProperties();
       }
     };
+
+    // Lerp loop for pointer sheen & rim light
+    const loop = () => {
+      currentX += (targetX - currentX) * 0.18;
+      currentY += (targetY - currentY) * 0.18;
+      currentOpacity += (targetOpacity - currentOpacity) * 0.18;
+      pointerAngle += (targetPointerAngle - pointerAngle) * 0.18;
+
+      updateProperties();
+
+      const settled =
+        targetOpacity === 0 &&
+        currentOpacity < 0.005 &&
+        Math.abs(pointerAngle) < 0.05;
+
+      if (!settled) {
+        rafId = window.requestAnimationFrame(loop);
+      } else {
+        currentOpacity = 0;
+        pointerAngle = 0;
+        updateProperties();
+        rafId = null;
+      }
+    };
+
+    const startLoop = () => {
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(loop);
+      }
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!isFinePointer || !glassRef.current) return;
+      const rect = glassRef.current.getBoundingClientRect();
+      targetX = e.clientX - rect.left;
+      targetY = e.clientY - rect.top;
+      targetOpacity = 1;
+      const ratio = (targetX / rect.width - 0.5) * 2; // -1 to +1
+      targetPointerAngle = Math.max(-10, Math.min(10, ratio * 10));
+      startLoop();
+    };
+
+    const handlePointerLeave = () => {
+      if (!isFinePointer) return;
+      targetOpacity = 0;
+      targetPointerAngle = 0;
+      startLoop();
+    };
+
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    const el = glassRef.current;
+    if (el && isFinePointer) {
+      el.addEventListener('pointermove', handlePointerMove, { passive: true });
+      el.addEventListener('pointerleave', handlePointerLeave, { passive: true });
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (el && isFinePointer) {
+        el.removeEventListener('pointermove', handlePointerMove);
+        el.removeEventListener('pointerleave', handlePointerLeave);
+      }
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
   }, []);
 
   // 2. IntersectionObserver for anchor links (#how and #modes) - no scroll listeners

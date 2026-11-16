@@ -10,12 +10,16 @@
   box-shadow: var(--glass-shadow);
   isolation: isolate;
   contain: layout style;
-  transition: box-shadow 220ms ease;
+  transition: box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1);
   --glass-p: 0;
   --light-angle: 135deg;
   --mx: 50%;
   --my: 50%;
   --sheen-opacity: 0;
+}
+
+.glass[data-scrolled="true"] {
+  box-shadow: var(--glass-shadow-scrolled, var(--glass-shadow));
 }
 
 /* Entrance transition (once on initial load, skipped in reduced motion) */
