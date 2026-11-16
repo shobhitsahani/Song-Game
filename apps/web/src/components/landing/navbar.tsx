@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Play, ArrowRight, List, X, Check } from '@phosphor-icons/react';
+import { Play, ArrowRight, List, X } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -17,7 +17,7 @@ import {
   REGEXP_ONLY_DIGITS_AND_CHARS,
 } from '@/components/ui/input-otp';
 import { ThemeMenu } from './theme-menu';
-import { useTheme } from '@/components/glass/theme-switcher';
+import { MobileNavPanel } from './mobile-nav';
 import { cn } from '@/lib/utils';
 
 export function NavLogoMark({ className }: { className?: string }) {
@@ -59,12 +59,14 @@ const CENTER_LINKS: NavLinkItem[] = [
 export const Navbar = React.memo(function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
 
   const [scrolled, setScrolled] = useState(false);
   const [activeAnchor, setActiveAnchor] = useState<string | null>(null);
   const [joinPopoverOpen, setJoinPopoverOpen] = useState(false);
   const [joinCode, setJoinCode] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
 
   // 1. Passive scroll listener to raise opacity and add shadow after 8px scroll
   useEffect(() => {
@@ -128,13 +130,12 @@ export const Navbar = React.memo(function Navbar() {
       <nav
         aria-label="Primary"
         className={cn(
-          'max-w-[1200px] w-full mx-auto h-14 p-2 rounded-full grid grid-cols-[1fr_auto_1fr] items-center pointer-events-auto transition-[background-color,border-color,box-shadow,opacity] duration-200 border',
+          'max-w-[1200px] w-full mx-auto h-14 p-2 rounded-full grid grid-cols-[1fr_auto] min-[900px]:grid-cols-[1fr_auto_1fr] items-center pointer-events-auto transition-[background-color,border-color,box-shadow,opacity] duration-200 border',
           scrolled
             ? 'bg-[var(--surface-1)]/95 shadow-md border-[var(--border)] backdrop-blur-md'
             : 'bg-[var(--surface-1)]/80 shadow-xs border-[var(--border)]/70 backdrop-blur-md'
         )}
         style={{
-          // Solid-color fallback when backdrop-filter is not supported
           backgroundColor: 'var(--nav-glass-bg)',
           borderColor: 'var(--nav-glass-border)',
           boxShadow: scrolled
@@ -156,8 +157,8 @@ export const Navbar = React.memo(function Navbar() {
           </Link>
         </div>
 
-        {/* Center: Links (Desktop) - 15px, medium weight, 36px capsule hover/active */}
-        <div className="justify-self-center hidden md:flex items-center gap-1">
+        {/* Center: Links (Desktop) - 15px, medium weight, 36px capsule hover/active (collapses below 900px) */}
+        <div className="justify-self-center hidden min-[900px]:flex items-center gap-1">
           {CENTER_LINKS.map((link) => {
             const isRouteActive = pathname === link.href;
             const isAnchorActive = pathname === '/' && link.anchorId === activeAnchor;
@@ -181,18 +182,20 @@ export const Navbar = React.memo(function Navbar() {
           })}
         </div>
 
-        {/* Right: Actions - Theme button + Join room + Play */}
+        {/* Right: Actions - Theme button + Join room + Play + Mobile menu button */}
         <div className="justify-self-end flex items-center gap-2 pr-1">
-          {/* Theme button & popover menu */}
-          <ThemeMenu />
+          {/* Theme button & popover menu (visible at 900px and up) */}
+          <div className="hidden min-[900px]:inline-flex">
+            <ThemeMenu />
+          </div>
 
-          {/* Join room: Popover with InputOTP */}
+          {/* Join room: Popover with InputOTP (visible at 1024px and up; in menu below 1024px) */}
           <Popover open={joinPopoverOpen} onOpenChange={setJoinPopoverOpen}>
             <PopoverTrigger asChild>
               <Button
                 variant="ghost"
                 size="sm"
-                className="hidden sm:inline-flex h-10 px-3.5 text-[15px] font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full"
+                className="hidden lg:inline-flex h-10 px-3.5 text-[15px] font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full"
               >
                 Join room
               </Button>
@@ -248,8 +251,42 @@ export const Navbar = React.memo(function Navbar() {
               <span>Play</span>
             </Button>
           </Link>
+
+          {/* Mobile menu toggle (visible below 1024px) */}
+          <div className="inline-flex lg:hidden">
+            <button
+              ref={mobileToggleRef}
+              type="button"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-nav-panel"
+              aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              className={cn(
+                'w-10 h-10 min-w-[40px] rounded-full flex items-center justify-center border transition-all duration-150 outline-none select-none cursor-pointer relative',
+                'focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2',
+                mobileMenuOpen
+                  ? 'bg-[var(--surface-2)] text-[var(--foreground)] border-[var(--border)] shadow-xs'
+                  : 'bg-[var(--surface-1)] text-[var(--foreground)] border-[var(--border)] hover:bg-[var(--surface-2)]'
+              )}
+            >
+              {/* 44px hit area */}
+              <span className="absolute -inset-1 rounded-full pointer-events-auto" aria-hidden="true" />
+              {mobileMenuOpen ? (
+                <X size={18} weight="bold" />
+              ) : (
+                <List size={18} weight="bold" />
+              )}
+            </button>
+          </div>
         </div>
       </nav>
+
+      {/* Mobile navigation panel anchored under the bar */}
+      <MobileNavPanel
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        toggleButtonRef={mobileToggleRef}
+      />
     </header>
   );
 });
