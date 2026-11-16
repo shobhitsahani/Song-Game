@@ -58,91 +58,85 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-[92dvh] flex items-center pt-24 pb-16 lg:pt-28 lg:pb-24 overflow-hidden">
+    <section className="relative min-h-[90dvh] flex items-center pt-[132px] pb-[clamp(80px,9vw,128px)] overflow-hidden">
       {/* Background MeshGradient shader - pinned @paper-design/shaders-react */}
       <HeroShaderBackground />
 
       <Container className="relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
-          {/* Left Column (5 of 12 = ~42-45%) */}
-          <div className="lg:col-span-5 flex flex-col items-start text-left justify-center">
-            {/* Headline: max 3 lines, clamp(2.5rem, 4.5vw, 4.25rem), weight 600 */}
-            <h1 className="text-[clamp(2.5rem,4.5vw,4.25rem)] font-semibold font-display tracking-[-0.02em] text-[var(--foreground)] leading-[1.05] mb-5 text-balance">
-              Name that track before the needle drops.
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Left Column (5 of 12 = ~42-45%) - Width 480-520px */}
+          <div className="lg:col-span-5 w-full max-w-[500px] flex flex-col items-start text-left justify-center">
+            {/* Headline: max 3 lines, clamp(2.5rem, 4.6vw, 4rem), line-height 1.05 */}
+            <h1 className="text-[clamp(2.5rem,4.6vw,4rem)] font-semibold font-display tracking-[-0.02em] text-[var(--foreground)] leading-[1.05] mb-5 text-balance">
+              Name that track before the&nbsp;needle&nbsp;drops.
             </h1>
 
-            {/* Subhead: max 20 words, body font, 17-18px */}
-            <p className="text-base sm:text-lg text-[var(--muted-foreground)] max-w-lg mb-8 font-normal leading-relaxed text-pretty">
+            {/* Subhead: max 44ch, body font, 17-18px */}
+            <p className="text-[17px] sm:text-[18px] text-[var(--muted-foreground)] max-w-[44ch] mb-7 font-normal leading-relaxed text-pretty">
               Real-time music trivia in your browser. Hear 15 seconds, lock in first, and outscore friends in live rooms.
             </p>
 
-            {/* Primary Actions: Play + InputOTP Join Room */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full max-w-xl">
-              <Link href="/room/create" className="shrink-0">
+            {/* Play button alone on its row */}
+            <div className="mb-6">
+              <Link href="/room/create">
                 <Button
-                  size="lg"
+                  size="md"
                   variant="primary"
-                  className="w-full sm:w-auto h-12 px-7 text-base font-semibold shadow-md"
+                  className="h-11 px-7 text-base font-semibold shadow-xs"
                 >
                   <Play size={18} weight="fill" /> Play
                 </Button>
               </Link>
+            </div>
 
-              {/* 6-slot InputOTP Join Form */}
-              <form onSubmit={handleJoin} className="flex-1 flex flex-col gap-1.5 min-w-0">
-                <div className="flex items-center gap-2">
-                  <div className="flex flex-col">
-                    <span className="text-xs font-medium text-[var(--muted-foreground)] mb-1 sm:hidden">
-                      Have a code?
-                    </span>
-                    <InputOTP
-                      maxLength={6}
-                      pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
-                      inputMode="text"
-                      aria-label="Enter 6-character room code"
-                      value={roomCode}
-                      onChange={(val) => {
-                        setRoomCode(val.toUpperCase());
-                        if (codeError) setCodeError(null);
-                      }}
-                      onComplete={handleJoin}
-                    >
-                      <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                        <InputOTPSlot index={5} />
-                      </InputOTPGroup>
-                    </InputOTP>
-                  </div>
+            {/* Quiet row: Have a code? label + 6-slot InputOTP Join Form */}
+            <div className="w-full flex flex-col gap-2">
+              <span className="text-xs font-medium text-[var(--muted-foreground)]">
+                Have a code?
+              </span>
+              <form onSubmit={handleJoin} className="flex items-center gap-2">
+                <InputOTP
+                  maxLength={6}
+                  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                  inputMode="text"
+                  autoComplete="off"
+                  aria-label="Room code, 6 characters"
+                  value={roomCode}
+                  onChange={(val) => {
+                    setRoomCode(val.toUpperCase());
+                    if (codeError) setCodeError(null);
+                  }}
+                  onComplete={handleJoin}
+                >
+                  <InputOTPGroup className="gap-1.5">
+                    <InputOTPSlot index={0} className="w-10 h-10 sm:w-11 sm:h-11 rounded-[10px] text-[20px] font-mono tabular-nums font-semibold" />
+                    <InputOTPSlot index={1} className="w-10 h-10 sm:w-11 sm:h-11 rounded-[10px] text-[20px] font-mono tabular-nums font-semibold" />
+                    <InputOTPSlot index={2} className="w-10 h-10 sm:w-11 sm:h-11 rounded-[10px] text-[20px] font-mono tabular-nums font-semibold" />
+                    <InputOTPSlot index={3} className="w-10 h-10 sm:w-11 sm:h-11 rounded-[10px] text-[20px] font-mono tabular-nums font-semibold" />
+                    <InputOTPSlot index={4} className="w-10 h-10 sm:w-11 sm:h-11 rounded-[10px] text-[20px] font-mono tabular-nums font-semibold" />
+                    <InputOTPSlot index={5} className="w-10 h-10 sm:w-11 sm:h-11 rounded-[10px] text-[20px] font-mono tabular-nums font-semibold" />
+                  </InputOTPGroup>
+                </InputOTP>
 
-                  <Button
-                    type="submit"
-                    variant="secondary"
-                    className="h-11 sm:h-12 px-4 text-sm font-semibold shrink-0"
-                    disabled={roomCode.trim().length < 4}
-                  >
-                    Join <ArrowRight size={15} weight="bold" />
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="hidden sm:inline-block text-xs font-medium text-[var(--muted-foreground)]">
-                    Have a code? Enter 6 characters to join.
-                  </span>
-                  {codeError && (
-                    <span className="text-xs font-medium text-[var(--destructive)]">
-                      {codeError}
-                    </span>
-                  )}
-                </div>
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  size="sm"
+                  className="h-10 sm:h-11 px-4 text-sm font-semibold shrink-0"
+                  disabled={roomCode.trim().length !== 6}
+                >
+                  Join <ArrowRight size={15} weight="bold" />
+                </Button>
               </form>
+              {codeError && (
+                <span className="text-xs font-medium text-[var(--destructive)]">
+                  {codeError}
+                </span>
+              )}
             </div>
 
             {/* Reserved space for Resume Banner (quiet inline, no layout jump) */}
-            <div className="min-h-[44px] w-full max-w-lg mt-4">
+            <div className="min-h-[48px] w-full mt-4">
               {savedRoom && !isDismissed && (
                 <motion.div
                   initial={{ opacity: 0, y: 6 }}
@@ -150,16 +144,16 @@ export function HeroSection() {
                   exit={{ opacity: 0, y: 4 }}
                   className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)] text-xs text-[var(--muted-foreground)]"
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 min-w-0 truncate">
                     <ArrowClockwise size={14} className="text-[var(--primary)] shrink-0" weight="bold" />
-                    <span>
+                    <span className="truncate">
                       Room <span className="font-semibold text-[var(--foreground)] font-mono">{savedRoom.code}</span> · question {savedRoom.round ?? 4} of {savedRoom.total ?? 10}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
                     <Link href={`/room/${savedRoom.code}`}>
-                      <Button size="sm" variant="outline" className="h-7 px-2.5 text-xs font-semibold">
+                      <Button size="sm" variant="secondary" className="h-7 px-3 text-xs font-semibold">
                         Resume
                       </Button>
                     </Link>
@@ -169,7 +163,7 @@ export function HeroSection() {
                       aria-label="Dismiss resume prompt"
                       className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
                     >
-                      <X size={13} weight="bold" />
+                      <X size={14} weight="bold" />
                     </button>
                   </div>
                 </motion.div>
