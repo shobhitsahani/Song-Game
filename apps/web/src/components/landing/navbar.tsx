@@ -16,7 +16,8 @@ import {
   InputOTPSlot,
   REGEXP_ONLY_DIGITS_AND_CHARS,
 } from '@/components/ui/input-otp';
-import { useTheme, type Theme } from '@/components/glass/theme-switcher';
+import { ThemeMenu } from './theme-menu';
+import { useTheme } from '@/components/glass/theme-switcher';
 import { cn } from '@/lib/utils';
 
 export function NavLogoMark({ className }: { className?: string }) {
@@ -182,6 +183,9 @@ export const Navbar = React.memo(function Navbar() {
 
         {/* Right: Actions - Theme button + Join room + Play */}
         <div className="justify-self-end flex items-center gap-2 pr-1">
+          {/* Theme button & popover menu */}
+          <ThemeMenu />
+
           {/* Join room: Popover with InputOTP */}
           <Popover open={joinPopoverOpen} onOpenChange={setJoinPopoverOpen}>
             <PopoverTrigger asChild>
