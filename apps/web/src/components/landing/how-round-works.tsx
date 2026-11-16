@@ -42,7 +42,7 @@ export function HowRoundWorks() {
           <p className="text-sm text-[var(--muted-foreground)] leading-relaxed min-h-[40px]">
             A 15-second snippet streams to everyone in the room at the same moment.
           </p>
-          <div className="mt-2 w-full rounded-[var(--radius-card)] overflow-hidden border border-[var(--border)] bg-[var(--surface-1)] shadow-sm">
+          <div className="mt-2 w-full">
             <HowRoundWorksTile1 />
           </div>
         </div>
@@ -60,7 +60,7 @@ export function HowRoundWorks() {
           <p className="text-sm text-[var(--muted-foreground)] leading-relaxed min-h-[40px]">
             Four choices. Tap your guess before the timer runs out. Faster answers score higher.
           </p>
-          <div className="mt-2 w-full rounded-[var(--radius-card)] overflow-hidden border border-[var(--border)] bg-[var(--surface-1)] shadow-sm">
+          <div className="mt-2 w-full">
             <HowRoundWorksTile2 />
           </div>
         </div>
@@ -78,7 +78,7 @@ export function HowRoundWorks() {
           <p className="text-sm text-[var(--muted-foreground)] leading-relaxed min-h-[40px]">
             Scores calculate on accuracy and speed. Standings update immediately after each track.
           </p>
-          <div className="mt-2 w-full rounded-[var(--radius-card)] overflow-hidden border border-[var(--border)] bg-[var(--surface-1)] shadow-sm">
+          <div className="mt-2 w-full">
             <HowRoundWorksTile3 />
           </div>
         </div>
