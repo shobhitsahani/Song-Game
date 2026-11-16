@@ -9,7 +9,7 @@ import {
 
 export function HowRoundWorks() {
   return (
-    <section className="relative py-16 sm:py-24 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="how" className="relative py-16 sm:py-24 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-[88px]">
       {/* Section heading: Fraunces display font, quiet editorial subtitle */}
       <div className="mb-12 text-left">
         <h2 className="text-[clamp(28px,3.2vw,42px)] font-semibold font-display tracking-[-0.02em] text-[var(--foreground)]">

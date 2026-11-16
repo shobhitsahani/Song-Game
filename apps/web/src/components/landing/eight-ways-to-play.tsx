@@ -149,7 +149,7 @@ export function EightWaysToPlay() {
   const ActiveIcon = activeMode.icon;
 
   return (
-    <section className="relative py-16 sm:py-24 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="modes" className="relative py-16 sm:py-24 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-[88px]">
       {/* Section heading */}
       <div className="mb-12 text-left">
         <h2 className="text-[clamp(28px,3.2vw,42px)] font-semibold font-display tracking-[-0.02em] text-[var(--foreground)]">

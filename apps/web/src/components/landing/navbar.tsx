@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Play, Trophy, Star, List, ArrowRight } from '@phosphor-icons/react';
-import { Logo } from '@/components/shared/logo';
+import { Play, ArrowRight, List, X, Check } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -12,33 +11,107 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
   REGEXP_ONLY_DIGITS_AND_CHARS,
 } from '@/components/ui/input-otp';
-import { ThemeSwitcher } from '@/components/glass/theme-switcher';
+import { useTheme, type Theme } from '@/components/glass/theme-switcher';
 import { cn } from '@/lib/utils';
 
-const NAV_LINKS = [
-  { href: '/room/create', label: 'Play', icon: Play },
-  { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
-  { href: '/achievements', label: 'Achievements', icon: Star },
+export function NavLogoMark({ className }: { className?: string }) {
+  return (
+    <svg
+      width="26"
+      height="26"
+      viewBox="0 0 28 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn('shrink-0 text-[var(--primary)]', className)}
+      aria-hidden="true"
+    >
+      {/* Outer vinyl rim */}
+      <circle cx="14" cy="14" r="12.5" stroke="currentColor" strokeWidth="1.75" />
+      {/* Subtle audio groove */}
+      <circle cx="14" cy="14" r="8.5" stroke="currentColor" strokeWidth="1" strokeDasharray="3 2" opacity="0.6" />
+      {/* Dynamic 3-bar equalizer at vinyl center */}
+      <line x1="11" y1="12" x2="11" y2="16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <line x1="14" y1="9" x2="14" y2="19" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      <line x1="17" y1="11" x2="17" y2="17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+interface NavLinkItem {
+  href: string;
+  label: string;
+  anchorId?: string;
+}
+
+const CENTER_LINKS: NavLinkItem[] = [
+  { href: '/#how', label: 'How it works', anchorId: 'how' },
+  { href: '/#modes', label: 'Modes', anchorId: 'modes' },
+  { href: '/leaderboard', label: 'Leaderboard' },
+  { href: '/achievements', label: 'Achievements' },
 ];
 
 export const Navbar = React.memo(function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  const [scrolled, setScrolled] = useState(false);
+  const [activeAnchor, setActiveAnchor] = useState<string | null>(null);
   const [joinPopoverOpen, setJoinPopoverOpen] = useState(false);
   const [joinCode, setJoinCode] = useState('');
+
+  // 1. Passive scroll listener to raise opacity and add shadow after 8px scroll
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 8);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // 2. IntersectionObserver for anchor links (#how and #modes) - no scroll listeners
+  useEffect(() => {
+    if (pathname !== '/') {
+      setActiveAnchor(null);
+      return;
+    }
+
+    const sections = ['how', 'modes']
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveAnchor(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: [0, 0.25],
+      }
+    );
+
+    sections.forEach((sec) => observer.observe(sec));
+    return () => observer.disconnect();
+  }, [pathname]);
 
   const handleJoinSubmit = () => {
     const trimmed = joinCode.trim().toUpperCase();
@@ -50,45 +123,73 @@ export const Navbar = React.memo(function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[var(--border)] bg-[var(--background)]/90 backdrop-blur-md">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Left: wordmark */}
-        <div className="flex items-center gap-8">
-          <Logo size="sm" />
-
-          {/* Center / Left Navigation (Desktop) - 15px clean text */}
-          <nav
-            aria-label="Main Navigation"
-            className="hidden md:flex items-center gap-1"
+    <header className="sticky top-3 sm:top-4 z-40 w-full px-4 sm:px-6 lg:px-8 pointer-events-none">
+      <nav
+        aria-label="Primary"
+        className={cn(
+          'max-w-[1200px] w-full mx-auto h-14 p-2 rounded-full grid grid-cols-[1fr_auto_1fr] items-center pointer-events-auto transition-[background-color,border-color,box-shadow,opacity] duration-200 border',
+          scrolled
+            ? 'bg-[var(--surface-1)]/95 shadow-md border-[var(--border)] backdrop-blur-md'
+            : 'bg-[var(--surface-1)]/80 shadow-xs border-[var(--border)]/70 backdrop-blur-md'
+        )}
+        style={{
+          // Solid-color fallback when backdrop-filter is not supported
+          backgroundColor: 'var(--nav-glass-bg)',
+          borderColor: 'var(--nav-glass-border)',
+          boxShadow: scrolled
+            ? '0 8px 30px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.05)'
+            : 'var(--nav-glass-shadow)',
+        }}
+      >
+        {/* Left: Brand - 24-28px custom mark + 1-color display wordmark */}
+        <div className="justify-self-start flex items-center pl-2">
+          <Link
+            href="/"
+            aria-label="SongGame home"
+            className="group inline-flex items-center gap-2.5 select-none outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 rounded-full"
           >
-            {NAV_LINKS.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    'px-3.5 py-1.5 rounded-[var(--radius-control)] text-[15px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]',
-                    isActive
-                      ? 'text-[var(--foreground)] font-semibold bg-[var(--surface-2)]'
-                      : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-1)]'
-                  )}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
+            <NavLogoMark />
+            <span className="font-display font-semibold text-[17px] tracking-[-0.01em] text-[var(--foreground)]">
+              SongGame
+            </span>
+          </Link>
         </div>
 
-        {/* Right: ThemeSwitcher + Join room popover + Play button (Desktop) */}
-        <div className="hidden md:flex items-center gap-3">
-          <ThemeSwitcher />
+        {/* Center: Links (Desktop) - 15px, medium weight, 36px capsule hover/active */}
+        <div className="justify-self-center hidden md:flex items-center gap-1">
+          {CENTER_LINKS.map((link) => {
+            const isRouteActive = pathname === link.href;
+            const isAnchorActive = pathname === '/' && link.anchorId === activeAnchor;
+            const isActive = isRouteActive || isAnchorActive;
 
-          {/* Join room: popover with InputOTP */}
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? 'page' : undefined}
+                className={cn(
+                  'h-9 px-3.5 rounded-full text-[15px] font-medium transition-colors inline-flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2',
+                  isActive
+                    ? 'text-[var(--foreground)] font-semibold bg-[var(--surface-2)] shadow-xs'
+                    : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]/60'
+                )}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Right: Actions - Theme button + Join room + Play */}
+        <div className="justify-self-end flex items-center gap-2 pr-1">
+          {/* Join room: Popover with InputOTP */}
           <Popover open={joinPopoverOpen} onOpenChange={setJoinPopoverOpen}>
             <PopoverTrigger asChild>
-              <Button variant="ghost" size="sm" className="font-medium text-[14px]">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hidden sm:inline-flex h-10 px-3.5 text-[15px] font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full"
+              >
                 Join room
               </Button>
             </PopoverTrigger>
@@ -123,7 +224,7 @@ export const Navbar = React.memo(function Navbar() {
               <Button
                 variant="primary"
                 size="sm"
-                className="w-full font-semibold"
+                className="w-full font-semibold h-10 rounded-full"
                 disabled={joinCode.length < 4}
                 onClick={handleJoinSubmit}
               >
@@ -132,95 +233,19 @@ export const Navbar = React.memo(function Navbar() {
             </PopoverContent>
           </Popover>
 
-          {/* Play: Primary button */}
-          <Link href="/room/create">
-            <Button variant="primary" size="sm" className="gap-1.5 font-semibold text-[14px]">
-              <Play size={13} weight="fill" />
-              <span>Play</span>
-            </Button>
-          </Link>
-        </div>
-
-        {/* Mobile Nav: Play + Hamburger Sheet */}
-        <div className="md:hidden flex items-center gap-2">
-          <Link href="/room/create">
-            <Button variant="primary" size="sm" className="h-9 px-3 text-xs gap-1">
-              <Play size={12} weight="fill" />
-              <span>Play</span>
-            </Button>
-          </Link>
-
-          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="w-9 h-9"
-                aria-label="Open navigation menu"
-              >
-                <List size={18} weight="bold" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-72 p-6 flex flex-col justify-between border-l border-[var(--border)] bg-[var(--card)]"
+          {/* Play: Primary button, 40px, fully rounded, flat accent fill */}
+          <Link href="/room/create" className="shrink-0">
+            <Button
+              variant="primary"
+              size="sm"
+              className="h-10 px-4 text-[15px] font-semibold gap-1.5 rounded-full"
             >
-              <div>
-                <SheetHeader className="text-left mb-6">
-                  <SheetTitle>
-                    <Logo size="sm" />
-                  </SheetTitle>
-                </SheetHeader>
-
-                {/* Navigation links */}
-                <div className="flex flex-col gap-1.5">
-                  {NAV_LINKS.map((link) => {
-                    const Icon = link.icon;
-                    const isActive = pathname === link.href;
-                    return (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={cn(
-                          'flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-control)] text-sm font-medium transition-colors',
-                          isActive
-                            ? 'bg-[var(--surface-2)] text-[var(--foreground)] font-semibold'
-                            : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-1)]'
-                        )}
-                      >
-                        <Icon size={18} weight={isActive ? 'fill' : 'regular'} />
-                        <span>{link.label}</span>
-                      </Link>
-                    );
-                  })}
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setJoinPopoverOpen(true);
-                    }}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-control)] text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-1)] transition-colors text-left"
-                  >
-                    <ArrowRight size={18} weight="bold" />
-                    <span>Join room</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Theme swatches in sheet */}
-              <div className="pt-6 border-t border-[var(--border)]">
-                <span className="text-xs font-mono font-medium text-[var(--muted-foreground)] uppercase tracking-wider block mb-3">
-                  Theme
-                </span>
-                <ThemeSwitcher className="w-full justify-between" />
-              </div>
-            </SheetContent>
-          </Sheet>
+              <Play size={14} weight="fill" />
+              <span>Play</span>
+            </Button>
+          </Link>
         </div>
-      </div>
+      </nav>
     </header>
   );
 });
-
