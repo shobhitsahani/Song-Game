@@ -8,6 +8,7 @@ import {
   Count,
   type Act,
 } from '../stageshow/kit';
+import { cn } from '@/lib/utils';
 
 type Period = 'alltime' | 'weekly' | 'monthly';
 
@@ -51,6 +52,11 @@ const LEADERBOARD_DATA: Record<Period, Entry[]> = {
 const initial: LeaderboardState = { period: 'alltime' };
 const poster: LeaderboardState = { period: 'weekly' };
 
+const REST = {
+  wide: { x: 550, y: 370 },
+  compact: { x: 310, y: 390 },
+};
+
 async function script(a: Act<LeaderboardState>) {
   await a.wait(900);
 
@@ -73,13 +79,12 @@ async function script(a: Act<LeaderboardState>) {
   await a.wait(250);
   await a.click();
   await a.set({ period: 'alltime' });
-  await a.wait(1400);
-}
+  await a.wait(200);
 
-const REST = {
-  wide: { x: 530, y: 360 },
-  compact: { x: 310, y: 380 },
-};
+  // Return cursor to REST
+  await a.move(REST.wide);
+  await a.wait(1200);
+}
 
 export function LeaderboardStageshow() {
   return (
@@ -92,7 +97,7 @@ export function LeaderboardStageshow() {
         poster={poster}
         script={script}
         play="loop"
-        cursor={{ at: REST, style: 'arrow', ripple: true }}
+        cursor={{ at: REST, style: 'arrow', ripple: true, idle: 600 }}
         className="look-songgame"
       >
         {(s) => {
@@ -103,70 +108,87 @@ export function LeaderboardStageshow() {
               chrome="native"
               lights="color"
               toolbar={
-                /* Clean Segmented Control Tabs */
-                <div className="ss-seg-tabs">
+                /* Clean Segmented Control Tabs (32px high minimum) */
+                <div className="ss-seg-tabs" role="tablist" aria-label="Leaderboard timeframe">
                   <span
-                    role="button"
+                    role="tab"
                     tabIndex={0}
+                    aria-selected={s.period === 'alltime'}
                     data-target="tab-alltime"
                     data-active={s.period === 'alltime' ? 'true' : undefined}
-                    className="ss-seg-tab"
+                    className="ss-seg-tab min-h-[32px] flex items-center justify-center text-[13px] font-medium"
                   >
                     All Time
                   </span>
                   <span
-                    role="button"
+                    role="tab"
                     tabIndex={0}
+                    aria-selected={s.period === 'weekly'}
                     data-target="tab-weekly"
                     data-active={s.period === 'weekly' ? 'true' : undefined}
-                    className="ss-seg-tab"
+                    className="ss-seg-tab min-h-[32px] flex items-center justify-center text-[13px] font-medium"
                   >
                     Weekly
                   </span>
                   <span
-                    role="button"
+                    role="tab"
                     tabIndex={0}
+                    aria-selected={s.period === 'monthly'}
                     data-target="tab-monthly"
                     data-active={s.period === 'monthly' ? 'true' : undefined}
-                    className="ss-seg-tab"
+                    className="ss-seg-tab min-h-[32px] flex items-center justify-center text-[13px] font-medium"
                   >
                     Monthly
                   </span>
                 </div>
               }
-              className="w-full h-full bg-[var(--surface-1)] border border-[var(--border)] shadow-sm rounded-[var(--radius-card)] overflow-hidden"
+              className="w-full h-full bg-[var(--surface-1)] border border-[var(--border)] shadow-sm rounded-[var(--radius-card)] overflow-hidden flex flex-col justify-between"
             >
-              <div className="p-3 sm:p-4 space-y-2">
+              {/* Hairline dividers only, no per-row gray boxes */}
+              <div className="p-3 sm:p-4 flex flex-col divide-y divide-[var(--border)]">
                 {list.map((entry) => (
                   <div
                     key={entry.username}
-                    className="flex items-center justify-between p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)] transition-all duration-200"
+                    className="flex items-center justify-between py-2.5 px-2 transition-colors first:pt-1 last:pb-1"
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       {/* Consistent tabular rank numerals 1-5 */}
-                      <span className="w-5 text-center font-mono font-bold text-xs sm:text-sm text-[var(--muted-foreground)] tabular-nums">
+                      <span
+                        className={cn(
+                          'w-6 text-center font-mono text-[13px] sm:text-[14px] tabular-nums',
+                          entry.rank <= 3
+                            ? 'font-bold text-[var(--foreground)]'
+                            : 'font-medium text-[var(--muted-foreground)]'
+                        )}
+                      >
                         {entry.rank}
                       </span>
 
                       <Avatar name={entry.initials} size={28} tone="person" />
 
                       <div className="min-w-0">
-                        <div className="text-xs sm:text-sm font-semibold text-[var(--foreground)] truncate">
+                        <div className="text-[14px] font-semibold text-[var(--foreground)] truncate">
                           {entry.username}
                         </div>
-                        <div className="text-[11px] text-[var(--muted-foreground)] font-mono">
+                        <div className="text-[12px] text-[var(--muted-foreground)] font-mono">
                           Level {entry.level} · {entry.wins} wins
                         </div>
                       </div>
                     </div>
 
                     <div className="text-right">
-                      <div className="font-mono font-semibold text-xs sm:text-sm text-[var(--foreground)] tabular-nums">
+                      <div className="font-mono font-bold text-[13px] sm:text-[14px] text-[var(--foreground)] tabular-nums">
                         <Count value={entry.points} format={(n) => `${n.toLocaleString()} pts`} />
                       </div>
                     </div>
                   </div>
                 ))}
+              </div>
+
+              {/* Caption inside the window footer */}
+              <div className="p-2.5 px-4 bg-[var(--surface-2)] border-t border-[var(--border)] text-[12px] font-mono text-[var(--muted-foreground)] flex items-center justify-between">
+                <span>Example standings</span>
+                <span>Scores reset on weekly cycle</span>
               </div>
             </Window>
           );
