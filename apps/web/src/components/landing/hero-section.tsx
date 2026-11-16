@@ -172,7 +172,7 @@ export function HeroSection() {
           </div>
 
           {/* Right Column (7 of 12 = ~55-58%) - Hero Stageshow Centerpiece */}
-          <div className="lg:col-span-7 w-full overflow-hidden lg:overflow-visible">
+          <div className="lg:col-span-7 w-full overflow-hidden xl:overflow-visible xl:-mr-[max(0px,calc((100vw-1200px)/2))]">
             <HeroStageshow />
           </div>
         </div>
