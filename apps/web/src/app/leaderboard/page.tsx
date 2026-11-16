@@ -41,7 +41,7 @@ export default function LeaderboardPage() {
     return (
       <>
         <Navbar />
-        <main className="min-h-screen pt-28 pb-28 px-4 max-w-4xl mx-auto">
+        <main id="main-content" className="min-h-screen pt-28 pb-28 px-4 max-w-4xl mx-auto">
           <Skeleton className="h-10 w-56 mb-8 rounded-2xl" />
           <div className="space-y-3">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -56,7 +56,7 @@ export default function LeaderboardPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pb-28 pt-28 px-4 max-w-4xl mx-auto">
+      <main id="main-content" className="min-h-screen pb-28 pt-28 px-4 max-w-4xl mx-auto">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
           {/* Sticky Header with Filter Pills */}
           <div className="sticky top-20 z-30 py-3 bg-[var(--background)]/85 backdrop-blur-xl -mx-4 px-4 sm:mx-0 sm:px-0 sm:bg-transparent sm:backdrop-blur-none border-b border-[var(--border)] sm:border-0 flex flex-wrap items-center justify-between gap-4">

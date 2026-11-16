@@ -189,7 +189,7 @@ export default function CreateRoomPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen flex items-center justify-center p-4 pt-24 pb-32">
+      <main id="main-content" className="min-h-screen flex items-center justify-center p-4 pt-28 pb-32">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}

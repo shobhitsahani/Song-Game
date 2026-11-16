@@ -11,7 +11,7 @@ export function FinalCTA() {
   const [showJoinModal, setShowJoinModal] = useState(false);
 
   return (
-    <section className="relative py-20 sm:py-28 border-t border-[var(--border)] bg-[var(--surface-1)]/40">
+    <section className="relative py-20 sm:py-28 border-t border-[var(--border)] bg-[var(--surface-1)]/40 scroll-mt-[88px]">
       <div className="max-w-[760px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl sm:text-5xl font-semibold font-display tracking-[-0.02em] text-[var(--foreground)] mb-4 text-balance">
           Ready to test your ear against friends?

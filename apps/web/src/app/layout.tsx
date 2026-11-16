@@ -102,7 +102,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <AmbientBackground />
         <OfflineNotice />
         <Providers>
-          <div id="main-content" tabIndex={-1} className="outline-none">
+          <div className="outline-none">
             {children}
           </div>
         </Providers>

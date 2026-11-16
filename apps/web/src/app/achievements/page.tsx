@@ -56,7 +56,7 @@ export default function AchievementsPage() {
     return (
       <>
         <Navbar />
-        <main className="min-h-screen pt-28 pb-16 px-4 max-w-4xl mx-auto">
+        <main id="main-content" className="min-h-screen pt-28 pb-16 px-4 max-w-4xl mx-auto">
           <Skeleton className="h-10 w-64 mb-8" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
@@ -72,7 +72,7 @@ export default function AchievementsPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pb-16">
+      <main id="main-content" className="min-h-screen pb-16">
         <div className="pt-28 px-4 max-w-4xl mx-auto">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
           <div className="flex items-center justify-between">
