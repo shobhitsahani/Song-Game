@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Play, ArrowRight } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { JoinRoomModal } from './join-room-modal';
+import { RoomSharePopover } from './room-share-popover';
 
 export function FinalCTA() {
   const [showJoinModal, setShowJoinModal] = useState(false);
@@ -19,6 +20,9 @@ export function FinalCTA() {
         <p className="text-base text-[var(--muted-foreground)] max-w-md mx-auto mb-8">
           Start a room in seconds, share the code, and hear who really knows their music.
         </p>
+
+        {/* Room created StageShow popover */}
+        <RoomSharePopover />
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">
           <Link href="/room/create" className="w-full sm:w-auto">

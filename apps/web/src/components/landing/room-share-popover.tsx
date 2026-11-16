@@ -1,0 +1,152 @@
+'use client';
+
+import React from 'react';
+import {
+  Stage,
+  Avatar,
+  Badge,
+  Roll,
+  type Act,
+} from '../stageshow/kit';
+import { Copy, Check, Users, Sparkle } from '@phosphor-icons/react';
+
+interface ShareState {
+  copied: boolean;
+  playersCount: number;
+}
+
+const initial: ShareState = {
+  copied: false,
+  playersCount: 1,
+};
+
+const poster: ShareState = {
+  copied: true,
+  playersCount: 4,
+};
+
+async function script(a: Act<ShareState>) {
+  // Calm opening beat
+  await a.wait(700);
+
+  // Cursor moves to copy button and clicks
+  await a.move('copy-code');
+  await a.wait(200);
+  await a.click();
+  await a.set({ copied: true });
+  await a.wait(500);
+
+  // Jordan joins
+  await a.set({ playersCount: 2 });
+  await a.wait(600);
+
+  // Sam joins
+  await a.set({ playersCount: 3 });
+  await a.wait(600);
+
+  // Alex joins
+  await a.set({ playersCount: 4 });
+  await a.wait(3200);
+
+  // Reset seam
+  await a.set({ copied: false, playersCount: 1 });
+  await a.wait(800);
+}
+
+const REST = {
+  wide: { x: 360, y: 35 },
+  compact: { x: 280, y: 35 },
+};
+
+export function RoomSharePopover() {
+  return (
+    <div className="w-full max-w-md mx-auto mb-8" aria-hidden="true">
+      <Stage<ShareState>
+        width={420}
+        height={150}
+        compact={{ below: 420, width: 320, height: 150 }}
+        initial={initial}
+        poster={poster}
+        script={script}
+        play="loop"
+        cursor={{ at: REST, style: 'arrow', ripple: true }}
+        className="look-songgame"
+      >
+        {(s) => (
+          <div className="w-full h-full rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] p-3.5 shadow-xl flex flex-col justify-between">
+            {/* Popover Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs font-mono font-bold text-[var(--foreground)]">Room VR426D</span>
+                <Badge tone="accent">Lobby</Badge>
+              </div>
+
+              <span className="text-[11px] font-mono font-semibold text-[var(--muted-foreground)] flex items-center gap-1">
+                <Users size={13} weight="bold" />
+                <span>{s.playersCount}/4 players</span>
+              </span>
+            </div>
+
+            {/* Share / Copy code row */}
+            <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-1)] border border-[var(--border)]">
+              <span className="text-xs font-mono text-[var(--muted-foreground)] tracking-wide truncate mr-2">
+                songgame.io/VR426D
+              </span>
+
+              <button
+                type="button"
+                data-target="copy-code"
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                  s.copied
+                    ? 'bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 shadow-sm'
+                    : 'bg-[var(--surface-2)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)]'
+                }`}
+              >
+                {s.copied ? (
+                  <>
+                    <Check size={13} weight="bold" />
+                    <span>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={13} weight="bold" />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Player facepile presence */}
+            <div className="flex items-center justify-between pt-0.5">
+              <div className="flex items-center -space-x-1.5">
+                <Avatar name="YOU" size={24} tone="accent" ring="confirmed" />
+                {s.playersCount >= 2 && (
+                  <Avatar name="JD" size={24} tone="person" ring="confirmed" className="transition-all duration-300" />
+                )}
+                {s.playersCount >= 3 && (
+                  <Avatar name="SM" size={24} tone="person" ring="confirmed" className="transition-all duration-300" />
+                )}
+                {s.playersCount >= 4 && (
+                  <Avatar name="AX" size={24} tone="person" ring="confirmed" className="transition-all duration-300" />
+                )}
+              </div>
+
+              <span className="text-[11px] font-mono text-emerald-400 font-semibold">
+                <Roll>
+                  {s.playersCount === 4
+                    ? 'All players ready · Starting'
+                    : s.playersCount === 3
+                    ? 'Sam joined the room'
+                    : s.playersCount === 2
+                    ? 'Jordan joined the room'
+                    : 'Waiting for players...'}
+                </Roll>
+              </span>
+            </div>
+          </div>
+        )}
+      </Stage>
+    </div>
+  );
+}
