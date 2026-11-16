@@ -84,7 +84,7 @@
   position: relative;
 }
 
-/* Rotating disc: grooves, outer border, transform animation (33 RPM: 1.8s per rev) */
+/* feat(hero): 33 RPM continuous vinyl disc rotation (1.8s per rev) */
 .hero-vinyl-disc {
   width: 72px;
   height: 72px;

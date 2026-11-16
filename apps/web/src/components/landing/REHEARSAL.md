@@ -84,7 +84,20 @@
 
 ---
 
-## 6. What Was Not Checked
+## 6. Hero Vinyl Disc Rotation Verification
+
+| Requirement | Implementation | Status |
+| :--- | :--- | :--- |
+| **Animation Properties** | Continuous clockwise rotation (`transform: rotate(0deg) -> rotate(360deg)`), `linear`, `infinite`. Exactly 1.8s per revolution (33 RPM matching label). | **PASS** |
+| **Separation of Layers** | Static wrapper `.hero-vinyl-groove` preserves 72px slot dimensions and offset drop-shadow (`box-shadow: 0 4px 12px rgba(0,0,0,0.35)`). Shadow does NOT orbit. Inner `.hero-vinyl-disc` rotates with `transform-origin: 50% 50%`. | **PASS** |
+| **Asymmetric Marker** | 2px × 3px tick (`.hero-vinyl-label::after`) at 12 o'clock label perimeter in spindle white (`rgba(255,255,255,0.75)`). Enables immediate visual perception of rotation. | **PASS** |
+| **Play-State Lifecycle** | Active during playback (`animation-play-state: running`), paused when resolved (`[data-spinning="false"]`), paused when offscreen (`.ss-stage[data-offscreen]`), paused in poster frame (`.ss-stage[data-still]`). | **PASS** |
+| **Reduced Motion** | `@media (prefers-reduced-motion: reduce)` immediately pauses rotation (`animation-play-state: paused !important`), holding static at 0deg. | **PASS** |
+| **Cross-Theme & Responsive** | Verified across all 3 themes (Daylight, Vinyl, Rose) and viewports (1280px desktop, 390px compact). Outside the 72px disc slot, pixel diff = 0px (zero reflow, zero font shift, zero shadow shift). | **PASS** |
+
+---
+
+## 7. What Was Not Checked
 
 - Live audio streaming during trivia rounds (simulated strictly via SVG waveform/groove animation in faux UI).
 - Real backend multiplayer WebSocket socket.io traffic during simulated stages (client-side deterministic scripts only).
