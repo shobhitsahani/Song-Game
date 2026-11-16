@@ -58,4 +58,90 @@
     --ss-shadow-satellite: 0 10px 30px -5px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border);
     --ss-shadow-card: 0 4px 16px -2px rgba(0, 0, 0, 0.15);
   }
+
+  /* Universal reset override inside stageshow so controls never fall back to raw browser styling */
+  .look-songgame button,
+  .ss-stage button {
+    all: unset;
+    box-sizing: border-box;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  /* Segmented control tabs inside stageshow */
+  .ss-seg-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: var(--surface-2);
+    padding: 3px;
+    border-radius: var(--radius-control, 8px);
+    border: 1px solid var(--border);
+    user-select: none;
+    box-sizing: border-box;
+  }
+
+  .ss-seg-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 12px;
+    border-radius: var(--radius-sm, 6px);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+    border: 1px solid transparent;
+    background: transparent;
+    text-decoration: none;
+    line-height: 1.25;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+
+  .ss-seg-tab:hover {
+    color: var(--foreground);
+  }
+
+  .ss-seg-tab[data-active="true"] {
+    background: var(--surface-1);
+    color: var(--foreground);
+    font-weight: 600;
+    border-color: var(--border);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Copy button inside stageshow */
+  .ss-copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: var(--radius-sm, 6px);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 150ms ease;
+    user-select: none;
+    background: var(--surface-1);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    line-height: 1.2;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+
+  .ss-copy-btn:hover {
+    background: var(--surface-3);
+  }
+
+  .ss-copy-btn[data-copied="true"] {
+    background: #10b981;
+    color: #ffffff;
+    border-color: #059669;
+    box-shadow: 0 1px 3px rgba(16, 185, 129, 0.25);
+  }
 }

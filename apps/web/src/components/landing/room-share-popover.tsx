@@ -25,8 +25,8 @@ const poster: ShareState = {
 };
 
 const REST = {
-  wide: { x: 380, y: 135 },
-  compact: { x: 290, y: 135 },
+  wide: { x: 380, y: 38 },
+  compact: { x: 280, y: 38 },
 };
 
 async function script(a: Act<ShareState>) {
@@ -101,14 +101,12 @@ export function RoomSharePopover() {
                 https://songgame.app/room/VR426D
               </span>
 
-              <button
-                type="button"
+              <span
+                role="button"
+                tabIndex={0}
                 data-target="copy-code"
-                className={`flex items-center gap-1 px-3 py-1 rounded-[var(--radius-sm)] text-xs font-semibold transition-all duration-150 ${
-                  s.copied
-                    ? 'bg-emerald-500 text-white shadow-xs'
-                    : 'bg-[var(--surface-1)] border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--surface-3)]'
-                }`}
+                data-copied={s.copied ? 'true' : undefined}
+                className="ss-copy-btn"
               >
                 {s.copied ? (
                   <>
@@ -121,7 +119,7 @@ export function RoomSharePopover() {
                     <span>Copy</span>
                   </>
                 )}
-              </button>
+              </span>
             </div>
 
             {/* Player presence in clean body font */}

@@ -77,8 +77,8 @@ async function script(a: Act<LeaderboardState>) {
 }
 
 const REST = {
-  wide: { x: 380, y: 22 },
-  compact: { x: 260, y: 22 },
+  wide: { x: 530, y: 360 },
+  compact: { x: 310, y: 380 },
 };
 
 export function LeaderboardStageshow() {
@@ -104,40 +104,34 @@ export function LeaderboardStageshow() {
               lights="color"
               toolbar={
                 /* Clean Segmented Control Tabs */
-                <div className="flex items-center gap-0.5 bg-[var(--surface-2)] p-0.5 rounded-[var(--radius-control)] border border-[var(--border)] text-xs">
-                  <button
-                    type="button"
+                <div className="ss-seg-tabs">
+                  <span
+                    role="button"
+                    tabIndex={0}
                     data-target="tab-alltime"
-                    className={`px-2.5 py-1 rounded-[var(--radius-sm)] text-xs font-medium transition-colors ${
-                      s.period === 'alltime'
-                        ? 'bg-[var(--surface-1)] text-[var(--foreground)] font-semibold shadow-xs'
-                        : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
-                    }`}
+                    data-active={s.period === 'alltime' ? 'true' : undefined}
+                    className="ss-seg-tab"
                   >
                     All Time
-                  </button>
-                  <button
-                    type="button"
+                  </span>
+                  <span
+                    role="button"
+                    tabIndex={0}
                     data-target="tab-weekly"
-                    className={`px-2.5 py-1 rounded-[var(--radius-sm)] text-xs font-medium transition-colors ${
-                      s.period === 'weekly'
-                        ? 'bg-[var(--surface-1)] text-[var(--foreground)] font-semibold shadow-xs'
-                        : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
-                    }`}
+                    data-active={s.period === 'weekly' ? 'true' : undefined}
+                    className="ss-seg-tab"
                   >
                     Weekly
-                  </button>
-                  <button
-                    type="button"
+                  </span>
+                  <span
+                    role="button"
+                    tabIndex={0}
                     data-target="tab-monthly"
-                    className={`px-2.5 py-1 rounded-[var(--radius-sm)] text-xs font-medium transition-colors ${
-                      s.period === 'monthly'
-                        ? 'bg-[var(--surface-1)] text-[var(--foreground)] font-semibold shadow-xs'
-                        : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
-                    }`}
+                    data-active={s.period === 'monthly' ? 'true' : undefined}
+                    className="ss-seg-tab"
                   >
                     Monthly
-                  </button>
+                  </span>
                 </div>
               }
               className="w-full h-full bg-[var(--surface-1)] border border-[var(--border)] shadow-sm rounded-[var(--radius-card)] overflow-hidden"

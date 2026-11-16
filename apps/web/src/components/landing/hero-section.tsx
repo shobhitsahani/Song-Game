@@ -66,32 +66,17 @@ export function HeroSection() {
           {/* Left Column (5 of 12 = ~42-45%) */}
           <div className="lg:col-span-5 flex flex-col items-start text-left justify-center">
             {/* Headline: max 3 lines, clamp(2.5rem, 4.5vw, 4.25rem), weight 600 */}
-            <motion.h1
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[clamp(2.5rem,4.5vw,4.25rem)] font-semibold font-display tracking-[-0.02em] text-[var(--foreground)] leading-[1.05] mb-5 text-balance"
-            >
+            <h1 className="text-[clamp(2.5rem,4.5vw,4.25rem)] font-semibold font-display tracking-[-0.02em] text-[var(--foreground)] leading-[1.05] mb-5 text-balance">
               Name that track before the needle drops.
-            </motion.h1>
+            </h1>
 
             {/* Subhead: max 20 words, body font, 17-18px */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-              className="text-base sm:text-lg text-[var(--muted-foreground)] max-w-lg mb-8 font-normal leading-relaxed text-pretty"
-            >
+            <p className="text-base sm:text-lg text-[var(--muted-foreground)] max-w-lg mb-8 font-normal leading-relaxed text-pretty">
               Real-time music trivia in your browser. Hear 15 seconds, lock in first, and outscore friends in live rooms.
-            </motion.p>
+            </p>
 
             {/* Primary Actions: Play + InputOTP Join Room */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full max-w-xl"
-            >
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full max-w-xl">
               <Link href="/room/create" className="shrink-0">
                 <Button
                   size="lg"
@@ -153,7 +138,7 @@ export function HeroSection() {
                   )}
                 </div>
               </form>
-            </motion.div>
+            </div>
 
             {/* Reserved space for Resume Banner (quiet inline, no layout jump) */}
             <div className="min-h-[44px] w-full max-w-lg mt-4">
@@ -193,13 +178,7 @@ export function HeroSection() {
 
           {/* Right Column (7 of 12 = ~55-58%) - Hero Stageshow Centerpiece */}
           <div className="lg:col-span-7 w-full overflow-hidden lg:overflow-visible">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <HeroStageshow />
-            </motion.div>
+            <HeroStageshow />
           </div>
         </div>
       </div>
