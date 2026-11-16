@@ -153,7 +153,7 @@ export function ThemeMenu({ className }: { className?: string }) {
         }}
         onKeyDown={handleKeyDown}
         className={cn(
-          'w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-150 outline-none select-none cursor-pointer',
+          'w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-150 outline-none select-none cursor-pointer glass-control-hover',
           'focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]',
           isOpen
             ? 'bg-[var(--surface-2)] text-[var(--foreground)] border-[var(--border)] shadow-xs'

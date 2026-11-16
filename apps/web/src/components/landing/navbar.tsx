@@ -71,11 +71,149 @@ export const Navbar = React.memo(function Navbar() {
   const [glassSize, setGlassSize] = useState<{ width: number; height: number }>({ width: 1200, height: 56 });
 
   const [activeAnchor, setActiveAnchor] = useState<string | null>(null);
+  const [hoveredHref, setHoveredHref] = useState<string | null>(null);
+  const [isLensAnimated, setIsLensAnimated] = useState(false);
+  const [lensState, setLensState] = useState<{
+    x: number;
+    width: number;
+    visible: boolean;
+    scaleX: number;
+    scaleY: number;
+  }>({
+    x: 0,
+    width: 0,
+    visible: false,
+    scaleX: 1,
+    scaleY: 1,
+  });
+
+  const lensTrackRef = useRef<HTMLDivElement>(null);
+  const linkRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const leaveTimerRef = useRef<number | null>(null);
+  const stretchTimerRef = useRef<number | null>(null);
+  const hasMountedRef = useRef(false);
+
   const [joinPopoverOpen, setJoinPopoverOpen] = useState(false);
   const [joinCode, setJoinCode] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
+
+  // Determine active href based on route and intersection anchor
+  const getActiveHref = useCallback(() => {
+    if (pathname === '/leaderboard') return '/leaderboard';
+    if (pathname === '/achievements') return '/achievements';
+    if (pathname === '/') {
+      if (activeAnchor === 'how') return '/#how';
+      if (activeAnchor === 'modes') return '/#modes';
+    }
+    return null;
+  }, [pathname, activeAnchor]);
+
+  const activeHref = getActiveHref();
+  const targetHref = hoveredHref ?? activeHref;
+
+  const updateLensPosition = useCallback(
+    (target: string | null, shouldAnimate: boolean) => {
+      if (!lensTrackRef.current) return;
+
+      if (!target) {
+        setLensState((prev) => ({
+          ...prev,
+          visible: false,
+          scaleX: 1,
+          scaleY: 1,
+        }));
+        return;
+      }
+
+      const targetEl = linkRefs.current.get(target);
+      if (!targetEl) {
+        setLensState((prev) => ({
+          ...prev,
+          visible: false,
+          scaleX: 1,
+          scaleY: 1,
+        }));
+        return;
+      }
+
+      const trackRect = lensTrackRef.current.getBoundingClientRect();
+      const linkRect = targetEl.getBoundingClientRect();
+      const nextX = Math.round(linkRect.left - trackRect.left);
+      const nextWidth = Math.round(linkRect.width);
+
+      const prefersReducedMotion =
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!shouldAnimate || prefersReducedMotion) {
+        setLensState({
+          x: nextX,
+          width: nextWidth,
+          visible: true,
+          scaleX: 1,
+          scaleY: 1,
+        });
+        return;
+      }
+
+      // Mid-move liquid stretch: 1.04 scaleX, 0.97 scaleY
+      setLensState((prev) => {
+        const isMoving = Math.abs(prev.x - nextX) > 2;
+        return {
+          x: nextX,
+          width: nextWidth,
+          visible: true,
+          scaleX: isMoving ? 1.04 : 1,
+          scaleY: isMoving ? 0.97 : 1,
+        };
+      });
+
+      if (stretchTimerRef.current) {
+        window.clearTimeout(stretchTimerRef.current);
+      }
+      stretchTimerRef.current = window.setTimeout(() => {
+        setLensState((prev) => ({
+          ...prev,
+          scaleX: 1,
+          scaleY: 1,
+        }));
+      }, 200);
+    },
+    []
+  );
+
+  // Position lens on mount (instant snap) and when targetHref changes
+  useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      updateLensPosition(targetHref, false);
+      const t = window.setTimeout(() => {
+        setIsLensAnimated(true);
+      }, 50);
+      return () => window.clearTimeout(t);
+    } else {
+      updateLensPosition(targetHref, true);
+    }
+  }, [targetHref, updateLensPosition, glassSize]);
+
+  const handleLinkEnter = useCallback((href: string) => {
+    if (leaveTimerRef.current) {
+      window.clearTimeout(leaveTimerRef.current);
+      leaveTimerRef.current = null;
+    }
+    setHoveredHref(href);
+  }, []);
+
+  const handleTrackLeave = useCallback(() => {
+    if (leaveTimerRef.current) {
+      window.clearTimeout(leaveTimerRef.current);
+    }
+    leaveTimerRef.current = window.setTimeout(() => {
+      setHoveredHref(null);
+    }, 160);
+  }, []);
 
   // ResizeObserver on .glass to track CSS size and regenerate displacement map (debounced 150ms)
   useEffect(() => {
@@ -355,8 +493,29 @@ export const Navbar = React.memo(function Navbar() {
           </Link>
         </div>
 
-        {/* Center: Links (Desktop) - 15px, medium weight, 36px capsule hover/active (collapses below 900px) */}
-        <div className="justify-self-center hidden min-[900px]:flex items-center gap-1">
+        {/* Center: Links (Desktop) - 15px, medium weight, with sliding glass lens */}
+        <div
+          ref={lensTrackRef}
+          onMouseLeave={handleTrackLeave}
+          onBlur={(e) => {
+            if (!lensTrackRef.current?.contains(e.relatedTarget as Node)) {
+              handleTrackLeave();
+            }
+          }}
+          className="justify-self-center hidden min-[900px]:flex items-center gap-1 glass-lens-track"
+        >
+          {/* Sliding Glass Lens */}
+          <span
+            className="glass-lens"
+            data-animate={isLensAnimated ? 'true' : 'false'}
+            style={{
+              transform: `translateX(${lensState.x}px) scaleX(${lensState.scaleX}) scaleY(${lensState.scaleY})`,
+              width: `${lensState.width}px`,
+              opacity: lensState.visible ? 1 : 0,
+            }}
+            aria-hidden="true"
+          />
+
           {CENTER_LINKS.map((link) => {
             const isRouteActive = pathname === link.href;
             const isAnchorActive = pathname === '/' && link.anchorId === activeAnchor;
@@ -366,13 +525,15 @@ export const Navbar = React.memo(function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                ref={(el) => {
+                  if (el) linkRefs.current.set(link.href, el);
+                  else linkRefs.current.delete(link.href);
+                }}
                 aria-current={isActive ? 'page' : undefined}
-                className={cn(
-                  'h-9 px-3.5 rounded-full text-[15px] font-medium transition-colors inline-flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2',
-                  isActive
-                    ? 'text-[var(--foreground)] font-semibold bg-[var(--surface-2)] shadow-xs'
-                    : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]/60'
-                )}
+                data-active={isActive ? 'true' : 'false'}
+                onMouseEnter={() => handleLinkEnter(link.href)}
+                onFocus={() => handleLinkEnter(link.href)}
+                className="glass-nav-link"
               >
                 {link.label}
               </Link>
@@ -393,7 +554,7 @@ export const Navbar = React.memo(function Navbar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="hidden lg:inline-flex h-10 px-3.5 text-[15px] font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full"
+                className="hidden lg:inline-flex h-10 px-3.5 text-[15px] font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full glass-control-hover"
               >
                 Join room
               </Button>
@@ -443,7 +604,7 @@ export const Navbar = React.memo(function Navbar() {
             <Button
               variant="primary"
               size="sm"
-              className="h-10 px-4 text-[15px] font-semibold gap-1.5 rounded-full"
+              className="h-10 px-4 text-[15px] font-semibold gap-1.5 rounded-full glass-play-btn"
             >
               <Play size={14} weight="fill" />
               <span>Play</span>
