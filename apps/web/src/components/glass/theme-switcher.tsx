@@ -19,10 +19,10 @@ export const ThemeContext = createContext<ThemeContextType>({
 
 export const useTheme = () => useContext(ThemeContext);
 
-const THEMES: { id: Theme; label: string; icon: typeof Sun; swatch: string }[] = [
-  { id: 'light', label: 'Daylight', icon: Sun, swatch: 'bg-blue-500' },
-  { id: 'black', label: 'Vinyl', icon: Moon, swatch: 'bg-amber-400' },
-  { id: 'rose', label: 'Rose', icon: Sparkle, swatch: 'bg-pink-500' },
+const THEMES: { id: Theme; label: string; swatch: string }[] = [
+  { id: 'light', label: 'Daylight', swatch: 'bg-[#2b5cf6]' },
+  { id: 'black', label: 'Vinyl', swatch: 'bg-[#f59e0b]' },
+  { id: 'rose', label: 'Rose', swatch: 'bg-[#ec4899]' },
 ];
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
@@ -124,41 +124,40 @@ export function ThemeSwitcher({ className }: { className?: string }) {
       role="radiogroup"
       aria-label="Theme selector"
       className={clsx(
-        'relative flex items-center gap-1 p-1 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] shadow-lg backdrop-blur-md',
+        'relative inline-flex items-center gap-1 p-1 rounded-[var(--radius-control,10px)] bg-[var(--surface-2)] border border-[var(--border)] shadow-xs select-none',
         className
       )}
     >
       {THEMES.map((t) => {
-        const Icon = t.icon;
         const isActive = theme === t.id;
 
         return (
           <button
             key={t.id}
+            type="button"
             role="radio"
             aria-checked={isActive}
             aria-label={`${t.label} theme`}
             onClick={(e) => setTheme(t.id, e)}
             className={clsx(
-              'relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 outline-none',
+              'relative z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--radius-sm,6px)] text-xs font-semibold transition-[color,background-color] duration-100 outline-none cursor-pointer',
               isActive
-                ? 'text-[var(--foreground)] font-semibold'
+                ? 'text-[var(--foreground)] font-bold'
                 : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
             )}
           >
             {isActive && (
               <motion.div
-                layoutId="activeThemePill"
-                className="absolute inset-0 rounded-full bg-[var(--card)] shadow-sm border border-[var(--glass-border)] -z-10"
+                layoutId="activeThemeLens"
+                className="absolute inset-0 rounded-[var(--radius-sm,6px)] bg-[var(--surface-1)] shadow-xs border border-[var(--border)] -z-10"
                 transition={{ type: 'spring', stiffness: 500, damping: 32 }}
               />
             )}
             <span
-              className={clsx('w-2 h-2 rounded-full shrink-0', t.swatch)}
+              className={clsx('w-2.5 h-2.5 rounded-full shrink-0 border border-black/10 dark:border-white/20', t.swatch)}
               aria-hidden="true"
             />
-            <Icon size={14} weight={isActive ? 'fill' : 'regular'} aria-hidden="true" />
-            <span className="hidden sm:inline">{t.label}</span>
+            <span className="text-[13px]">{t.label}</span>
           </button>
         );
       })}

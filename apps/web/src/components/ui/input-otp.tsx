@@ -12,7 +12,7 @@ const InputOTP = React.forwardRef<
   <OTPInput
     ref={ref}
     containerClassName={cn(
-      'flex items-center gap-2 has-disabled:opacity-50',
+      'flex items-center has-disabled:opacity-50',
       containerClassName
     )}
     className={cn('disabled:cursor-not-allowed', className)}
@@ -25,7 +25,7 @@ const InputOTPGroup = React.forwardRef<
   React.ElementRef<'div'>,
   React.ComponentPropsWithoutRef<'div'>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('flex items-center gap-1.5', className)} {...props} />
+  <div ref={ref} className={cn('inline-flex items-center -space-x-px', className)} {...props} />
 ));
 InputOTPGroup.displayName = 'InputOTPGroup';
 
@@ -40,8 +40,8 @@ const InputOTPSlot = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        'relative flex h-11 w-10 sm:h-12 sm:w-11 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-1,var(--card))] text-base sm:text-lg font-mono font-bold uppercase transition-[border-color,box-shadow] duration-[80ms] ease-out',
-        isActive && 'z-10 border-[var(--ring)] ring-2 ring-[var(--ring)]/50 shadow-md',
+        'relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center border border-[var(--border)] bg-[var(--surface-1)] text-base sm:text-lg font-sans font-bold uppercase transition-[border-color,box-shadow,background-color] duration-100 ease-out first:rounded-l-[var(--radius-control,10px)] last:rounded-r-[var(--radius-control,10px)]',
+        isActive && 'z-10 border-[var(--ring)] ring-2 ring-[var(--ring)]/50 bg-[var(--surface-2)] shadow-xs',
         className
       )}
       {...props}
