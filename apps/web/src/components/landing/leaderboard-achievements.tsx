@@ -13,6 +13,7 @@ import {
   GameController,
 } from '@phosphor-icons/react';
 import { LeaderboardStageshow } from './leaderboard-stageshow';
+import { AchievementsStageshow } from './achievements-stageshow';
 
 const REAL_ACHIEVEMENTS = [
   { id: 'first_win', title: 'First Win', description: 'Win your first game', icon: Trophy, xp: 50 },
@@ -66,6 +67,8 @@ export function LeaderboardAchievementsSection() {
             </div>
 
             <div className="card-surface p-4 sm:p-6 space-y-3">
+              <AchievementsStageshow />
+
               {REAL_ACHIEVEMENTS.map((ach) => {
                 const Icon = ach.icon;
                 return (
