@@ -2,7 +2,7 @@
 import './globals.css';
 import { Providers } from './providers';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://songgame.app';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://song-game-alpha.vercel.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

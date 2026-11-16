@@ -6,6 +6,7 @@ import './globals.css';
 import { Providers } from './providers';
 import { AmbientBackground } from '@/components/glass/ambient-background';
 import { OfflineNotice } from '@/components/shared/offline-notice';
+import { SITE_ORIGIN } from '@/lib/site';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -22,7 +23,7 @@ const hankenGrotesk = Hanken_Grotesk({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://songgame.app'),
+  metadataBase: new URL(SITE_ORIGIN),
   title: {
     default: 'SongGame - Multiplayer Music Trivia',
     template: '%s | SongGame',
