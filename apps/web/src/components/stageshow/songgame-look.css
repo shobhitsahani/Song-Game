@@ -1,0 +1,61 @@
+/* SongGame StageShow Look
+   Maps StageShow kit design tokens to SongGame's liquid-glass design system.
+   Automatically adapts to html[data-theme="light" | "black" | "rose"].
+*/
+
+@layer stageshow {
+  .look-songgame.ss-stage,
+  .look-songgame .ss-stage,
+  .ss-stage[data-look="songgame"] {
+    --ss-font: var(--font-sans), 'Inter', system-ui, sans-serif;
+    --ss-mono: var(--font-mono), monospace;
+
+    /* Primary Accent */
+    --ss-accent: var(--primary);
+    --ss-accent-soft: color-mix(in srgb, var(--primary) 18%, transparent);
+    --ss-accent-text: var(--primary);
+    --ss-accent-2: var(--accent);
+
+    /* Surfaces */
+    --ss-canvas: transparent;
+    --ss-surface: var(--surface-1);
+    --ss-chrome: var(--surface-2);
+    --ss-well: var(--surface-2);
+    --ss-raised: var(--surface-1);
+
+    /* Borders & Lines */
+    --ss-line: var(--border);
+    --ss-line-faint: color-mix(in srgb, var(--border) 50%, transparent);
+
+    /* Text & Inks */
+    --ss-text-strong: var(--foreground);
+    --ss-text: var(--muted-foreground);
+    --ss-text-faint: color-mix(in srgb, var(--muted-foreground) 60%, transparent);
+    --ss-icon: var(--foreground);
+    --ss-icon-faint: var(--muted-foreground);
+
+    /* Status Colors */
+    --ss-success: var(--success);
+    --ss-success-soft: color-mix(in srgb, var(--success) 18%, transparent);
+    --ss-success-text: var(--success-foreground);
+    --ss-danger: var(--destructive);
+    --ss-danger-soft: color-mix(in srgb, var(--destructive) 18%, transparent);
+    --ss-danger-text: var(--destructive-foreground);
+    --ss-warning: oklch(0.82 0.17 75);
+    --ss-warning-soft: color-mix(in srgb, oklch(0.82 0.17 75) 18%, transparent);
+    --ss-warning-text: oklch(0.20 0.04 75);
+
+    /* Radius Tokens matching site radius system */
+    --ss-radius-sm: var(--radius-sm);
+    --ss-radius-md: var(--radius-md);
+    --ss-radius-lg: var(--radius-lg);
+    --ss-radius-window: var(--radius-dialog);
+    --ss-radius-pill: var(--radius-control);
+
+    /* Depth / Shadows */
+    --ss-shadow-window: var(--glass-shadow);
+    --ss-shadow-hero: var(--glass-shadow);
+    --ss-shadow-satellite: 0 10px 30px -5px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border);
+    --ss-shadow-card: 0 4px 16px -2px rgba(0, 0, 0, 0.15);
+  }
+}
