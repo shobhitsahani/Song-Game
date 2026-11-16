@@ -20,6 +20,7 @@ import { ThemeMenu } from './theme-menu';
 import { MobileNavPanel } from './mobile-nav';
 import { Container } from '@/components/ui/container';
 import { cn } from '@/lib/utils';
+import { generateDisplacementMap, isRefractionSupported } from './liquid-glass-filter';
 import './liquid-glass.css';
 
 export function NavLogoMark({ className }: { className?: string }) {
@@ -62,6 +63,13 @@ export const Navbar = React.memo(function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
 
+  const rawId = React.useId();
+  const filterId = `glass-refract-${rawId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
+  const glassRef = useRef<HTMLDivElement>(null);
+  const [glassMode, setGlassMode] = useState<'frosted' | 'refract'>('frosted');
+  const [displacementUrl, setDisplacementUrl] = useState<string>('');
+  const [glassSize, setGlassSize] = useState<{ width: number; height: number }>({ width: 1200, height: 56 });
+
   const [scrolled, setScrolled] = useState(false);
   const [activeAnchor, setActiveAnchor] = useState<string | null>(null);
   const [joinPopoverOpen, setJoinPopoverOpen] = useState(false);
@@ -69,6 +77,55 @@ export const Navbar = React.memo(function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
+
+  // ResizeObserver on .glass to track CSS size and regenerate displacement map (debounced 150ms)
+  useEffect(() => {
+    if (!glassRef.current) return;
+    const updateSize = () => {
+      if (!glassRef.current) return;
+      const rect = glassRef.current.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        setGlassSize({ width: Math.round(rect.width), height: Math.round(rect.height) });
+      }
+    };
+    updateSize();
+
+    let timeoutId: number;
+    const ro = new ResizeObserver((entries) => {
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => {
+        for (const entry of entries) {
+          if (entry.contentRect.width > 0) {
+            updateSize();
+          }
+        }
+      }, 150);
+    });
+    ro.observe(glassRef.current);
+    return () => {
+      window.clearTimeout(timeoutId);
+      ro.disconnect();
+    };
+  }, []);
+
+  // Generate SVG refraction displacement map if Chromium is detected
+  useEffect(() => {
+    if (isRefractionSupported()) {
+      const url = generateDisplacementMap({
+        width: glassSize.width,
+        height: glassSize.height,
+        bezel: 16,
+      });
+      if (url) {
+        setDisplacementUrl(url);
+        setGlassMode('refract');
+      } else {
+        setGlassMode('frosted');
+      }
+    } else {
+      setGlassMode('frosted');
+    }
+  }, [glassSize]);
 
   // 1. Passive scroll listener to raise opacity and add shadow after 8px scroll
   useEffect(() => {
