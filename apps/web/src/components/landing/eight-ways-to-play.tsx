@@ -4,14 +4,14 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
-  Disc,
+  SpeakerHigh,
   Heart,
   Timer,
   Microphone,
   Calendar,
   User,
-  VinylRecord,
-  SpeakerHigh,
+  Disc,
+  MusicNotes,
   Check,
 } from '@phosphor-icons/react';
 import { Window } from '../stageshow/kit';
@@ -23,14 +23,6 @@ interface GameMode {
   key: string;
   title: string;
   rules: string;
-  badge?: string;
-  icon: typeof Disc;
-  settings: {
-    timer: string;
-    lives: string;
-    target: string;
-    scoring: string;
-  };
 }
 
 const GAME_MODES: GameMode[] = [
@@ -39,115 +31,54 @@ const GAME_MODES: GameMode[] = [
     key: 'CLASSIC',
     title: 'Classic',
     rules: 'Name the song title from 15-second audio snippets across all playlists.',
-    icon: Disc,
-    settings: {
-      timer: '15 seconds',
-      lives: 'Unlimited',
-      target: 'Song title',
-      scoring: 'Up to 1,000 pts / speed',
-    },
   },
   {
     num: '02',
     key: 'SURVIVAL',
     title: 'Survival',
     rules: 'Sudden-death elimination: miss one track and you are knocked out of the room.',
-    badge: 'Knockout',
-    icon: Heart,
-    settings: {
-      timer: '15 seconds',
-      lives: '1 Life only',
-      target: 'Song title',
-      scoring: 'Elimination on miss',
-    },
   },
   {
     num: '03',
     key: 'HARDCORE',
     title: 'Hardcore',
-    rules: 'Compressed 10-second timer with zero room for second guesses.',
-    badge: 'Blitz',
-    icon: Timer,
-    settings: {
-      timer: '10 seconds (blitz)',
-      lives: '1 Life',
-      target: 'Song title',
-      scoring: '1.5x score multiplier',
-    },
+    rules: 'Compressed 10-second blitz timer with 1.5x points and zero room for second guesses.',
   },
   {
     num: '04',
     key: 'LYRICS',
     title: 'Lyrics',
-    rules: 'Identify the track from missing lyrics and vocal phrases.',
-    icon: Microphone,
-    settings: {
-      timer: '15 seconds',
-      lives: 'Unlimited',
-      target: 'Missing lyric phrase',
-      scoring: 'Up to 1,000 pts',
-    },
+    rules: 'Identify the track from missing lyrics and memorable vocal phrases.',
   },
   {
     num: '05',
     key: 'DECADE',
     title: 'Decade',
-    rules: 'Filter clips strictly to your era, from 70s rock to modern 2020s hits.',
-    badge: 'Filtered',
-    icon: Calendar,
-    settings: {
-      timer: '15 seconds',
-      lives: 'Unlimited',
-      target: '1970s – 2020s hits',
-      scoring: 'Era-calibrated points',
-    },
+    rules: 'Filter clips strictly to your chosen era, from 70s rock to modern 2020s hits.',
   },
   {
     num: '06',
     key: 'ARTIST',
     title: 'Artist',
     rules: 'Name the vocalist, band, or producer behind the track instead of the song.',
-    icon: User,
-    settings: {
-      timer: '15 seconds',
-      lives: 'Unlimited',
-      target: 'Artist / Producer',
-      scoring: 'Up to 1,000 pts',
-    },
   },
   {
     num: '07',
     key: 'ALBUM',
     title: 'Album',
     rules: 'Pick the exact studio album or LP release where the track first debuted.',
-    icon: VinylRecord,
-    settings: {
-      timer: '15 seconds',
-      lives: 'Unlimited',
-      target: 'Studio album / LP',
-      scoring: 'Up to 1,000 pts',
-    },
   },
   {
     num: '08',
     key: 'GENRE',
     title: 'Genre',
     rules: 'Target specific soundscapes: Pop Hits, Classic Rock, Hip-Hop, Indie, Electronic.',
-    badge: 'Filtered',
-    icon: SpeakerHigh,
-    settings: {
-      timer: '15 seconds',
-      lives: 'Unlimited',
-      target: 'Selected genre',
-      scoring: 'Up to 1,000 pts',
-    },
   },
 ];
 
 export function EightWaysToPlay() {
   const [activeKey, setActiveKey] = useState('CLASSIC');
   const activeMode = GAME_MODES.find((m) => m.key === activeKey) || GAME_MODES[0];
-  const ActiveIcon = activeMode.icon;
 
   return (
     <section id="modes" className="relative landing-section scroll-mt-[88px]">
@@ -162,168 +93,274 @@ export function EightWaysToPlay() {
           </p>
         </div>
 
-      {/* Tracklist layout: 8 rows left, 1 browser still preview right */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start border-t border-[var(--border)] pt-10">
-        {/* Left Column (7 of 12): Tracklist rows */}
-        <div
-          role="list"
-          aria-label="Game modes tracklist"
-          className="lg:col-span-7 flex flex-col divide-y divide-[var(--border)] border border-[var(--border)] rounded-[var(--radius-card)] bg-[var(--surface-1)] p-2 shadow-xs"
-        >
-          {GAME_MODES.map((mode) => {
-            const isSelected = mode.key === activeKey;
-            const Icon = mode.icon;
+        {/* Tracklist layout: ~55% list left, ~45% sticky browser preview right */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start border-t border-[var(--border)] pt-10">
+          {/* Left Column (~55% = 7 of 12): Hairline Tracklist rows */}
+          <div
+            role="list"
+            aria-label="Game modes tracklist"
+            className="lg:col-span-7 flex flex-col divide-y divide-[var(--border)]"
+          >
+            {GAME_MODES.map((mode) => {
+              const isSelected = mode.key === activeKey;
 
-            return (
-              <Link
-                key={mode.key}
-                role="listitem"
-                href={`/room/create?mode=${mode.key}`}
-                onMouseEnter={() => setActiveKey(mode.key)}
-                onFocus={() => setActiveKey(mode.key)}
-                className={cn(
-                  'group flex items-center justify-between py-3 px-3.5 rounded-[var(--radius-control)] transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]',
-                  isSelected
-                    ? 'bg-[var(--surface-2)] text-[var(--foreground)] shadow-xs'
-                    : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--surface-2)]/60'
-                )}
-              >
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <span className="font-mono text-xs font-bold text-[var(--muted-foreground)] tabular-nums w-5 shrink-0">
-                    {mode.num}
-                  </span>
-                  <div className="flex flex-col min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm sm:text-base text-[var(--foreground)] group-hover:text-[var(--primary)] transition-colors">
+              return (
+                <Link
+                  key={mode.key}
+                  role="listitem"
+                  href={`/room/create?mode=${mode.key}`}
+                  onMouseEnter={() => setActiveKey(mode.key)}
+                  onFocus={() => setActiveKey(mode.key)}
+                  className={cn(
+                    'group flex items-center justify-between min-h-[64px] sm:min-h-[68px] py-3.5 px-3 rounded-[var(--radius-control)] transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]',
+                    isSelected
+                      ? 'bg-[var(--surface-2)] shadow-xs'
+                      : 'hover:bg-[var(--surface-2)]/60'
+                  )}
+                >
+                  <div className="flex items-center gap-3.5 min-w-0 pr-3">
+                    <span className="font-mono text-[13px] font-bold text-[var(--muted-foreground)] tabular-nums w-6 shrink-0">
+                      {mode.num}
+                    </span>
+                    <div className="flex flex-col min-w-0">
+                      <span
+                        className={cn(
+                          'text-[17px] font-semibold transition-colors',
+                          isSelected ? 'text-[var(--primary)]' : 'text-[var(--foreground)]'
+                        )}
+                      >
                         {mode.title}
                       </span>
-                      {mode.badge && (
-                        <span className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded-[var(--radius-sm)] bg-[var(--surface-3)] text-[var(--muted-foreground)]">
-                          {mode.badge}
-                        </span>
-                      )}
+                      <p className="text-[14px] text-[var(--muted-foreground)] truncate mt-0.5">
+                        {mode.rules}
+                      </p>
                     </div>
-                    <p className="text-xs text-[var(--muted-foreground)] truncate mt-0.5">
-                      {mode.rules}
-                    </p>
                   </div>
-                </div>
 
-                <div className="flex items-center gap-2 shrink-0 ml-3">
-                  <Icon
-                    size={18}
-                    className={cn(
-                      'transition-colors',
-                      isSelected ? 'text-[var(--primary)]' : 'text-[var(--muted-foreground)] opacity-60'
-                    )}
-                  />
-                  <ArrowRight
-                    size={14}
-                    weight="bold"
-                    className="text-[var(--muted-foreground)] group-hover:text-[var(--primary)] group-hover:translate-x-0.5 transition-all"
-                  />
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+                  <div className="shrink-0 flex items-center pl-2">
+                    <ArrowRight
+                      size={16}
+                      weight="bold"
+                      className={cn(
+                        'transition-all duration-150',
+                        isSelected
+                          ? 'opacity-100 text-[var(--primary)] translate-x-0'
+                          : 'opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 text-[var(--muted-foreground)]'
+                      )}
+                    />
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
 
-        {/* Right Column (5 of 12): ONE Stageshow Browser Preview */}
-        <div className="lg:col-span-5 lg:sticky lg:top-24 w-full">
-          <div aria-hidden="true" className="w-full">
-            <Window
-              tabs={['SongGame — Setup']}
-              nav
-              url={
-                <span className="inline-flex items-center gap-1.5 text-xs text-[var(--muted-foreground)]">
-                  <span>https://songgame.app/room/create</span>
-                </span>
-              }
-              urlShape="pill"
-              chrome="native"
-              lights="color"
-              className="w-full bg-[var(--surface-1)] border border-[var(--border)] rounded-[var(--radius-card)] shadow-md overflow-hidden"
-            >
-              <div className="p-4 sm:p-5 flex flex-col gap-4">
-                {/* Mode Header */}
-                <div className="flex items-center justify-between pb-3 border-b border-[var(--border)]">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-[var(--radius-control)] bg-[var(--primary)] text-[var(--primary-foreground)] flex items-center justify-center shadow-xs">
-                      <ActiveIcon size={18} weight="fill" />
-                    </div>
+          {/* Right Column (~45% = 5 of 12): Sticky Browser Pane (Hidden below 1024px) */}
+          <div className="hidden lg:block lg:col-span-5 sticky top-[80px] w-full">
+            <div aria-hidden="true" className="w-full">
+              <Window
+                tabs={['SongGame — Setup']}
+                nav
+                url={
+                  <span className="inline-flex items-center gap-1.5 text-[12px] text-[var(--muted-foreground)]">
+                    <span>https://songgame.app/room/create</span>
+                  </span>
+                }
+                urlShape="pill"
+                chrome="native"
+                lights="color"
+                className="w-full bg-[var(--surface-1)] border border-[var(--border)] rounded-[var(--radius-card)] shadow-md overflow-hidden min-h-[540px] flex flex-col justify-between"
+              >
+                <div className="p-5 flex flex-col gap-4 flex-1">
+                  {/* Pane Header */}
+                  <div className="flex items-center justify-between pb-3 border-b border-[var(--border)]">
                     <div>
-                      <div className="text-sm font-bold text-[var(--foreground)] font-sans flex items-center gap-2">
+                      <div className="text-[16px] font-bold text-[var(--foreground)] font-sans">
                         {activeMode.title} Mode
                       </div>
-                      <span className="text-[11px] text-[var(--muted-foreground)] font-mono">
+                      <span className="text-[12px] text-[var(--muted-foreground)] font-mono">
                         Rule Preset {activeMode.num} of 08
                       </span>
                     </div>
+                    <span className="text-[13px] font-semibold text-[var(--primary)] font-mono">
+                      /room/create
+                    </span>
                   </div>
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-[var(--radius-sm)] bg-[var(--surface-2)] border border-[var(--border)] text-[var(--foreground)]">
-                    Ready
-                  </span>
+
+                  {/* Mode Rules description */}
+                  <p className="text-[13px] text-[var(--muted-foreground)] leading-relaxed bg-[var(--surface-2)] p-3 rounded-[var(--radius-control)] border border-[var(--border)]">
+                    {activeMode.rules}
+                  </p>
+
+                  {/* Dynamic Content Per Mode */}
+                  <div className="flex-1 flex flex-col justify-center transition-opacity duration-150">
+                    {activeMode.key === 'CLASSIC' && (
+                      <div className="space-y-2.5">
+                        <span className="text-[12px] font-semibold text-[var(--foreground)] uppercase font-mono block">
+                          Four Choices Preview
+                        </span>
+                        <div className="grid grid-cols-2 gap-2 text-[13px]">
+                          <div className="p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]">
+                            A. Echoes in Rain
+                          </div>
+                          <div className="p-2.5 rounded-[var(--radius-control)] bg-emerald-500/15 border border-emerald-500/40 font-semibold text-[var(--foreground)]">
+                            B. Neon Midnight
+                          </div>
+                          <div className="p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]">
+                            C. Solar Flare
+                          </div>
+                          <div className="p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)] text-[var(--muted-foreground)]">
+                            D. Starlight Ave
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {activeMode.key === 'SURVIVAL' && (
+                      <div className="space-y-3 p-3 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
+                        <div className="flex items-center justify-between text-[13px]">
+                          <span className="font-semibold text-[var(--foreground)] flex items-center gap-1.5">
+                            <Heart size={16} weight="fill" className="text-rose-500" />
+                            Lives Remaining
+                          </span>
+                          <span className="font-mono font-bold text-rose-500 text-[14px]">1 Life Only</span>
+                        </div>
+                        <p className="text-[12px] text-[var(--muted-foreground)] leading-relaxed">
+                          Zero margin for error. The first incorrect or missed answer immediately removes you from the match leaderboard.
+                        </p>
+                      </div>
+                    )}
+
+                    {activeMode.key === 'HARDCORE' && (
+                      <div className="space-y-3 p-3 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
+                        <div className="flex items-center justify-between text-[13px]">
+                          <span className="font-semibold text-[var(--foreground)] flex items-center gap-1.5">
+                            <Timer size={16} weight="bold" className="text-amber-500" />
+                            Blitz Timer
+                          </span>
+                          <span className="font-mono font-bold text-amber-500 text-[14px]">10s Countdown</span>
+                        </div>
+                        <div className="w-full bg-[var(--surface-3)] h-2 rounded-full overflow-hidden">
+                          <div className="bg-amber-500 h-full w-2/3" />
+                        </div>
+                        <span className="text-[12px] font-mono text-[var(--primary)] font-semibold block">
+                          1.5x points multiplier active
+                        </span>
+                      </div>
+                    )}
+
+                    {activeMode.key === 'LYRICS' && (
+                      <div className="space-y-2.5 p-3 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
+                        <span className="text-[12px] font-semibold text-[var(--foreground)] flex items-center gap-1.5">
+                          <Microphone size={15} weight="bold" className="text-[var(--primary)]" />
+                          Complete the Vocal Line
+                        </span>
+                        <div className="text-[13px] font-mono text-[var(--foreground)] p-2.5 rounded bg-[var(--surface-1)] border border-[var(--border)] leading-relaxed">
+                          &ldquo;We were running through the night, chasing the ______&rdquo;
+                        </div>
+                        <span className="text-[12px] text-[var(--muted-foreground)]">4 lyrical endings to choose from</span>
+                      </div>
+                    )}
+
+                    {activeMode.key === 'DECADE' && (
+                      <div className="space-y-2.5">
+                        <span className="text-[12px] font-semibold text-[var(--foreground)] flex items-center gap-1.5">
+                          <Calendar size={15} weight="bold" className="text-[var(--primary)]" />
+                          Era Selection
+                        </span>
+                        <div className="grid grid-cols-3 gap-2 text-[12px] font-mono text-center">
+                          {['1970s', '1980s', '1990s', '2000s', '2010s', '2020s'].map((era, i) => (
+                            <div
+                              key={era}
+                              className={cn(
+                                'p-2 rounded-[var(--radius-control)] border text-[12px] font-semibold',
+                                i === 1
+                                  ? 'bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)]'
+                                  : 'bg-[var(--surface-2)] border-[var(--border)] text-[var(--muted-foreground)]'
+                              )}
+                            >
+                              {era}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {activeMode.key === 'ARTIST' && (
+                      <div className="space-y-2.5 p-3 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
+                        <span className="text-[12px] font-semibold text-[var(--foreground)] flex items-center gap-1.5">
+                          <User size={15} weight="bold" className="text-[var(--primary)]" />
+                          Target: Vocalist or Producer
+                        </span>
+                        <p className="text-[13px] text-[var(--foreground)] leading-relaxed">
+                          Identify the creator behind the master track rather than the song name.
+                        </p>
+                        <div className="flex gap-2 text-[12px] font-mono text-[var(--muted-foreground)]">
+                          <span className="p-1 px-2 rounded bg-[var(--surface-1)] border border-[var(--border)]">Band</span>
+                          <span className="p-1 px-2 rounded bg-[var(--surface-1)] border border-[var(--border)]">Solo Vocalist</span>
+                          <span className="p-1 px-2 rounded bg-[var(--surface-1)] border border-[var(--border)]">Producer</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {activeMode.key === 'ALBUM' && (
+                      <div className="space-y-2.5">
+                        <span className="text-[12px] font-semibold text-[var(--foreground)] flex items-center gap-1.5">
+                          <Disc size={15} weight="bold" className="text-[var(--primary)]" />
+                          Album LP Grid
+                        </span>
+                        <div className="grid grid-cols-2 gap-2">
+                          {['Endless Summer (2016)', 'Monsters (2020)', 'Nocturnal (2017)', 'Heroes (2022)'].map((alb, i) => (
+                            <div
+                              key={alb}
+                              className={cn(
+                                'p-2.5 rounded-[var(--radius-control)] border text-[12px]',
+                                i === 0
+                                  ? 'bg-[var(--surface-3)] border-[var(--primary)] font-semibold text-[var(--foreground)]'
+                                  : 'bg-[var(--surface-2)] border-[var(--border)] text-[var(--muted-foreground)]'
+                              )}
+                            >
+                              {alb}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {activeMode.key === 'GENRE' && (
+                      <div className="space-y-2.5">
+                        <span className="text-[12px] font-semibold text-[var(--foreground)] flex items-center gap-1.5">
+                          <MusicNotes size={15} weight="bold" className="text-[var(--primary)]" />
+                          Soundscape Filter
+                        </span>
+                        <div className="flex flex-wrap gap-2 text-[12px]">
+                          {['Synthwave', 'Indie Rock', 'Pop Hits', 'Hip-Hop', 'Electronic', 'Jazz Fusion'].map((g, i) => (
+                            <span
+                              key={g}
+                              className={cn(
+                                'px-2.5 py-1 rounded-[var(--radius-control)] border font-medium',
+                                i === 0
+                                  ? 'bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)]'
+                                  : 'bg-[var(--surface-2)] border-[var(--border)] text-[var(--muted-foreground)]'
+                              )}
+                            >
+                              {g}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Mode Rules description */}
-                <p className="text-xs text-[var(--muted-foreground)] leading-relaxed bg-[var(--surface-2)] p-3 rounded-[var(--radius-control)] border border-[var(--border)]">
-                  {activeMode.rules}
-                </p>
-
-                {/* Setting Specs Grid */}
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
-                    <span className="text-[10px] text-[var(--muted-foreground)] uppercase font-mono block mb-1">
-                      Clip Timer
-                    </span>
-                    <span className="font-semibold text-[var(--foreground)]">
-                      {activeMode.settings.timer}
-                    </span>
-                  </div>
-
-                  <div className="p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
-                    <span className="text-[10px] text-[var(--muted-foreground)] uppercase font-mono block mb-1">
-                      Lives / Survival
-                    </span>
-                    <span className="font-semibold text-[var(--foreground)]">
-                      {activeMode.settings.lives}
-                    </span>
-                  </div>
-
-                  <div className="p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
-                    <span className="text-[10px] text-[var(--muted-foreground)] uppercase font-mono block mb-1">
-                      Answer Target
-                    </span>
-                    <span className="font-semibold text-[var(--foreground)]">
-                      {activeMode.settings.target}
-                    </span>
-                  </div>
-
-                  <div className="p-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)]">
-                    <span className="text-[10px] text-[var(--muted-foreground)] uppercase font-mono block mb-1">
-                      Scoring Rule
-                    </span>
-                    <span className="font-semibold text-[var(--foreground)]">
-                      {activeMode.settings.scoring}
-                    </span>
-                  </div>
+                {/* Bottom Bar: Clean Spec Readout */}
+                <div className="p-4 bg-[var(--surface-2)] border-t border-[var(--border)] flex items-center justify-between text-[12px]">
+                  <span className="text-[var(--muted-foreground)] font-mono">10 rounds per match</span>
+                  <span className="text-[var(--foreground)] font-semibold font-mono">Up to 1,000 pts / track</span>
                 </div>
-
-                {/* Faux Launch Button */}
-                <div className="pt-2 border-t border-[var(--border)] flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold text-[11px]">
-                    <Check size={14} weight="bold" />
-                    <span>Lobby config verified</span>
-                  </div>
-                  <span className="text-[11px] font-mono text-[var(--muted-foreground)]">
-                    /room/create?mode={activeMode.key}
-                  </span>
-                </div>
-              </div>
-            </Window>
+              </Window>
+            </div>
           </div>
         </div>
-      </div>
       </Container>
     </section>
   );
