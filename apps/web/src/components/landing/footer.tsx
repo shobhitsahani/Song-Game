@@ -4,13 +4,14 @@ import React from 'react';
 import Link from 'next/link';
 import { GithubLogo } from '@phosphor-icons/react';
 import { Logo } from '@/components/shared/logo';
+import { Container } from '@/components/ui/container';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-[var(--border)] bg-[var(--surface-1)]/60 backdrop-blur-xl py-12 px-4 sm:px-6 lg:px-8 mt-12">
-      <div className="max-w-[1200px] mx-auto">
+    <footer className="border-t border-[var(--border)] bg-[var(--surface-1)]/60 backdrop-blur-xl py-16 mt-12">
+      <Container>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-[var(--border)]">
           {/* Wordmark + one line description */}
           <div className="md:col-span-6 flex flex-col items-start text-left">
@@ -65,7 +66,7 @@ export function Footer() {
           <p>Audio previews provided by Apple Music and iTunes official previews.</p>
           <p>© {currentYear} SongGame. All rights reserved.</p>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

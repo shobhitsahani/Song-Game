@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion } from 'motion/react';
 import { Play, ArrowRight, X, ArrowClockwise } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
+import { Container } from '@/components/ui/container';
 import { InputOTP, InputOTPGroup, InputOTPSlot, REGEXP_ONLY_DIGITS_AND_CHARS } from '@/components/ui/input-otp';
 import { HeroStageshow } from './hero-stageshow';
 import { HeroShaderBackground } from './hero-shader-background';
@@ -61,7 +62,7 @@ export function HeroSection() {
       {/* Background MeshGradient shader - pinned @paper-design/shaders-react */}
       <HeroShaderBackground />
 
-      <div className="relative z-10 max-w-[1200px] w-full mx-auto px-4 sm:px-6 lg:px-8">
+      <Container className="relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
           {/* Left Column (5 of 12 = ~42-45%) */}
           <div className="lg:col-span-5 flex flex-col items-start text-left justify-center">
@@ -181,7 +182,7 @@ export function HeroSection() {
             <HeroStageshow />
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

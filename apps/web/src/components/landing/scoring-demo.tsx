@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { calculatePoints } from '@song-game/shared';
+import { Container } from '@/components/ui/container';
 
 export function ScoringDemo() {
   const [guessTime, setGuessTime] = useState(1.8);
@@ -33,13 +34,14 @@ export function ScoringDemo() {
   const currentY = getY(points);
 
   return (
-    <section className="relative py-16 sm:py-24 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-[88px]">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        {/* Left Column (5 of 12) */}
-        <div className="lg:col-span-5 text-left">
-          <h2 className="text-[clamp(28px,3.2vw,42px)] font-semibold font-display tracking-[-0.02em] text-[var(--foreground)] mb-4 text-balance">
-            Faster answers score more
-          </h2>
+    <section className="relative landing-section scroll-mt-[88px]">
+      <Container>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Left Column (5 of 12) */}
+          <div className="lg:col-span-5 text-left">
+            <h2 className="landing-h2 mb-4">
+              Faster answers score more
+            </h2>
 
           <div className="space-y-4 text-base sm:text-lg text-[var(--muted-foreground)] leading-relaxed">
             <p>
@@ -205,6 +207,7 @@ export function ScoringDemo() {
           </div>
         </div>
       </div>
+      </Container>
     </section>
   );
 }

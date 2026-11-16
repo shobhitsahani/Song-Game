@@ -15,6 +15,7 @@ import {
   Check,
 } from '@phosphor-icons/react';
 import { Window } from '../stageshow/kit';
+import { Container } from '@/components/ui/container';
 import { cn } from '@/lib/utils';
 
 interface GameMode {
@@ -149,16 +150,17 @@ export function EightWaysToPlay() {
   const ActiveIcon = activeMode.icon;
 
   return (
-    <section id="modes" className="relative py-16 sm:py-24 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-[88px]">
-      {/* Section heading */}
-      <div className="mb-12 text-left">
-        <h2 className="text-[clamp(28px,3.2vw,42px)] font-semibold font-display tracking-[-0.02em] text-[var(--foreground)]">
-          Eight ways to play
-        </h2>
-        <p className="text-base sm:text-lg text-[var(--muted-foreground)] mt-2 max-w-xl font-normal">
-          From party casual to sudden-death elimination. Choose your rules before opening the room.
-        </p>
-      </div>
+    <section id="modes" className="relative landing-section scroll-mt-[88px]">
+      <Container>
+        {/* Section heading */}
+        <div className="landing-heading-group">
+          <h2 className="landing-h2">
+            Eight ways to play
+          </h2>
+          <p className="landing-subline">
+            From party casual to sudden-death elimination. Choose your rules before opening the room.
+          </p>
+        </div>
 
       {/* Tracklist layout: 8 rows left, 1 browser still preview right */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start border-t border-[var(--border)] pt-10">
@@ -322,6 +324,7 @@ export function EightWaysToPlay() {
           </div>
         </div>
       </div>
+      </Container>
     </section>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Container } from '@/components/ui/container';
 import {
   HowRoundWorksTile1,
   HowRoundWorksTile2,
@@ -9,16 +10,17 @@ import {
 
 export function HowRoundWorks() {
   return (
-    <section id="how" className="relative py-16 sm:py-24 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-[88px]">
-      {/* Section heading: Fraunces display font, quiet editorial subtitle */}
-      <div className="mb-12 text-left">
-        <h2 className="text-[clamp(28px,3.2vw,42px)] font-semibold font-display tracking-[-0.02em] text-[var(--foreground)]">
-          How a round works
-        </h2>
-        <p className="text-base sm:text-lg text-[var(--muted-foreground)] mt-2 max-w-xl font-normal">
-          Ten clips per room. Three steps per track.
-        </p>
-      </div>
+    <section id="how" className="relative landing-section scroll-mt-[88px]">
+      <Container>
+        {/* Section heading: Fraunces display font, quiet editorial subtitle */}
+        <div className="landing-heading-group">
+          <h2 className="landing-h2">
+            How a round works
+          </h2>
+          <p className="landing-subline">
+            Ten clips per room. Three steps per track.
+          </p>
+        </div>
 
       {/* 3 columns joined by a clean top border */}
       <div
@@ -81,6 +83,7 @@ export function HowRoundWorks() {
           </div>
         </div>
       </div>
+      </Container>
     </section>
   );
 }

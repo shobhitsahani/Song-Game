@@ -13,6 +13,7 @@ import {
 } from '@phosphor-icons/react';
 import { LeaderboardStageshow } from './leaderboard-stageshow';
 import { AchievementsStageshow } from './achievements-stageshow';
+import { Container } from '@/components/ui/container';
 
 const REAL_ACHIEVEMENTS = [
   { id: 'first_win', title: 'First Win', description: 'Win your first game', icon: Trophy, xp: 50 },
@@ -25,8 +26,9 @@ const REAL_ACHIEVEMENTS = [
 
 export function LeaderboardAchievementsSection() {
   return (
-    <section className="relative py-16 sm:py-24 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-[88px]">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+    <section className="relative landing-section scroll-mt-[88px]">
+      <Container>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         {/* Left Column (7 of 12): Leaderboard StageShow window */}
         <div className="lg:col-span-7 flex flex-col justify-between h-full">
           <div>
@@ -115,6 +117,7 @@ export function LeaderboardAchievementsSection() {
           </div>
         </div>
       </div>
+      </Container>
     </section>
   );
 }

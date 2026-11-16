@@ -6,17 +6,18 @@ import { Play, ArrowRight } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { JoinRoomModal } from './join-room-modal';
 import { RoomSharePopover } from './room-share-popover';
+import { Container } from '@/components/ui/container';
 
 export function FinalCTA() {
   const [showJoinModal, setShowJoinModal] = useState(false);
 
   return (
-    <section className="relative py-20 sm:py-28 border-t border-[var(--border)] bg-[var(--surface-1)]/40 scroll-mt-[88px]">
-      <div className="max-w-[760px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl sm:text-5xl font-semibold font-display tracking-[-0.02em] text-[var(--foreground)] mb-4 text-balance">
+    <section className="relative landing-section border-t border-[var(--border)] bg-[var(--surface-2)] overflow-hidden scroll-mt-[88px]">
+      <Container className="text-center">
+        <h2 className="landing-h2 mb-4">
           Ready to test your ear against friends?
         </h2>
-        <p className="text-base sm:text-lg text-[var(--muted-foreground)] max-w-lg mx-auto mb-8 font-normal leading-relaxed text-pretty">
+        <p className="landing-subline mx-auto mb-8">
           Start a room in seconds, share the code, and hear who really knows their music.
         </p>
 
@@ -44,7 +45,7 @@ export function FinalCTA() {
             Join room <ArrowRight size={16} weight="bold" />
           </Button>
         </div>
-      </div>
+      </Container>
 
       <JoinRoomModal open={showJoinModal} onClose={() => setShowJoinModal(false)} />
     </section>
