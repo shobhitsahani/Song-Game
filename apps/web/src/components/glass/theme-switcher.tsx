@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useEffect, useState, useTransition } from 'react';
 import { motion } from 'motion/react';
-import { Sun, Moon, Sparkle } from '@phosphor-icons/react';
 import { clsx } from 'clsx';
 
 export type Theme = 'black' | 'rose' | 'light';

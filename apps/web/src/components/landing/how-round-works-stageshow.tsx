@@ -3,7 +3,6 @@
 import React from 'react';
 import {
   Stage,
-  Bar,
   Count,
   Roll,
   Avatar,

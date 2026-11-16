@@ -24,7 +24,7 @@ import {
   InputOTPSlot,
   REGEXP_ONLY_DIGITS_AND_CHARS,
 } from '@/components/ui/input-otp';
-import { ThemeSwitcher, useTheme, type Theme } from '@/components/glass/theme-switcher';
+import { ThemeSwitcher } from '@/components/glass/theme-switcher';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
@@ -36,7 +36,6 @@ const NAV_LINKS = [
 export const Navbar = React.memo(function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [joinPopoverOpen, setJoinPopoverOpen] = useState(false);
   const [joinCode, setJoinCode] = useState('');
