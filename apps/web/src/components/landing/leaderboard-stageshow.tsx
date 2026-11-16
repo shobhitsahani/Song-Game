@@ -112,7 +112,7 @@ export function LeaderboardStageshow() {
                 <div className="ss-seg-tabs" role="tablist" aria-label="Leaderboard timeframe">
                   <span
                     role="tab"
-                    tabIndex={0}
+                    tabIndex={-1}
                     aria-selected={s.period === 'alltime'}
                     data-target="tab-alltime"
                     data-active={s.period === 'alltime' ? 'true' : undefined}
@@ -122,7 +122,7 @@ export function LeaderboardStageshow() {
                   </span>
                   <span
                     role="tab"
-                    tabIndex={0}
+                    tabIndex={-1}
                     aria-selected={s.period === 'weekly'}
                     data-target="tab-weekly"
                     data-active={s.period === 'weekly' ? 'true' : undefined}
@@ -132,7 +132,7 @@ export function LeaderboardStageshow() {
                   </span>
                   <span
                     role="tab"
-                    tabIndex={0}
+                    tabIndex={-1}
                     aria-selected={s.period === 'monthly'}
                     data-target="tab-monthly"
                     data-active={s.period === 'monthly' ? 'true' : undefined}

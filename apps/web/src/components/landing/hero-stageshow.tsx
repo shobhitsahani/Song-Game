@@ -385,7 +385,7 @@ export function HeroStageshow() {
                   <span className="text-[13px] font-medium text-[var(--foreground)]">
                     Round 1/10
                   </span>
-                  <div className="flex items-center gap-1.5 ml-auto text-[13px]">
+                  <div className="flex items-center gap-1.5 ml-auto text-[13px] text-[var(--foreground)]">
                     <Timer size={14} weight="bold" />
                     <span className="font-mono tabular-nums font-semibold">{s.timer}s</span>
                   </div>

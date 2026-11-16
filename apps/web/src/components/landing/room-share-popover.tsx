@@ -95,11 +95,9 @@ export function RoomSharePopover() {
               </span>
 
               <span
-                role="button"
-                tabIndex={0}
                 data-target="copy-code"
                 data-copied={s.copied ? 'true' : undefined}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--radius-sm)] bg-[var(--surface-3)] hover:bg-[var(--surface-1)] text-[13px] font-semibold text-[var(--foreground)] border border-[var(--border)] transition-colors cursor-pointer shrink-0"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--radius-sm)] bg-[var(--surface-3)] hover:bg-[var(--surface-1)] text-[13px] font-semibold text-[var(--foreground)] border border-[var(--border)] transition-colors shrink-0"
               >
                 {s.copied ? (
                   <>
