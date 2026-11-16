@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect, useCallback, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ArrowRight, Check, X } from '@phosphor-icons/react';
@@ -24,7 +24,6 @@ const LINKS = [
   { href: '/#how', label: 'How it works', anchor: true },
   { href: '/#modes', label: 'Modes', anchor: true },
   { href: '/leaderboard', label: 'Leaderboard', anchor: false },
-  { href: '/achievements', label: 'Achievements', anchor: false },
 ];
 
 const THEMES: { id: Theme; label: string; swatchBg: string; swatchBorder: string; accentDot: string }[] = [
@@ -171,7 +170,7 @@ export function MobileNavPanel({ isOpen, onClose, toggleButtonRef }: MobileNavPr
         'animate-in fade-in-0 zoom-in-95 duration-200 motion-reduce:animate-none'
       )}
     >
-      {/* 4 Navigation links as 48px rows */}
+      {/* 3 Navigation links as 48px rows */}
       <div className="flex flex-col space-y-1">
         {LINKS.map((link, idx) => {
           const isActive = pathname === link.href;

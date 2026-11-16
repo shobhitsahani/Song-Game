@@ -56,7 +56,6 @@ const CENTER_LINKS: NavLinkItem[] = [
   { href: '/#how', label: 'How it works', anchorId: 'how' },
   { href: '/#modes', label: 'Modes', anchorId: 'modes' },
   { href: '/leaderboard', label: 'Leaderboard' },
-  { href: '/achievements', label: 'Achievements' },
 ];
 
 export const Navbar = React.memo(function Navbar() {
@@ -102,7 +101,6 @@ export const Navbar = React.memo(function Navbar() {
   // Determine active href based on route and intersection anchor
   const getActiveHref = useCallback(() => {
     if (pathname === '/leaderboard') return '/leaderboard';
-    if (pathname === '/achievements') return '/achievements';
     if (pathname === '/') {
       if (activeAnchor === 'how') return '/#how';
       if (activeAnchor === 'modes') return '/#modes';
