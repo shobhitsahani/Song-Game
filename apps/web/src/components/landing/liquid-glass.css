@@ -50,14 +50,14 @@
   pointer-events: none;
   overflow: hidden;
   z-index: 1;
-  backdrop-filter: blur(calc(var(--glass-blur, 10px) + var(--glass-p, 0) * (var(--glass-blur-scrolled, 16px) - var(--glass-blur, 10px)))) saturate(var(--glass-saturate, 1.5));
-  -webkit-backdrop-filter: blur(calc(var(--glass-blur, 10px) + var(--glass-p, 0) * (var(--glass-blur-scrolled, 16px) - var(--glass-blur, 10px)))) saturate(var(--glass-saturate, 1.5));
+  backdrop-filter: blur(calc(var(--glass-blur, 5px) + var(--glass-p, 0) * (var(--glass-blur-scrolled, 7px) - var(--glass-blur, 5px)))) saturate(var(--glass-saturate, 1.6)) brightness(var(--glass-brightness, 1.05));
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur, 5px) + var(--glass-p, 0) * (var(--glass-blur-scrolled, 7px) - var(--glass-blur, 5px)))) saturate(var(--glass-saturate, 1.6)) brightness(var(--glass-brightness, 1.05));
 }
 
-/* Refract enhancement for Chromium: SVG displacement map */
+/* Refract enhancement for Chromium: SVG displacement map + calm backdrop blur (3-5px) */
 .glass[data-glass="refract"] .glass__backdrop {
-  backdrop-filter: var(--glass-filter-ref, none);
-  -webkit-backdrop-filter: var(--glass-filter-ref, none);
+  backdrop-filter: var(--glass-filter-ref, none) blur(calc(var(--glass-blur, 4px) + var(--glass-p, 0) * 2px)) brightness(var(--glass-brightness, 1.05));
+  -webkit-backdrop-filter: var(--glass-filter-ref, none) blur(calc(var(--glass-blur, 4px) + var(--glass-p, 0) * 2px)) brightness(var(--glass-brightness, 1.05));
 }
 
 /* Opaque surface fallback if backdrop-filter is completely unsupported */
@@ -77,8 +77,8 @@
   z-index: 2;
   padding: 16px;
   box-sizing: border-box;
-  backdrop-filter: blur(8px) saturate(1.6) brightness(1.08);
-  -webkit-backdrop-filter: blur(8px) saturate(1.6) brightness(1.08);
+  backdrop-filter: blur(7px) saturate(var(--glass-saturate, 1.6)) brightness(var(--glass-brightness, 1.05));
+  -webkit-backdrop-filter: blur(7px) saturate(var(--glass-saturate, 1.6)) brightness(var(--glass-brightness, 1.05));
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);

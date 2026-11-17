@@ -55,11 +55,12 @@ html[data-theme="black"] {
   --nav-lens-border: oklch(0.28 0.010 75 / 0.6);
 
   /* Liquid Glass tokens - Vinyl (warm charcoal) */
-  --glass-tint: rgba(255, 255, 255, 0.07);
-  --glass-tint-scrolled: rgba(18, 16, 14, 0.45);
-  --glass-blur: 10px;
-  --glass-blur-scrolled: 16px;
-  --glass-saturate: 1.35;
+  --glass-tint: rgba(255, 255, 255, 0.09);
+  --glass-tint-scrolled: rgba(18, 16, 14, 0.18);
+  --glass-blur: 5px;
+  --glass-blur-scrolled: 7px;
+  --glass-saturate: 1.55;
+  --glass-brightness: 1.0;
   --glass-rim-hi: rgba(255, 255, 255, 0.52);
   --glass-rim-lo: rgba(255, 255, 255, 0.12);
   --glass-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.35);
@@ -139,11 +140,12 @@ html[data-theme="rose"] {
   --nav-lens-border: oklch(1 0.03 350 / 0.20);
 
   /* Liquid Glass tokens - Rose (deep berry) */
-  --glass-tint: rgba(244, 114, 182, 0.08);
-  --glass-tint-scrolled: rgba(40, 15, 25, 0.38);
-  --glass-blur: 10px;
-  --glass-blur-scrolled: 16px;
-  --glass-saturate: 1.5;
+  --glass-tint: rgba(244, 114, 182, 0.10);
+  --glass-tint-scrolled: rgba(40, 15, 25, 0.19);
+  --glass-blur: 5px;
+  --glass-blur-scrolled: 7px;
+  --glass-saturate: 1.6;
+  --glass-brightness: 1.0;
   --glass-rim-hi: rgba(255, 220, 235, 0.55);
   --glass-rim-lo: rgba(236, 72, 153, 0.15);
   --glass-shadow: 0 4px 16px -4px rgba(20, 5, 12, 0.35);
@@ -226,10 +228,11 @@ html[data-theme="light"] {
 
   /* Liquid Glass tokens - Daylight (warm paper & vinyl blue) */
   --glass-tint: rgba(255, 255, 255, 0.08);
-  --glass-tint-scrolled: rgba(255, 255, 255, 0.28);
-  --glass-blur: 10px;
-  --glass-blur-scrolled: 16px;
-  --glass-saturate: 1.6;
+  --glass-tint-scrolled: rgba(255, 255, 255, 0.16);
+  --glass-blur: 5px;
+  --glass-blur-scrolled: 7px;
+  --glass-saturate: 1.65;
+  --glass-brightness: 1.05;
   --glass-rim-hi: rgba(255, 255, 255, 0.92);
   --glass-rim-lo: rgba(255, 255, 255, 0.20);
   --glass-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.06);
