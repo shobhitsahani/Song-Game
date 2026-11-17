@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
-  SpeakerHigh,
   Heart,
   Timer,
   Microphone,
@@ -12,7 +11,6 @@ import {
   User,
   Disc,
   MusicNotes,
-  Check,
 } from '@phosphor-icons/react';
 import { Window } from '../stageshow/kit';
 import { Container } from '@/components/ui/container';
