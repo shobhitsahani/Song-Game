@@ -517,7 +517,7 @@ export const Navbar = React.memo(function Navbar() {
             className="group inline-flex items-center gap-2.5 select-none outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 rounded-full"
           >
             <NavLogoMark />
-            <span className="font-display font-semibold text-[17px] tracking-[-0.01em] text-[var(--foreground)]">
+            <span className="font-display font-semibold text-[17px] tracking-[-0.01em] text-[var(--foreground)] glass-text-halo">
               SongGame
             </span>
           </Link>
@@ -584,7 +584,7 @@ export const Navbar = React.memo(function Navbar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="hidden lg:inline-flex h-10 px-3.5 text-[15px] font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full glass-control-hover"
+                className="hidden lg:inline-flex h-10 px-3.5 text-[15px] font-medium text-[var(--foreground)] rounded-full glass-control-hover glass-text-halo"
               >
                 Join room
               </Button>

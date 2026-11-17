@@ -189,7 +189,13 @@
   }
 }
 
-/* Desktop nav link items */
+/* Legibility text halo for controls and text over liquid glass */
+.glass-text-halo {
+  text-shadow: 0 0 10px color-mix(in srgb, var(--surface-1) 75%, transparent),
+               0 0 1px color-mix(in srgb, var(--surface-1) 85%, transparent);
+}
+
+/* Desktop nav link items - full strength ink */
 .glass-nav-link {
   position: relative;
   z-index: 1;
@@ -198,7 +204,9 @@
   border-radius: 9999px;
   font-size: 15px;
   font-weight: 500;
-  color: var(--muted-foreground);
+  color: var(--foreground);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--surface-1) 75%, transparent),
+               0 0 1px color-mix(in srgb, var(--surface-1) 85%, transparent);
   transition: color 150ms ease;
   display: inline-flex;
   align-items: center;
