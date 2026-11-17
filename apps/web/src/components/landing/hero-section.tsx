@@ -62,31 +62,6 @@ export function HeroSection() {
       {/* Background MeshGradient shader - pinned @paper-design/shaders-react */}
       <HeroShaderBackground />
 
-      {/* Static oversized vinyl backdrop motif partly under navbar at scrollY=0 */}
-      <div
-        className="absolute -top-[380px] left-[52%] -translate-x-1/2 w-[1000px] h-[1000px] pointer-events-none select-none z-0"
-        aria-hidden="true"
-      >
-        <svg
-          viewBox="0 0 1000 1000"
-          className="w-full h-full text-[var(--foreground)] opacity-[0.08]"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Concentric vinyl grooves (thin rings, 900-1100px diameter) */}
-          {[500, 480, 460, 440, 420, 400, 380, 360, 340, 320, 300, 280, 260, 240, 220, 200, 180].map((r) => (
-            <circle key={r} cx="500" cy="500" r={r} stroke="currentColor" strokeWidth="1" />
-          ))}
-          {/* Lead-in groove */}
-          <circle cx="500" cy="500" r="495" stroke="currentColor" strokeWidth="1.5" opacity="0.8" />
-          {/* Label disc in accent at low saturation */}
-          <circle cx="500" cy="500" r="140" fill="var(--primary)" opacity="0.25" />
-          <circle cx="500" cy="500" r="130" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-          {/* Center spindle hole */}
-          <circle cx="500" cy="500" r="16" fill="var(--background)" stroke="currentColor" strokeWidth="1.5" />
-        </svg>
-      </div>
-
       <Container className="relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column (5 of 12 = ~42-45%) - Width 480-520px */}
