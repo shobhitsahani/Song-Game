@@ -156,8 +156,8 @@ export function ThemeMenu({ className }: { className?: string }) {
           'w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-150 outline-none select-none cursor-pointer glass-control-hover',
           'focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]',
           isOpen
-            ? 'bg-[var(--surface-2)] text-[var(--foreground)] border-[var(--border)] shadow-xs'
-            : 'bg-[var(--surface-1)] text-[var(--foreground)] border-[var(--border)] hover:bg-[var(--surface-2)] hover:border-[var(--border)]'
+            ? 'bg-[var(--glass-control-hover-fill)] text-[var(--foreground)] border-[var(--glass-control-hover-border)] shadow-xs'
+            : 'bg-[var(--glass-control-bg)] text-[var(--foreground)] border-[var(--glass-control-border)] hover:bg-[var(--glass-control-hover-fill)] hover:border-[var(--glass-control-hover-border)]'
         )}
       >
         {/* Half-filled circle glyph representing the current theme's swatch */}

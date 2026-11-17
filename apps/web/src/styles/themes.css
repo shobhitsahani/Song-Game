@@ -69,9 +69,13 @@ html[data-theme="black"] {
   --glass-sheen: rgba(255, 255, 255, 0.13);
   --glass-shadow: 0 4px 18px -4px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.35);
   --glass-shadow-scrolled: 0 14px 38px -10px rgba(0, 0, 0, 0.75), 0 1px 3px rgba(0, 0, 0, 0.45);
-  --glass-lens-fill: rgba(255, 255, 255, 0.16);
-  --glass-lens-border: rgba(255, 255, 255, 0.22);
+  --glass-lens-fill: rgba(255, 255, 255, 0.15);
+  --glass-lens-border: rgba(255, 255, 255, 0.20);
   --glass-lens-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.4);
+  --glass-control-bg: rgba(255, 255, 255, 0.08);
+  --glass-control-border: rgba(255, 255, 255, 0.15);
+  --glass-control-hover-fill: rgba(255, 255, 255, 0.14);
+  --glass-control-hover-border: rgba(255, 255, 255, 0.22);
 
   /* Ambient Orbs */
   --orb-1: oklch(0.82 0.16 75 / 0.12);
@@ -158,9 +162,13 @@ html[data-theme="rose"] {
   --glass-sheen: rgba(255, 220, 235, 0.14);
   --glass-shadow: 0 4px 18px -4px rgba(20, 5, 12, 0.40), 0 1px 2px rgba(20, 5, 12, 0.30);
   --glass-shadow-scrolled: 0 14px 38px -10px rgba(20, 5, 12, 0.70), 0 2px 4px rgba(20, 5, 12, 0.35);
-  --glass-lens-fill: rgba(255, 255, 255, 0.16);
-  --glass-lens-border: rgba(255, 210, 230, 0.28);
+  --glass-lens-fill: rgba(255, 255, 255, 0.15);
+  --glass-lens-border: rgba(255, 210, 230, 0.22);
   --glass-lens-shadow: 0 2px 8px -2px rgba(20, 5, 12, 0.35);
+  --glass-control-bg: rgba(255, 255, 255, 0.08);
+  --glass-control-border: rgba(255, 210, 230, 0.16);
+  --glass-control-hover-fill: rgba(255, 255, 255, 0.14);
+  --glass-control-hover-border: rgba(255, 210, 230, 0.24);
 
   /* Ambient Orbs */
   --orb-1: oklch(0.72 0.21 355 / 0.25); /* Pink */
@@ -249,9 +257,13 @@ html[data-theme="light"] {
   --glass-sheen: rgba(255, 255, 255, 0.20);
   --glass-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04);
   --glass-shadow-scrolled: 0 12px 32px -8px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.05);
-  --glass-lens-fill: rgba(255, 255, 255, 0.68);
-  --glass-lens-border: rgba(255, 255, 255, 0.85);
-  --glass-lens-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.08);
+  --glass-lens-fill: rgba(255, 255, 255, 0.48);
+  --glass-lens-border: rgba(255, 255, 255, 0.65);
+  --glass-lens-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.06);
+  --glass-control-bg: rgba(255, 255, 255, 0.28);
+  --glass-control-border: rgba(255, 255, 255, 0.45);
+  --glass-control-hover-fill: rgba(255, 255, 255, 0.45);
+  --glass-control-hover-border: rgba(255, 255, 255, 0.65);
 
   /* Ambient Orbs - subdued warm light */
   --orb-1: oklch(0.88 0.06 250 / 0.12);
