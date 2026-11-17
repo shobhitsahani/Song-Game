@@ -432,8 +432,8 @@ Ensure your host environment meets the following specifications before installin
 ### Clone Repository
 
 ```bash
-git clone https://github.com/shobhitsahani/music-trivia.git
-cd music-trivia
+git clone https://github.com/shobhitsahani/Song-Game.git
+cd Song-Game
 ```
 
 ### Install Dependencies
