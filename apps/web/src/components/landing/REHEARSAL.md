@@ -97,7 +97,19 @@
 
 ---
 
-## 7. What Was Not Checked
+## 7. Hero Stage Stability & Zero-Reload-Flash Verification
+
+| Item | Problem / Previous Behavior | Implementation / Fix | Status |
+| :--- | :--- | :--- | :--- |
+| **Stage Geometry** | SSR rendered 780px wide stage; client switched to 358px compact stage after 1.5s delay on reload. | Single compact stage (358 × 480) on both SSR and client. Removed 780px wide layout, container queries, and runtime design switching. Centered in 7-col hero column (`display: flex; justify-content: center`). | **PASS** (Zero geometry changes between SSR & client) |
+| **Cursor Entry** | Cursor rendered at (0, 0) top-left window corner before initial positioning, flashing a black dot. | Hidden with `opacity: 0` via `.ss-cursor:not([data-positioned])`. Initial placement sets `data-positioned` attribute, fading in only at valid coordinates. | **PASS** (No dot flash at origin) |
+| **Resume Row Shift** | `min-h-[48px]` caused 14px layout shift when 62px resume banner mounted. | Fixed height slot `className="h-[62px] w-full mt-4 flex items-center"` with smooth opacity fade-in. | **PASS** (Zero CLS on resume load) |
+| **Navbar Hydration** | SSR and client initial active state differed, causing lens pop on hydration. | Initial state unified (`activeAnchor: null`, `isActive: false`, `isLensAnimated: false`). Hash sync deferred to client mount. | **PASS** (Zero hydration warnings) |
+| **Frame Consistency** | Finished state flashed before start frame on reload. | Server frame matches demo initial state (`timer: 15s`, `#2 You 3,250 pts`, `spinning: true`). | **PASS** (Consistent timeline restart) |
+
+---
+
+## 8. What Was Not Checked
 
 - Live audio streaming during trivia rounds (simulated strictly via SVG waveform/groove animation in faux UI).
 - Real backend multiplayer WebSocket socket.io traffic during simulated stages (client-side deterministic scripts only).
