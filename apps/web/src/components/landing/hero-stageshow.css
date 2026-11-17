@@ -3,7 +3,14 @@
 .hero-stageshow-container {
   position: relative;
   width: 100%;
+  display: flex;
+  justify-content: center;
   user-select: none;
+  min-height: 480px;
+}
+
+.hero-stageshow-container .ss-fit {
+  margin: 0 auto;
 }
 
 .hero-stageshow-container .ss-stage {
