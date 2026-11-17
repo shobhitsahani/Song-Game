@@ -469,12 +469,13 @@ export const Navbar = React.memo(function Navbar() {
             <feDisplacementMap
               in="SourceGraphic"
               in2="map"
-              scale="84"
+              scale="78"
               xChannelSelector="R"
               yChannelSelector="G"
               result="displaced"
             />
-            <feColorMatrix in="displaced" type="saturate" values="1.6" />
+            <feGaussianBlur in="displaced" stdDeviation="0.75" result="smoothed" />
+            <feColorMatrix in="smoothed" type="saturate" values="1.6" />
           </filter>
         </svg>
       )}
