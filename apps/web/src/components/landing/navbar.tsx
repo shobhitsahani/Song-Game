@@ -413,6 +413,16 @@ export const Navbar = React.memo(function Navbar() {
     return () => observer.disconnect();
   }, [pathname]);
 
+  // 2.5 Hash state sync on initial client mount
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hash = window.location.hash.replace('#', '');
+      if (hash === 'how' || hash === 'modes') {
+        setActiveAnchor(hash);
+      }
+    }
+  }, []);
+
   const handleJoinSubmit = () => {
     const trimmed = joinCode.trim().toUpperCase();
     if (trimmed.length >= 4) {
