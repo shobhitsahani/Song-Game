@@ -3,7 +3,6 @@
 import React from 'react';
 import {
   Stage,
-  Window,
   Avatar,
   type Act,
 } from '../stageshow/kit';
