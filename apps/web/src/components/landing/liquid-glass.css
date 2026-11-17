@@ -7,10 +7,10 @@
   width: 100%;
   height: 56px;
   border-radius: 9999px;
-  background: transparent;
-  border: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   box-shadow: var(--glass-shadow);
   isolation: isolate;
   contain: layout style;
