@@ -6,7 +6,7 @@
 export interface DisplacementMapOptions {
   width: number;
   height: number;
-  bezel?: number; // Bezel width in pixels (14-20px)
+  bezel?: number; // Bezel width in pixels (20-26px)
 }
 
 /**
@@ -86,7 +86,7 @@ function getBezelSlope(d: number, bezel: number): number {
 export function generateDisplacementMap({
   width,
   height,
-  bezel = 16,
+  bezel = 25,
 }: DisplacementMapOptions): string {
   if (typeof document === 'undefined' || width <= 0 || height <= 0) {
     return '';

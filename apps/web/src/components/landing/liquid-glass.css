@@ -7,6 +7,10 @@
   width: 100%;
   height: 56px;
   border-radius: 9999px;
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   box-shadow: var(--glass-shadow);
   isolation: isolate;
   contain: layout style;
@@ -64,25 +68,42 @@
   }
 }
 
+/* Layer 1.5: Edge band for every browser (peripheral lensing ring) */
+.glass__edge-band {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+  padding: 16px;
+  box-sizing: border-box;
+  backdrop-filter: blur(8px) saturate(1.6) brightness(1.08);
+  -webkit-backdrop-filter: blur(8px) saturate(1.6) brightness(1.08);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+}
+
 /* Layer 2: Tint - surface token at low alpha tuned per theme */
 .glass__tint {
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  z-index: 2;
+  z-index: 3;
   background: color-mix(in srgb, var(--glass-tint) calc((1 - var(--glass-p, 0)) * 100%), var(--glass-tint-scrolled));
-  box-shadow: inset 0 1px 0 0 var(--glass-rim-hi), inset 0 -10px 18px -12px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 1px 0 0 var(--glass-rim-hi), inset 0 0 0 3px rgba(255, 255, 255, 0.20), inset 0 -10px 18px -12px rgba(0, 0, 0, 0.15);
   transition: background-color 200ms ease;
 }
 
-/* Layer 3: Rim - 1.25px bright gradient border with mask-composite */
+/* Layer 3: Rim - 1.5px bright gradient border with mask-composite */
 .glass__rim {
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  padding: 1.25px;
+  padding: 1.5px;
   background: linear-gradient(
     var(--light-angle, 135deg),
     var(--glass-rim-hi),
@@ -94,7 +115,7 @@
   mask-composite: exclude;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
-  z-index: 3;
+  z-index: 4;
 }
 
 /* Layer 4: Sheen - pointer-lit radial highlight */
@@ -106,13 +127,12 @@
   overflow: hidden;
   opacity: var(--sheen-opacity, 0);
   transition: opacity 220ms ease;
-  z-index: 4;
+  z-index: 5;
   background: radial-gradient(
     140px circle at var(--mx, 50%) var(--my, 50%),
     rgba(255, 255, 255, 0.18),
     transparent 70%
   );
-  mix-blend-mode: soft-light;
 }
 
 /* Layer 5: Nav Content Grid */
@@ -222,7 +242,8 @@
 
 /* Accessibility & OS Preferences */
 @media (prefers-reduced-transparency: reduce) {
-  .glass__backdrop {
+  .glass__backdrop,
+  .glass__edge-band {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     background: var(--surface-1) !important;
@@ -236,7 +257,8 @@
 }
 
 @media (prefers-contrast: more) {
-  .glass__backdrop {
+  .glass__backdrop,
+  .glass__edge-band {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     background: var(--surface-1) !important;

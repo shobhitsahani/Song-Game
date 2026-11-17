@@ -249,7 +249,7 @@ export const Navbar = React.memo(function Navbar() {
       const url = generateDisplacementMap({
         width: glassSize.width,
         height: glassSize.height,
-        bezel: 16,
+        bezel: 25,
       });
       if (url) {
         setDisplacementUrl(url);
@@ -448,12 +448,12 @@ export const Navbar = React.memo(function Navbar() {
             <feDisplacementMap
               in="SourceGraphic"
               in2="map"
-              scale="32"
+              scale="84"
               xChannelSelector="R"
               yChannelSelector="G"
               result="displaced"
             />
-            <feColorMatrix in="displaced" type="saturate" values="1.5" />
+            <feColorMatrix in="displaced" type="saturate" values="1.6" />
           </filter>
         </svg>
       )}
@@ -470,6 +470,9 @@ export const Navbar = React.memo(function Navbar() {
         >
           {/* Layer 1: Backdrop with frosted blur + saturate */}
           <div className="glass__backdrop" aria-hidden="true" />
+
+          {/* Layer 1.5: Edge band - peripheral lensing ring for all browsers */}
+          <div className="glass__edge-band" aria-hidden="true" />
 
           {/* Layer 2: Tint & inner highlights */}
           <div className="glass__tint" aria-hidden="true" />
