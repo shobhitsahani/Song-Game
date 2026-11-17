@@ -299,6 +299,7 @@ export function Stage<S extends object>({
     const el = cursorRef.current
     if (!el) return
     el.style.transform = `translate(${p.x}px, ${p.y}px)`
+    el.setAttribute('data-positioned', '')
     el.removeAttribute('data-idle')
   }, [])
 
