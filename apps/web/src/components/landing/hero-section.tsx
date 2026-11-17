@@ -135,14 +135,14 @@ export function HeroSection() {
               )}
             </div>
 
-            {/* Reserved space for Resume Banner (quiet inline, no layout jump) */}
-            <div className="min-h-[48px] w-full mt-4">
+            {/* Reserved space for Resume Banner (fixed height slot, no layout shift) */}
+            <div className="h-[62px] w-full mt-4 flex items-center">
               {savedRoom && !isDismissed && (
                 <motion.div
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 4 }}
-                  className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)] text-xs text-[var(--muted-foreground)]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.15 }}
+                  className="w-full flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[var(--border)] text-xs text-[var(--muted-foreground)]"
                 >
                   <div className="flex items-center gap-2 min-w-0 truncate">
                     <ArrowClockwise size={14} className="text-[var(--primary)] shrink-0" weight="bold" />
