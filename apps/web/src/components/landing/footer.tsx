@@ -53,7 +53,7 @@ export function Footer() {
               Community
             </span>
             <a
-              href="https://github.com/shobhitsahani/music-trivia"
+              href="https://github.com/shobhitsahani/Song-Game"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-[14px] sm:text-[15px] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] rounded-[var(--radius-sm)] py-0.5"
