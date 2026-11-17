@@ -245,21 +245,29 @@ export const Navbar = React.memo(function Navbar() {
 
   // Generate SVG refraction displacement map if Chromium is detected
   useEffect(() => {
-    if (glassSize.width > 0 && glassSize.height > 0 && isRefractionSupported()) {
-      const url = generateDisplacementMap({
-        width: glassSize.width,
-        height: glassSize.height,
-        bezel: 25,
-      });
-      if (url) {
-        setDisplacementUrl(url);
-        setGlassMode('refract');
-      } else {
-        setGlassMode('frosted');
+    const evaluateRefraction = () => {
+      if (glassSize.width > 0 && glassSize.height > 0 && isRefractionSupported()) {
+        const url = generateDisplacementMap({
+          width: glassSize.width,
+          height: glassSize.height,
+          bezel: 25,
+        });
+        if (url) {
+          setDisplacementUrl(url);
+          setGlassMode('refract');
+          return;
+        }
       }
-    } else {
       setGlassMode('frosted');
-    }
+    };
+
+    evaluateRefraction();
+
+    const handleResize = () => {
+      evaluateRefraction();
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [glassSize]);
 
   // 1. Scroll reactivity & pointer-lit rim (passive, rAF-lerped, zero React re-renders)
