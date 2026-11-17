@@ -42,23 +42,6 @@
   overflow: hidden;
 }
 
-/* Wide 2-Column Room Layout */
-.hero-room-layout {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  height: 100%;
-  box-sizing: border-box;
-  background: var(--surface-1);
-}
-
-.hero-room-main {
-  display: flex;
-  flex-direction: column;
-  padding: 14px 16px;
-  gap: 12px;
-  border-right: 1px solid var(--border);
-}
-
 .hero-room-topbar {
   display: flex;
   align-items: center;
@@ -205,49 +188,6 @@
   min-width: 0;
 }
 
-/* Equalizer Bars */
-.hero-eq-bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 14px;
-  margin-top: 4px;
-}
-
-.hero-eq-bar {
-  width: 3px;
-  background: var(--primary);
-  border-radius: 1px;
-  opacity: 0.8;
-}
-
-.hero-eq-bars[data-active="true"] .bar-1 { animation: eq-pulse 0.7s infinite alternate ease-in-out; }
-.hero-eq-bars[data-active="true"] .bar-2 { animation: eq-pulse 0.9s infinite alternate ease-in-out 0.1s; }
-.hero-eq-bars[data-active="true"] .bar-3 { animation: eq-pulse 0.6s infinite alternate ease-in-out 0.2s; }
-.hero-eq-bars[data-active="true"] .bar-4 { animation: eq-pulse 0.8s infinite alternate ease-in-out 0.15s; }
-.hero-eq-bars[data-active="true"] .bar-5 { animation: eq-pulse 1.0s infinite alternate ease-in-out 0.25s; }
-.hero-eq-bars[data-active="true"] .bar-6 { animation: eq-pulse 0.65s infinite alternate ease-in-out 0.05s; }
-.hero-eq-bars[data-active="true"] .bar-7 { animation: eq-pulse 0.85s infinite alternate ease-in-out 0.18s; }
-.hero-eq-bars[data-active="true"] .bar-8 { animation: eq-pulse 0.75s infinite alternate ease-in-out 0.12s; }
-
-.hero-eq-bars[data-active="false"] .hero-eq-bar {
-  height: 4px !important;
-  animation: none;
-  opacity: 0.3;
-}
-
-@keyframes eq-pulse {
-  0% { height: 3px; }
-  100% { height: 14px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-eq-bar {
-    animation: none !important;
-    height: 6px;
-  }
-}
-
 /* 2x2 Answer Grid with 56px-high options */
 .hero-answers-grid {
   display: grid;
@@ -334,99 +274,6 @@
 :is([data-theme="black"], [data-theme="rose"]) .hero-answer-payoff {
   color: #4ade80;
   background: rgba(34, 197, 94, 0.2);
-}
-
-/* Round Progress Row */
-.hero-progress-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 4px 2px 4px;
-}
-
-/* Right Column: Players Rail (hairline dividers, no gray blocks) */
-.hero-room-rail {
-  display: flex;
-  flex-direction: column;
-  padding: 14px 16px;
-  background: var(--surface-1);
-  gap: 8px;
-}
-
-.hero-rail-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--muted-foreground);
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-
-.hero-rail-roster {
-  display: flex;
-  flex-direction: column;
-  divide-y: 1px solid var(--border);
-}
-
-.hero-roster-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 4px;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-  transition: all 0.2s ease-out;
-}
-
-.hero-roster-row:last-child {
-  border-bottom: none;
-}
-
-.hero-row-you {
-  background: color-mix(in srgb, var(--primary) 8%, transparent);
-  border-radius: var(--radius-sm, 6px);
-  padding-inline: 8px;
-}
-
-.hero-roster-rank {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--muted-foreground);
-  width: 22px;
-  tabular-nums: true;
-}
-
-.hero-roster-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  flex: 1;
-  min-width: 0;
-  line-height: 1.3;
-}
-
-.hero-roster-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--foreground);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.hero-roster-status {
-  font-size: 12px;
-  color: var(--muted-foreground);
-  white-space: nowrap;
-}
-
-.hero-roster-score {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--foreground);
-  tabular-nums: true;
 }
 
 /* Compact Mobile Layout */
