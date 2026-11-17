@@ -14,6 +14,20 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['@phosphor-icons/react'],
   },
+  async redirects() {
+    return [
+      {
+        source: '/github',
+        destination: 'https://github.com/shobhitsahani/Song-Game',
+        permanent: false,
+      },
+      {
+        source: '/repo',
+        destination: 'https://github.com/shobhitsahani/Song-Game',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
