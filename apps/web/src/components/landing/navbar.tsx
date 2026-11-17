@@ -224,6 +224,9 @@ export const Navbar = React.memo(function Navbar() {
       }
     };
     updateSize();
+    if (typeof document !== 'undefined' && document.fonts?.ready) {
+      document.fonts.ready.then(() => updateSize());
+    }
 
     let timeoutId: number;
     const ro = new ResizeObserver((entries) => {
@@ -559,7 +562,7 @@ export const Navbar = React.memo(function Navbar() {
         </div>
 
         {/* Right: Actions - Theme button + Join room + Play + Mobile menu button */}
-        <div className="justify-self-end flex items-center gap-2 pr-1">
+        <div className="justify-self-end flex items-center gap-2 pr-2">
           {/* Theme button & popover menu (visible at 900px and up) */}
           <div className="hidden min-[900px]:inline-flex">
             <ThemeMenu />
