@@ -26,6 +26,11 @@ const nextConfig: NextConfig = {
         destination: 'https://github.com/shobhitsahani/Song-Game',
         permanent: false,
       },
+      {
+        source: '/source',
+        destination: 'https://github.com/shobhitsahani/Song-Game',
+        permanent: false,
+      },
     ];
   },
 };

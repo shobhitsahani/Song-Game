@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { GithubLogo } from '@phosphor-icons/react';
 import { Logo } from '@/components/shared/logo';
 import { Container } from '@/components/ui/container';
+import { REPO_URL } from '@/lib/site';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -53,7 +54,7 @@ export function Footer() {
               Community
             </span>
             <a
-              href="https://github.com/shobhitsahani/Song-Game"
+              href={REPO_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-[14px] sm:text-[15px] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] rounded-[var(--radius-sm)] py-0.5"
