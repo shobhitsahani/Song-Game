@@ -69,7 +69,6 @@ function getBezelSlope(d: number, bezel: number): number {
   if (d <= 0) return 1;
   if (d >= bezel) return 0;
   const t = d / bezel;
-  const u = 1 - t; // 1 at edge, 0 at center
   // Finite difference for robust and smooth slope
   const dt = 0.02;
   const t1 = Math.max(0, t - dt);
