@@ -77,8 +77,9 @@
   z-index: 2;
   padding: 16px;
   box-sizing: border-box;
-  backdrop-filter: blur(7px) saturate(var(--glass-saturate, 1.6)) brightness(var(--glass-brightness, 1.05));
-  -webkit-backdrop-filter: blur(7px) saturate(var(--glass-saturate, 1.6)) brightness(var(--glass-brightness, 1.05));
+  opacity: 0.45;
+  backdrop-filter: blur(6px) saturate(var(--glass-saturate, 1.6)) brightness(var(--glass-brightness, 1.0));
+  -webkit-backdrop-filter: blur(6px) saturate(var(--glass-saturate, 1.6)) brightness(var(--glass-brightness, 1.0));
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -95,9 +96,8 @@
   background: color-mix(in srgb, var(--glass-tint) calc((1 - var(--glass-p, 0)) * 100%), var(--glass-tint-scrolled));
   box-shadow:
     inset 0 1px 0 0 var(--glass-rim-hi),
-    inset 0 0 0 2.5px var(--glass-inner-rim, rgba(255, 255, 255, 0.16)),
-    inset 0 -1px 0 0 var(--glass-bottom-bounce, rgba(255, 255, 255, 0.25)),
-    inset 0 -6px 8px -4px var(--glass-bottom-glow, rgba(255, 255, 255, 0.10));
+    inset 0 0 0 1px var(--glass-inner-rim, rgba(255, 255, 255, 0.10)),
+    inset 0 -1px 0 0 var(--glass-bottom-bounce, rgba(255, 255, 255, 0.10));
   transition: background-color 200ms ease;
 }
 
@@ -176,8 +176,10 @@
   pointer-events: none;
   z-index: 0;
   background: var(--glass-lens-fill);
+  backdrop-filter: blur(8px) saturate(1.4);
+  -webkit-backdrop-filter: blur(8px) saturate(1.4);
   border: 1px solid var(--glass-lens-border);
-  box-shadow: var(--glass-lens-shadow), inset 0 1px 0 0 rgba(255, 255, 255, 0.40);
+  box-shadow: var(--glass-lens-shadow), inset 0 1px 0 0 rgba(255, 255, 255, 0.35);
   transform-origin: center center;
 }
 
@@ -189,10 +191,9 @@
   }
 }
 
-/* Legibility text halo for controls and text over liquid glass */
+/* Legibility text shadow for controls and text over liquid glass */
 .glass-text-halo {
-  text-shadow: 0 0 10px color-mix(in srgb, var(--surface-1) 75%, transparent),
-               0 0 1px color-mix(in srgb, var(--surface-1) 85%, transparent);
+  text-shadow: 0 1px 2px color-mix(in srgb, var(--surface-1) 80%, transparent);
 }
 
 /* Desktop nav link items - full strength ink */
@@ -205,8 +206,7 @@
   font-size: 15px;
   font-weight: 500;
   color: var(--foreground);
-  text-shadow: 0 0 10px color-mix(in srgb, var(--surface-1) 75%, transparent),
-               0 0 1px color-mix(in srgb, var(--surface-1) 85%, transparent);
+  text-shadow: 0 1px 2px color-mix(in srgb, var(--surface-1) 80%, transparent);
   transition: color 150ms ease;
   display: inline-flex;
   align-items: center;
