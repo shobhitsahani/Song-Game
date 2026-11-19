@@ -11,19 +11,29 @@ export default function Icon() {
     (
       <div
         style={{
-          fontSize: 20,
-          background: '#0d0c11',
           width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#f59e0b',
-          borderRadius: '50%',
-          border: '2px solid #f59e0b',
+          background: 'transparent',
         }}
       >
-        ♫
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 28 28"
+          fill="none"
+        >
+          {/* Outer vinyl rim */}
+          <circle cx="14" cy="14" r="12" stroke="#2b5cf6" strokeWidth="2.2" />
+          {/* Subtle audio groove */}
+          <circle cx="14" cy="14" r="8" stroke="#2b5cf6" strokeWidth="1.2" opacity="0.6" />
+          {/* Dynamic 3-bar equalizer at vinyl center */}
+          <line x1="10.5" y1="12" x2="10.5" y2="16" stroke="#2b5cf6" strokeWidth="2.2" strokeLinecap="round" />
+          <line x1="14" y1="8" x2="14" y2="20" stroke="#2b5cf6" strokeWidth="2.6" strokeLinecap="round" />
+          <line x1="17.5" y1="11" x2="17.5" y2="17" stroke="#2b5cf6" strokeWidth="2.2" strokeLinecap="round" />
+        </svg>
       </div>
     ),
     {
