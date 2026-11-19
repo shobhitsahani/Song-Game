@@ -11,19 +11,30 @@ export default function AppleIcon() {
     (
       <div
         style={{
-          fontSize: 90,
-          background: '#0d0c11',
           width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#f59e0b',
+          background: '#0d0c11',
           borderRadius: '40px',
-          border: '6px solid #f59e0b',
         }}
       >
-        ♫
+        <svg
+          width="130"
+          height="130"
+          viewBox="0 0 28 28"
+          fill="none"
+        >
+          {/* Outer vinyl rim */}
+          <circle cx="14" cy="14" r="12" stroke="#2b5cf6" strokeWidth="2.2" />
+          {/* Subtle audio groove */}
+          <circle cx="14" cy="14" r="8" stroke="#2b5cf6" strokeWidth="1.2" opacity="0.6" />
+          {/* Dynamic 3-bar equalizer at vinyl center */}
+          <line x1="10.5" y1="12" x2="10.5" y2="16" stroke="#2b5cf6" strokeWidth="2.2" strokeLinecap="round" />
+          <line x1="14" y1="8" x2="14" y2="20" stroke="#2b5cf6" strokeWidth="2.6" strokeLinecap="round" />
+          <line x1="17.5" y1="11" x2="17.5" y2="17" stroke="#2b5cf6" strokeWidth="2.2" strokeLinecap="round" />
+        </svg>
       </div>
     ),
     {
