@@ -55,18 +55,27 @@ html[data-theme="black"] {
   --nav-lens-border: oklch(0.28 0.010 75 / 0.6);
 
   /* Liquid Glass tokens - Vinyl (warm charcoal) */
-  --glass-tint: rgba(255, 255, 255, 0.07);
-  --glass-tint-scrolled: rgba(18, 16, 14, 0.45);
-  --glass-blur: 10px;
-  --glass-blur-scrolled: 16px;
-  --glass-saturate: 1.35;
-  --glass-rim-hi: rgba(255, 255, 255, 0.52);
-  --glass-rim-lo: rgba(255, 255, 255, 0.12);
-  --glass-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.35);
-  --glass-shadow-scrolled: 0 14px 38px -10px rgba(0, 0, 0, 0.7), 0 2px 4px rgba(0, 0, 0, 0.35);
-  --glass-lens-fill: rgba(255, 255, 255, 0.16);
-  --glass-lens-border: rgba(255, 255, 255, 0.22);
-  --glass-lens-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.4);
+  --glass-tint: rgba(255, 255, 255, 0.03);
+  --glass-tint-scrolled: rgba(18, 16, 14, 0.12);
+  --glass-blur: 8px;
+  --glass-blur-scrolled: 12px;
+  --glass-saturate: 1.7;
+  --glass-brightness: 1.0;
+  --glass-rim-hi: rgba(255, 255, 255, 0.45);
+  --glass-rim-lo: rgba(255, 255, 255, 0.10);
+  --glass-inner-rim: rgba(255, 255, 255, 0.08);
+  --glass-bottom-bounce: rgba(255, 255, 255, 0.10);
+  --glass-bottom-glow: transparent;
+  --glass-sheen: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 4px 18px -4px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.35);
+  --glass-shadow-scrolled: 0 14px 38px -10px rgba(0, 0, 0, 0.75), 0 1px 3px rgba(0, 0, 0, 0.45);
+  --glass-lens-fill: rgba(255, 255, 255, 0.10);
+  --glass-lens-border: rgba(255, 255, 255, 0.16);
+  --glass-lens-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.35);
+  --glass-control-bg: transparent;
+  --glass-control-border: rgba(255, 255, 255, 0.14);
+  --glass-control-hover-fill: rgba(255, 255, 255, 0.10);
+  --glass-control-hover-border: rgba(255, 255, 255, 0.20);
 
   /* Ambient Orbs */
   --orb-1: oklch(0.82 0.16 75 / 0.12);
@@ -139,18 +148,27 @@ html[data-theme="rose"] {
   --nav-lens-border: oklch(1 0.03 350 / 0.20);
 
   /* Liquid Glass tokens - Rose (deep berry) */
-  --glass-tint: rgba(244, 114, 182, 0.08);
-  --glass-tint-scrolled: rgba(40, 15, 25, 0.38);
-  --glass-blur: 10px;
-  --glass-blur-scrolled: 16px;
-  --glass-saturate: 1.5;
-  --glass-rim-hi: rgba(255, 220, 235, 0.55);
-  --glass-rim-lo: rgba(236, 72, 153, 0.15);
-  --glass-shadow: 0 4px 16px -4px rgba(20, 5, 12, 0.35);
-  --glass-shadow-scrolled: 0 14px 38px -10px rgba(20, 5, 12, 0.65), 0 2px 4px rgba(20, 5, 12, 0.3);
-  --glass-lens-fill: rgba(255, 255, 255, 0.16);
-  --glass-lens-border: rgba(255, 210, 230, 0.28);
+  --glass-tint: rgba(244, 114, 182, 0.04);
+  --glass-tint-scrolled: rgba(40, 15, 25, 0.14);
+  --glass-blur: 8px;
+  --glass-blur-scrolled: 12px;
+  --glass-saturate: 1.7;
+  --glass-brightness: 1.0;
+  --glass-rim-hi: rgba(255, 220, 235, 0.48);
+  --glass-rim-lo: rgba(236, 72, 153, 0.12);
+  --glass-inner-rim: rgba(255, 210, 230, 0.08);
+  --glass-bottom-bounce: rgba(255, 220, 235, 0.10);
+  --glass-bottom-glow: transparent;
+  --glass-sheen: rgba(255, 220, 235, 0.12);
+  --glass-shadow: 0 4px 18px -4px rgba(20, 5, 12, 0.40), 0 1px 2px rgba(20, 5, 12, 0.30);
+  --glass-shadow-scrolled: 0 14px 38px -10px rgba(20, 5, 12, 0.70), 0 2px 4px rgba(20, 5, 12, 0.35);
+  --glass-lens-fill: rgba(255, 255, 255, 0.10);
+  --glass-lens-border: rgba(255, 210, 230, 0.18);
   --glass-lens-shadow: 0 2px 8px -2px rgba(20, 5, 12, 0.35);
+  --glass-control-bg: transparent;
+  --glass-control-border: rgba(255, 210, 230, 0.14);
+  --glass-control-hover-fill: rgba(255, 255, 255, 0.10);
+  --glass-control-hover-border: rgba(255, 210, 230, 0.20);
 
   /* Ambient Orbs */
   --orb-1: oklch(0.72 0.21 355 / 0.25); /* Pink */
@@ -225,18 +243,27 @@ html[data-theme="light"] {
   --nav-lens-border: oklch(0.86 0.008 85 / 0.8);
 
   /* Liquid Glass tokens - Daylight (warm paper & vinyl blue) */
-  --glass-tint: rgba(255, 255, 255, 0.08);
-  --glass-tint-scrolled: rgba(255, 255, 255, 0.28);
-  --glass-blur: 10px;
-  --glass-blur-scrolled: 16px;
-  --glass-saturate: 1.6;
-  --glass-rim-hi: rgba(255, 255, 255, 0.92);
-  --glass-rim-lo: rgba(255, 255, 255, 0.20);
-  --glass-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.06);
-  --glass-shadow-scrolled: 0 12px 32px -8px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.04);
-  --glass-lens-fill: rgba(255, 255, 255, 0.68);
-  --glass-lens-border: rgba(255, 255, 255, 0.85);
-  --glass-lens-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.08);
+  --glass-tint: rgba(255, 255, 255, 0.02);
+  --glass-tint-scrolled: rgba(255, 255, 255, 0.06);
+  --glass-blur: 8px;
+  --glass-blur-scrolled: 12px;
+  --glass-saturate: 1.75;
+  --glass-brightness: 1.0;
+  --glass-rim-hi: rgba(255, 255, 255, 0.85);
+  --glass-rim-lo: rgba(0, 0, 0, 0.06);
+  --glass-inner-rim: rgba(255, 255, 255, 0.10);
+  --glass-bottom-bounce: rgba(255, 255, 255, 0.10);
+  --glass-bottom-glow: transparent;
+  --glass-sheen: rgba(255, 255, 255, 0.16);
+  --glass-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --glass-shadow-scrolled: 0 12px 32px -8px rgba(0, 0, 0, 0.10), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --glass-lens-fill: rgba(0, 0, 0, 0.04);
+  --glass-lens-border: rgba(0, 0, 0, 0.08);
+  --glass-lens-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.60);
+  --glass-control-bg: transparent;
+  --glass-control-border: rgba(0, 0, 0, 0.08);
+  --glass-control-hover-fill: rgba(255, 255, 255, 0.18);
+  --glass-control-hover-border: rgba(0, 0, 0, 0.12);
 
   /* Ambient Orbs - subdued warm light */
   --orb-1: oklch(0.88 0.06 250 / 0.12);

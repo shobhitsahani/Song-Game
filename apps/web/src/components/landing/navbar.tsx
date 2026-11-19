@@ -469,12 +469,13 @@ export const Navbar = React.memo(function Navbar() {
             <feDisplacementMap
               in="SourceGraphic"
               in2="map"
-              scale="84"
+              scale="78"
               xChannelSelector="R"
               yChannelSelector="G"
               result="displaced"
             />
-            <feColorMatrix in="displaced" type="saturate" values="1.6" />
+            <feGaussianBlur in="displaced" stdDeviation="0.75" result="smoothed" />
+            <feColorMatrix in="smoothed" type="saturate" values="1.6" />
           </filter>
         </svg>
       )}
@@ -517,7 +518,7 @@ export const Navbar = React.memo(function Navbar() {
             className="group inline-flex items-center gap-2.5 select-none outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 rounded-full"
           >
             <NavLogoMark />
-            <span className="font-display font-semibold text-[17px] tracking-[-0.01em] text-[var(--foreground)]">
+            <span className="font-display font-semibold text-[17px] tracking-[-0.01em] text-[var(--foreground)] glass-text-halo">
               SongGame
             </span>
           </Link>
@@ -584,7 +585,7 @@ export const Navbar = React.memo(function Navbar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="hidden lg:inline-flex h-10 px-3.5 text-[15px] font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-full glass-control-hover"
+                className="hidden lg:inline-flex h-10 px-3.5 text-[15px] font-medium text-[var(--foreground)] rounded-full border border-transparent hover:border-[var(--glass-control-hover-border)] hover:bg-[var(--glass-control-hover-fill)] glass-control-hover glass-text-halo"
               >
                 Join room
               </Button>
@@ -654,8 +655,8 @@ export const Navbar = React.memo(function Navbar() {
                 'w-10 h-10 min-w-[40px] rounded-full flex items-center justify-center border transition-all duration-150 outline-none select-none cursor-pointer relative',
                 'focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2',
                 mobileMenuOpen
-                  ? 'bg-[var(--surface-2)] text-[var(--foreground)] border-[var(--border)] shadow-xs'
-                  : 'bg-[var(--surface-1)] text-[var(--foreground)] border-[var(--border)] hover:bg-[var(--surface-2)]'
+                  ? 'bg-[var(--glass-control-hover-fill)] text-[var(--foreground)] border-[var(--glass-control-hover-border)] shadow-xs'
+                  : 'bg-[var(--glass-control-bg)] text-[var(--foreground)] border-[var(--glass-control-border)] hover:bg-[var(--glass-control-hover-fill)] hover:border-[var(--glass-control-hover-border)]'
               )}
             >
               {/* 44px hit area */}
